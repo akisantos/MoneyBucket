@@ -1,6 +1,7 @@
 package com.akistd.moneybucket;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.akistd.moneybucket.adapters.testing.UsersListApdater;
+import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Users;
 import com.akistd.moneybucket.ui.auth.Login;
@@ -23,6 +25,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.bson.types.ObjectId;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -32,12 +36,9 @@ import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
 import io.realm.mongodb.auth.GoogleAuthType;
-import io.realm.mongodb.sync.MutableSubscriptionSet;
-import io.realm.mongodb.sync.Subscription;
-import io.realm.mongodb.sync.SyncConfiguration;
 
 public class MainActivity extends AppCompatActivity {
-
+    SharedPreferences prefs = null;
     Constants util = new Constants();
     Realm realm;
     ListView listView;
@@ -48,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInClient gsc;
     String signinToken="";
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Khởi tạo Realm
         Realm.init(this);
         String appID = util.getAppID() ;
         App app = new App(new AppConfiguration.Builder(appID)
@@ -57,26 +60,17 @@ public class MainActivity extends AppCompatActivity {
                 .requestTimeout(30, TimeUnit.SECONDS)
                 .build());
 
+        //Kết nối đến database
         Credentials credentials = Credentials.google(this.getIntent().getStringExtra("signinToken"), GoogleAuthType.ID_TOKEN);
         app.loginAsync(credentials, r->{
             if (r.isSuccess()) {
 
                 Log.v("AKILOGG", "Đăng nhập thành công với tài khoản Google.");
                 user = app.currentUser();
-                SyncConfiguration builder = new SyncConfiguration.Builder(user)
-                        .allowQueriesOnUiThread(true)
-                        .allowWritesOnUiThread(true)
-                        .initialSubscriptions(new SyncConfiguration.InitialFlexibleSyncSubscriptions() {
-                            @Override
-                            public void configure(Realm realm, MutableSubscriptionSet subscriptions) {
-                                subscriptions.removeAll();
-                                subscriptions.add(Subscription.create(realm.where(Users.class).equalTo("owner_id", user.getId())));
-                            }})
-                        .waitForInitialRemoteData(2112, TimeUnit.MILLISECONDS)
-                        .build();
+                MongoDB.getInstance().setUser(user);
 
-                Realm.setDefaultConfiguration(builder);
-                Realm.getInstanceAsync(builder, new Realm.Callback() {
+                Realm.setDefaultConfiguration(MongoDB.getInstance().getDefaultDeviceSyncConfig());
+                Realm.getInstanceAsync(MongoDB.getInstance().getDefaultDeviceSyncConfig(), new Realm.Callback() {
                     @Override
                     public void onSuccess(Realm realm) {
                         if(isChangingConfigurations() || isFinishing()) {
@@ -84,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             MainActivity.this.realm = realm;
                             MongoDB.getInstance().setRealm(realm);
+
                             onRealmLoaded(realm);
+                            Log.v("AKILOGG", "Gán realm thành công!");
                         }
                     }
                 });
@@ -94,46 +90,87 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("AKILOGG", "Failed to log in. Error: " + r.getError());
             }
         });
-        //MongoDB.getInstance().Connect(this.getIntent().getStringExtra("signinToken"));
 
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
 
+        //Khởi tạo chạy lần đầu
+        prefs = getSharedPreferences("com.akistd.moneyBucket", MODE_PRIVATE);
 
-
-    }
-
-    protected void onRealmLoaded(Realm realm) {
+        //Add controls và events cho mục không cần đến db.
         addControls();
         addEvents();
 
+        //Lấy thông tin đăng nhập
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this,gso);
+    }
+
+
+    private void configFirstRun(){
+            if (prefs.getBoolean("firstrun", true)) {
+                // Do first run stuff here then set 'firstrun' as false
+                // using the following line to edit/commit prefs
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        if(realm.where(Users.class).equalTo("owner_id", user.getId()).findFirst() == null){
+
+                            //Khởi tạo người dùng mới
+                            Users users = new Users();
+                            users.setId(new ObjectId());
+                            users.setOwner_id(user.getId());
+                            users.setUserBalance(0.0);
+
+                            GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                            users.setUserName(acc.getDisplayName());
+                            users.setUser_email(acc.getEmail());
+
+                            realm.copyToRealm(users);
+
+                            //Khởi tạo hũ
+
+
+                            Jars thietyeu = new Jars(new ObjectId(),0.55,0.0,"Thiết yếu", user.getId());
+                            Jars giaoduc = new Jars(new ObjectId(),0.1,0.0,"Giáo dục", user.getId());
+                            Jars tietkiem = new Jars(new ObjectId(),0.2,0.0,"Tiết kiệm", user.getId());
+                            Jars huongthu = new Jars(new ObjectId(),0.05,0.0,"Hưởng thụ", user.getId());
+                            Jars dautu = new Jars(new ObjectId(),0.05,0.0,"Đầu tư", user.getId());
+                            Jars thientam = new Jars(new ObjectId(),0.05,0.0,"Thiện tâm", user.getId());
+
+                            realm.copyToRealm(thietyeu);
+                            realm.copyToRealm(giaoduc);
+                            realm.copyToRealm(tietkiem);
+                            realm.copyToRealm(huongthu);
+                            realm.copyToRealm(dautu);
+                            realm.copyToRealm(thientam);
+
+
+                        }
+                    }
+                });
+                prefs.edit().putBoolean("firstrun", false).commit();
+            }
+        }
+
+
+    //Khởi chạy khi kết nối db thành công
+    protected void onRealmLoaded(Realm realm) {
+        configFirstRun();
+
         listView = findViewById(R.id.usersListView);
         ArrayList<Users> userList = new ArrayList<>();
-        userList.addAll(realm.where(Users.class).findAll());
+        userList.addAll(MongoDB.getInstance().getAllUsersData());
         UsersListApdater apdater = new UsersListApdater(userList);
         listView.setAdapter(apdater);
 
-        reload = findViewById(R.id.LoadUsersBtn);
-        reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Users user = new Users();
-                user.setUserBalance(1234.0);
-                user.setOwner_id(MongoDB.getInstance().getUser().getId());
-                user.setUserName("akitest");
-                MongoDB.getInstance().insertUsers(user);
-                apdater.notifyDataSetChanged();
-            }
-        });
+
     }
 
     private void addControls(){
         signoutBtn = findViewById(R.id.signOutBtn);
         dumdum = findViewById(R.id.dumdum);
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this,gso);
+
 
         GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(this);
         if (acc !=null){
@@ -168,16 +205,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MongoDB.getInstance().Connect(signinToken);
-        realm.close();
+        if (realm != null){
+            realm.close();
+        }
 
     }
 }

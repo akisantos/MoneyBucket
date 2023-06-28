@@ -12,10 +12,7 @@ import java.util.concurrent.TimeUnit;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.mongodb.App;
-import io.realm.mongodb.AppConfiguration;
-import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
-import io.realm.mongodb.auth.GoogleAuthType;
 import io.realm.mongodb.sync.MutableSubscriptionSet;
 import io.realm.mongodb.sync.Subscription;
 import io.realm.mongodb.sync.SyncConfiguration;
@@ -24,15 +21,10 @@ public class MongoDB implements MongoRepository{
 
     private static MongoDB instance = null;
     private final Constants util = new Constants();
-
     String appID = util.getAppID() ;
-    App app = new App(new AppConfiguration.Builder(appID)
-            .appName("MoneyBucket")
-            .requestTimeout(30, TimeUnit.SECONDS)
-            .build());
+    App app;
     private Realm realm;
-    private final ThreadLocal<Realm> localRealms = new ThreadLocal<>();
-    private User user = app.currentUser();
+    private User user;
 
 
     public Realm getRealm() {
@@ -51,41 +43,11 @@ public class MongoDB implements MongoRepository{
         return user;
     }
 
-    public MongoDB(){
-
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public synchronized void Connect(String uid){
-        Credentials credentials = Credentials.google(uid, GoogleAuthType.ID_TOKEN);
-        app.loginAsync(credentials, r->{
-            if (r.isSuccess()) {
-
-                Log.v("AKILOGG", "Đăng nhập thành công với tài khoản Google.");
-                user = app.currentUser();
-
-            } else {
-                Log.e("AKILOGG", "Failed to log in. Error: " + r.getError());
-            }
-        });
-        /*try {
-            wait();
-            app.loginAsync(credentials, r->{
-                if (r.isSuccess()) {
-
-                    Log.v("AKILOGG", "Đăng nhập thành công với tài khoản Google.");
-                    user = app.currentUser();
-                    setDefaultDeviceSyncConfig();
-                    notify();
-                    ConfigRealm();
-
-
-                } else {
-                    Log.e("AKILOGG", "Failed to log in. Error: " + r.getError());
-                }
-            });
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/
+    public MongoDB(){
 
     }
 
@@ -96,26 +58,9 @@ public class MongoDB implements MongoRepository{
         return instance;
     }
 
-    @Override
-    public synchronized void ConfigRealm() {
 
-        if (user != null){
-            Log.v("AKILOGG", "Successfully init realm!.");
-            Log.v("AKI LOGGG", Realm.getDefaultConfiguration().toString());
-            Realm.getInstanceAsync(Realm.getDefaultConfiguration(), new Realm.Callback() {
-                @Override
-                public void onSuccess(Realm realm) {
-                    Log.v("AKI LOGG", "Đã mở Realm thành công");
-                    MongoDB.this.realm = realm;
-                    localRealms.set(realm);
 
-                }
-            });
-
-        }
-    }
-
-    public SyncConfiguration setDefaultDeviceSyncConfig(){
+    public SyncConfiguration getDefaultDeviceSyncConfig(){
         SyncConfiguration builder = new SyncConfiguration.Builder(user)
                 .allowQueriesOnUiThread(true)
                 .allowWritesOnUiThread(true)
@@ -124,72 +69,22 @@ public class MongoDB implements MongoRepository{
                     public void configure(Realm realm, MutableSubscriptionSet subscriptions) {
                         subscriptions.removeAll();
                         subscriptions.add(Subscription.create(realm.where(Users.class).equalTo("owner_id", user.getId())));
+                        subscriptions.add(Subscription.create(realm.where(Jars.class).equalTo("owner_id", user.getId())));
+                        subscriptions.add(Subscription.create(realm.where(Transaction.class).equalTo("owner_id", user.getId())));
                     }})
+
                 .waitForInitialRemoteData(2112, TimeUnit.MILLISECONDS)
                 .build();
 
         Realm.setDefaultConfiguration(builder);
-
         return builder;
-    }
-
-    public Realm openLocalInstance() {
-        checkDefaultConfiguration();
-        Realm realm = Realm.getDefaultInstance(); // <-- maybe this should be a parameter
-        Realm localRealm = localRealms.get();
-        if(localRealm == null || localRealm.isClosed()) {
-            localRealms.set(realm);
-        }
-        return realm;
-    }
-
-    /**
-     * Returns the local Realm instance without adding to the reference count.
-     *
-     * @return the local Realm instance
-     * @throws IllegalStateException when no Realm is open
-     */
-    public Realm getLocalInstance() {
-        Realm realm = localRealms.get();
-        if(realm == null || realm.isClosed()) {
-            throw new IllegalStateException(
-                    "No open Realms were found on this thread.");
-        }
-        return realm;
-    }
-
-    /**
-     * Closes local Realm instance, decrementing the reference count.
-     *
-     * @throws IllegalStateException if there is no open Realm.
-     */
-    public void closeLocalInstance() {
-        checkDefaultConfiguration();
-        Realm realm = localRealms.get();
-        if(realm == null || realm.isClosed()) {
-            throw new IllegalStateException(
-                    "Cannot close a Realm that is not open.");
-        }
-        realm.close();
-        // noinspection ConstantConditions
-        if(Realm.getLocalInstanceCount(Realm.getDefaultConfiguration()) <= 0) {
-            localRealms.set(null);
-        }
-    }
-
-
-
-    private void checkDefaultConfiguration() {
-        if(Realm.getDefaultConfiguration() == null) {
-            throw new IllegalStateException("No default configuration is set.");
-        }
     }
 
 
 
 
     @Override
-    public ArrayList<Users>getData() {
+    public ArrayList<Users>getAllUsersData() {
         ArrayList<Users> data = new ArrayList<>();
         if (realm == null){
             ConfigRealm();
@@ -204,13 +99,32 @@ public class MongoDB implements MongoRepository{
         return data;
     }
 
+
+    //DATA SINGLETON
     @Override
     public ArrayList<Users> filterData(String name) {
         return null;
     }
 
+    @Override
+    public void ConfigRealm() {
+        SyncConfiguration builder = new SyncConfiguration.Builder(user)
+                .allowQueriesOnUiThread(true)
+                .allowWritesOnUiThread(true)
+                .initialSubscriptions(new SyncConfiguration.InitialFlexibleSyncSubscriptions() {
+                    @Override
+                    public void configure(Realm realm, MutableSubscriptionSet subscriptions) {
+                        subscriptions.removeAll();
+                        subscriptions.add(Subscription.create(realm.where(Users.class).equalTo("owner_id", user.getId())));
+                        subscriptions.add(Subscription.create(realm.where(Jars.class).equalTo("owner_id", user.getId())));
+                        subscriptions.add(Subscription.create(realm.where(Transaction.class).equalTo("owner_id", user.getId())));
+                    }})
 
+                .waitForInitialRemoteData(2112, TimeUnit.MILLISECONDS)
+                .build();
 
+        Realm.setDefaultConfiguration(builder);
+    }
 
     @Override
     public void insertUsers(Users user) {
@@ -245,7 +159,7 @@ public class MongoDB implements MongoRepository{
     }
 
     @Override
-    public void deletePerson(ObjectId id) {
+    public void deleteUsers(ObjectId id) {
         if (user != null){
             realm.executeTransaction( r ->{
                 try {
@@ -256,6 +170,100 @@ public class MongoDB implements MongoRepository{
                 }
             });
         }
+    }
+
+    @Override
+    public Object getAllTransaction() {
+        return null;
+    }
+
+    @Override
+    public void insertTransaction(Transaction transaction) {
+        if (user != null){
+            realm.executeTransaction( r ->{
+                try {
+                    transaction.setId(new ObjectId());
+                    transaction.setOwner_id(user.getId());
+                    r.copyToRealm(transaction);
+                }catch (Exception e){
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void updateTransaction(Transaction transaction) {
+        realm.executeTransaction( r ->{
+            try {
+
+                Transaction queriedTrans = r.where(Transaction.class).equalTo("_id == $0", transaction.getId()).findFirst();
+                if (queriedTrans!= null) {
+                    realm.copyToRealmOrUpdate(queriedTrans);
+                }
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+    }
+
+    @Override
+    public void deleteTransaction(ObjectId id) {
+        realm.executeTransaction( r ->{
+            try {
+                Transaction u = r.where(Transaction.class).equalTo("_id==$0", id).findFirst();
+                u.deleteFromRealm();
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+    }
+
+    @Override
+    public Object getAllJars() {
+        return null;
+    }
+
+    @Override
+    public void insertJar(Jars jars) {
+        if (user != null){
+            realm.executeTransaction( r ->{
+                try {
+                    jars.setId(new ObjectId());
+                    jars.setOwner_id(user.getId());
+                    r.copyToRealm(jars);
+                }catch (Exception e){
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void updateJar(Jars jars) {
+        realm.executeTransaction( r ->{
+            try {
+
+                Jars queriedTrans = r.where(Jars.class).equalTo("_id == $0", jars.getId()).findFirst();
+                if (queriedTrans!= null) {
+                    realm.copyToRealmOrUpdate(queriedTrans);
+                }
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+    }
+
+    @Override
+    public void deleteJar(ObjectId id) {
+        realm.executeTransaction( r ->{
+            try {
+                Jars u = r.where(Jars.class).equalTo("_id==$0", id).findFirst();
+                u.deleteFromRealm();
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
     }
 
 }

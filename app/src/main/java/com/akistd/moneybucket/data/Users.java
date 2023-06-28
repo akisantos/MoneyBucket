@@ -11,6 +11,8 @@ public class Users extends RealmObject {
     private String owner_id ="";
     private Double user_balance;
     private String user_name;
+
+    private String user_email;
     public Users(){
 
     }
@@ -33,4 +35,11 @@ public class Users extends RealmObject {
         return owner_id;
     }
 
+    public String getUser_email() {
+        return user_email;
+    }
+
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
+    }
 }

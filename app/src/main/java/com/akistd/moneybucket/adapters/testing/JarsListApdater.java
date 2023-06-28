@@ -1,21 +1,19 @@
 package com.akistd.moneybucket.adapters.testing;
 
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.akistd.moneybucket.R;
-import com.akistd.moneybucket.data.MongoDB;
-import com.akistd.moneybucket.data.Users;
+import com.akistd.moneybucket.data.Jars;
 
 import java.util.ArrayList;
 
-public class UsersListApdater extends BaseAdapter {
-    ArrayList<Users> usersList ;
+public class JarsListApdater extends BaseAdapter {
+    ArrayList<Jars> usersList ;
 
-    public UsersListApdater(ArrayList<Users> usersList) {
+    public JarsListApdater(ArrayList<Jars> usersList) {
         this.usersList = usersList;
     }
 
@@ -42,26 +40,18 @@ public class UsersListApdater extends BaseAdapter {
         } else viewProduct = convertView;
 
         //Bind sữ liệu phần tử vào View
-        Users users = (Users) getItem(position);
+        Jars users = (Jars) getItem(position);
         ((TextView) viewProduct.findViewById(R.id.userIdTV)).setText(users.getOwner_id().toString());
-        ((TextView) viewProduct.findViewById(R.id.userNameTV)).setText(String.format("usrname : %s", users.getUserName()));
-        ((TextView) viewProduct.findViewById(R.id.userBalanceTV)).setText(users.getUserBalance().toString());
+        ((TextView) viewProduct.findViewById(R.id.userNameTV)).setText(String.format("Tên hũ : %s", users.getJarName()));
+        ((TextView) viewProduct.findViewById(R.id.userBalanceTV)).setText("% hũ:" + users.getJarAmount().toString());
 
-        viewProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(parent.getContext(), JarsInfo.class);
-                intent.putExtra("owner_id", users.getOwner_id());
-                parent.getContext().startActivity(intent);
-            }
-        });
 
         return viewProduct;
     }
 
-    @Override
+    /*@Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        usersList = MongoDB.getInstance().getAllUsersData();
-    }
+        usersList = MongoDB.getInstance().getData();
+    }*/
 }
