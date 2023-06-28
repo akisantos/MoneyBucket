@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "81718292714",
+    "project_id": "moneybucket-af3ef",
+    "storage_bucket": "moneybucket-af3ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81718292714:android:774108a231f6850e772793",
+        "android_client_info": {
+          "package_name": "com.akistd.moneybucket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81718292714-jrtqdt1ddtqvpf9c4putv1vlbsgipftm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGhgHts_tqkWsY9pbGL1aH9E_znSvrUiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81718292714-jrtqdt1ddtqvpf9c4putv1vlbsgipftm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
