@@ -15,18 +15,29 @@
         android:theme="@style/Theme.MoneyBucket"
         tools:targetApi="31">
         <activity
+            android:name=".TrangChu_Activity"
+            android:exported="false"
+            android:label="@string/title_activity_trang_chu" >
+
+        </activity>
+        <activity
+            android:name=".ui.baocaochithu.BaoCaoActivity"
+            android:exported="false">
+
+        </activity>
+        <activity
             android:name=".adapters.testing.JarsInfo"
             android:exported="false" />
         <activity
             android:name=".ui.auth.Login"
             android:exported="true"
             android:label="@string/title_activity_money_bucket_login">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".MainActivity"

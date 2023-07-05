@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.akistd.moneybucket.MainActivity;
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.TrangChu_Activity;
 import com.akistd.moneybucket.util.Constants;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -30,6 +32,8 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
         //Setup google auth
@@ -70,7 +74,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void goToHomeScreen() {
-        Intent homeIntent = new Intent(Login.this.getApplicationContext(), MainActivity.class);
+        Intent homeIntent = new Intent(Login.this.getApplicationContext(), TrangChu_Activity.class);
         GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(this);
         homeIntent.putExtra("signinToken", acc.getIdToken().toString());
         startActivity(homeIntent);

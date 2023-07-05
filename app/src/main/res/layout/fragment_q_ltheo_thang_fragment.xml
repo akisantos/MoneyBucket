@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#091B4B"
+    tools:ignore="SpeakableTextPresentCheck">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        tools:context=".QuanLyHuActivity">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:id="@+id/frg_bcct"
+            android:layout_height="match_parent"
+            tools:context=".ui.quanlihu.QuanLyHu_Fragment"
+            tools:ignore="InvalidId">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/mChart2"
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+                tools:ignore="MissingClass,MissingConstraints,NotSibling"></com.github.mikephil.charting.charts.BarChart>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

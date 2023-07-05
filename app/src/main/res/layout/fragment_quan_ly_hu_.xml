@@ -37,8 +37,7 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="MissingConstraints">
-
+                tools:ignore="MissingClass,MissingConstraints">
             </com.github.mikephil.charting.charts.PieChart>
 
             <androidx.appcompat.widget.AppCompatButton
