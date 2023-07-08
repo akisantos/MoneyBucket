@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.homepage.mainpage"
+    android:background="@drawable/loginbg">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <RelativeLayout
+                    android:id="@+id/mainpage_mainFunction"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/main_balance"
+                        android:layout_width="match_parent"
+                        android:layout_height="210dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/home_page_subbackground">
+
+                        <RelativeLayout
+                            android:id="@+id/main_balance_process"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp">
+
+                            <ProgressBar
+                                android:id="@+id/main_balance_processBar"
+                                style="?android:attr/progressBarStyle"
+                                android:layout_width="116dp"
+                                android:layout_height="116dp"
+                                android:background="@drawable/main_balance_circle_shape"
+
+
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/main_balance_circular_processbar"
+
+                                />
+
+                            <TextView
+                                android:id="@+id/main_balance_process_numb"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="85%"
+                                android:textColor="#3D62AF"
+                                android:textSize="11pt"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/main_balance_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="15dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/mainpage_welcomeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:text="Chào, User"
+                                android:textColor="#3D62AF"
+                                android:textSize="7pt"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="Số dư khả dụng"
+                                android:textColor="#3D62AF"
+                                android:textSize="7pt" />
+
+                            <TextView
+                                android:id="@+id/mainpage_currentBalanceText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:text="3,000,000 VND"
+                                android:textColor="#3D62AF"
+                                android:textSize="10pt"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/in_out_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/main_balance"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/mainpage_btn_addIncome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/home_page_subbackground"
+                            android:drawableLeft="@drawable/plus_icon_30"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="0dp"
+                            android:text="Thu nhập"
+                            android:textColor="#46ED2D"
+                            android:textSize="7pt"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/mainpage_btn_addOutcome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/home_page_subbackground"
+                            android:drawableLeft="@drawable/minus_icon"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="0dp"
+                            android:text="Chi tiêu"
+                            android:textColor="#ED2D2D"
+                            android:textSize="7pt"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/mainpage_jarsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_below="@+id/mainpage_mainFunction"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="7pt"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"
+                        android:text="Danh sách hũ" />
+
+                    <LinearLayout
+                        android:id="@+id/jars_list_jarsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/home_page_subbackground"
+                        android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/jars_list_listview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mainpage_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/mainpage_jarsList"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="7pt"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"
+                        android:text="Lịch sử" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:background="@drawable/home_page_subbackground">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginTop="15dp"
+                            android:textSize="7pt"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="10dp"
+                            android:text="Giao dịch mới nhất" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="250dp"
+                            android:orientation="vertical">
+
+                            <ListView
+                                android:id="@+id/mainpage_listview_history"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/mainpage_btn_historySeemore"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/mainpage_seemore"
+                            android:textSize="7pt"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Xem tất cả" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mainpage_moneyFlowReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
+                    android:layout_below="@id/mainpage_history"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="7pt"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"
+                        android:text="Báo cáo thu chi"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/home_page_subbackground"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.github.mikephil.charting.charts.BarChart
+                                android:id="@+id/moneyFlow_barchart"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"/>
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/mainpage_btn_moneyFlowSeemore"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/mainpage_seemore"
+                            android:textSize="7pt"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Xem tất cả" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</ScrollView>
