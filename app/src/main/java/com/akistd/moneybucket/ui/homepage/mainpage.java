@@ -2,13 +2,12 @@ package com.akistd.moneybucket.ui.homepage;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
 import com.github.mikephil.charting.charts.BarChart;
