@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.akistd.moneybucket.ui.home.HomeFragment"
+        android:name="com.akistd.moneybucket.ui.homepage.mainpage"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_mainpage" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
