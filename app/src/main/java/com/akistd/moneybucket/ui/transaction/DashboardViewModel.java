@@ -1,4 +1,4 @@
-package com.akistd.moneybucket.ui.transactio;
+package com.akistd.moneybucket.ui.transaction;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.akistd.moneybucket.ui.transactio.DashboardFragment"
+        android:name="com.akistd.moneybucket.ui.transaction.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 

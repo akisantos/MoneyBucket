@@ -1,5 +1,26 @@
 <resources>
     <string name="app_name">MoneyBucket</string>
+    <string-array name="lost_money_txt">
+        <item>-100.000</item>
+        <item>-100.000</item>
+        <item>-100.000</item>
+        <item>-100.000</item>
+        <item>-100.000</item>
+    </string-array>
+    <string-array name="jam_name_txt">
+        <item>Hũ thiết yếu</item>
+        <item>Hũ thiết yếu</item>
+        <item>Hũ thiết yếu</item>
+        <item>Hũ thiết yếu</item>
+        <item>Hũ thiết yếu</item>
+    </string-array>
+    <string-array name="minute_ago_txt">
+        <item>date</item>
+        <item>date</item>
+        <item>date</item>
+        <item>date</item>
+        <item>date</item>
+    </string-array>
     <string name="title_activity_money_bucket_login">moneyBucket_Login</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
