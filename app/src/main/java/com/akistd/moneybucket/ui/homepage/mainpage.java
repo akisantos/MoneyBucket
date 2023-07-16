@@ -1,15 +1,23 @@
 package com.akistd.moneybucket.ui.homepage;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.ui.history.HistoryActivity;
+import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
+import com.akistd.moneybucket.util.Constants;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -18,6 +26,10 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
 
@@ -28,12 +40,9 @@ import java.util.ArrayList;
  */
 public class mainpage extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -41,15 +50,22 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment mainpage.
-     */
-    // TODO: Rename and change types and number of parameters
+
+    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome;
+
+    TextView mainpage_welcomeText,mainpage_currentBalanceText;
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+
+    ListView jars_list_listview;
+    ArrayList<CJarlist> arrayList;
+    Cjarlist_listAdapter cjarlistListAdapter;
+
+    BarChart moneyFlowChart;
+    Constants util = new Constants();
+
+    View view;
     public static mainpage newInstance(String param1, String param2) {
         mainpage fragment = new mainpage();
         Bundle args = new Bundle();
@@ -66,32 +82,98 @@ public class mainpage extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Lấy thông tin đăng nhập
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
+        gsc = GoogleSignIn.getClient(getActivity(),gso);
     }
-    ListView jars_list_listview;
-    ArrayList<CJarlist> arrayList;
-    Cjarlist_listAdapter cjarlistListAdapter;
 
-    BarChart moneyFlowChart;
 
-    View view;
-
+    String username = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_mainpage, container, false);
+        addControls(view);
+        addEvents();
+
+        dispMoneyFlowBarchart();
+
+        return view;
+    }
 
 
-        //-----------------------------------------------------------------------------------
+
+    private void addControls(View view){
+
+
+        //HeaderCard
+        mainpage_welcomeText = (TextView) view.findViewById(R.id.mainpage_welcomeText);
+        mainpage_currentBalanceText = (TextView) view.findViewById(R.id.mainpage_currentBalanceText);
+
+
+        //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
         jars_list_listview = (ListView) view.findViewById(R.id.jars_list_listview);
         arrayList = CJarlist.jarlist();
         cjarlistListAdapter = new Cjarlist_listAdapter(getActivity(), R.layout.jarlist_layout_mainpage, arrayList);
         jars_list_listview.setAdapter(cjarlistListAdapter);
 
-        //-------------------------------------------------------------------------------------
-        dispMoneyFlowBarchart();
+        //Income,outcome btn
+        mainpage_btn_addIncome = (AppCompatButton) view.findViewById(R.id.mainpage_btn_addIncome);
+        mainpage_btn_addOutcome = (AppCompatButton) view.findViewById(R.id.mainpage_btn_addOutcome);
 
-        return view;
+        //History
+        mainpage_btn_historySeemore = (AppCompatButton) view.findViewById(R.id.mainpage_btn_historySeemore);
+
+
+    }
+
+    private void addEvents(){
+
+        //headerCard
+        GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(getContext());
+        mainpage_welcomeText.setText("Xin chào, "+ acc.getDisplayName() + "!");
+        mainpage_currentBalanceText.setText("Đang cập nhật...");
+        loadSoDu();
+
+        //history events
+        mainpage_btn_historySeemore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent historyIntent = new Intent(view.getContext(), HistoryActivity.class);
+                view.getContext().startActivity(historyIntent);
+            }
+        });
+
+        //Income, outcome events
+        mainpage_btn_addIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transactionIntent = new Intent(view.getContext(), TransactionsActivity.class);
+                transactionIntent.putExtra("tabIndex",0);
+                view.getContext().startActivity(transactionIntent);
+            }
+        });
+
+        mainpage_btn_addOutcome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transactionIntent = new Intent(view.getContext(), TransactionsActivity.class);
+                transactionIntent.putExtra("tabIndex",1);
+                view.getContext().startActivity(transactionIntent);
+            }
+        });
+    }
+
+    private void loadSoDu(){
+        ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();
+        Double sodu= Double.valueOf(0d);
+        for (Jars jar: jars) {
+            sodu += jar.getJarBalance();
+        }
+
+        mainpage_currentBalanceText.setText(String.format("%.0f",sodu));
     }
 
     public void dispMoneyFlowBarchart(){

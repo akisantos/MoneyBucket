@@ -77,14 +77,14 @@ public class ThuNhapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnSave = view.findViewById(R.id.btnSave);
+        /*btnSave = view.findViewById(R.id.btnSave);
         imgBtnOut = view.findViewById(R.id.imgBtnOut);
         btnAllJam = view.findViewById(R.id.btnAllJam);
         btnDatePicker = view.findViewById(R.id.btnDatePicker);
         editTotalMoney = view.findViewById(R.id.editTotalMoney);
         editDescribe = view.findViewById(R.id.editDescribe);
 
-        addEvent();
+        addEvent();*/
     }
 
     private void addEvent() {

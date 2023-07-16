@@ -2,24 +2,29 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
+    android:id="@+id/mobile_transactions"
     app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.akistd.moneybucket.ui.homepage.mainpage"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_mainpage" />
+        tools:layout="@layout/fragment_mainpage" >
+        <argument
+            android:name="username"
+            app:argType="string"
+            android:defaultValue="null" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.akistd.moneybucket.ui.transaction.DashboardFragment"
+        android:id="@+id/navigation_transactions"
+        android:name="com.akistd.moneybucket.ui.transaction.TransactionFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_transaction" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.akistd.moneybucket.ui.profile.NotificationsFragment"
+        android:id="@+id/navigation_profile"
+        android:name="com.akistd.moneybucket.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>

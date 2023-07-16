@@ -7,12 +7,12 @@
         android:title="Trang chủ" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_transactions"
         android:icon="@drawable/baseline_add_circle_outline"
         android:title="Giao dịch" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="Hồ sơ" />
 

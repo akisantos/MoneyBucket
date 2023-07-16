@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import com.akistd.moneybucket.adapters.testing.UsersListApdater;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Users;
+import com.akistd.moneybucket.databinding.ActivityTrangChuBinding;
 import com.akistd.moneybucket.ui.auth.Login;
+import com.akistd.moneybucket.ui.homepage.mainpage;
+import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,10 +31,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -49,13 +57,21 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInClient gsc;
     String signinToken="";
     User user;
+    App app;
+    final androidx.fragment.app.FragmentManager mFragmentManager = getSupportFragmentManager();
+    final androidx.fragment.app.FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+    final mainpage mFragment = new mainpage();
 
+    private ActivityTrangChuBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         //Khởi tạo Realm
         Realm.init(this);
         String appID = util.getAppID() ;
-        App app = new App(new AppConfiguration.Builder(appID)
+        app = new App(new AppConfiguration.Builder(appID)
                 .appName("MoneyBucket")
                 .requestTimeout(30, TimeUnit.SECONDS)
                 .build());
@@ -92,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         //Khởi tạo chạy lần đầu
         prefs = getSharedPreferences("com.akistd.moneyBucket", MODE_PRIVATE);
@@ -158,17 +174,77 @@ public class MainActivity extends AppCompatActivity {
     protected void onRealmLoaded(Realm realm) {
         configFirstRun();
 
-        listView = findViewById(R.id.usersListView);
+        /*listView = findViewById(R.id.usersListView);
         ArrayList<Users> userList = new ArrayList<>();
         userList.addAll(MongoDB.getInstance().getAllUsersData());
         UsersListApdater apdater = new UsersListApdater(userList);
-        listView.setAdapter(apdater);
+        listView.setAdapter(apdater);*/
+
+
+        binding = ActivityTrangChuBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Log.v("AKKI LOG", String.valueOf(item.getItemId()));
+                if (item.getItemId() == R.id.navigation_transactions){
+                    Intent intent = new Intent(MainActivity.this, TransactionsActivity.class);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+
+
+        GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(this);
+        Log.v("AKI LOGG", acc.getDisplayName());
+
+
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_transactions, R.id.navigation_profile)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_trang_chu);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+
+        BottomNavigationView nav = findViewById(R.id.nav_view);
+        nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navigation_profile){
+                    Bundle bundleProfile = new Bundle();
+                    bundleProfile.putString("username", acc.getDisplayName());
+                    bundleProfile.putString("userId", app.currentUser().getId());
+                    navController.navigate(R.id.navigation_profile,bundleProfile);
+                }
+
+                if (item.getItemId() == R.id.navigation_home){
+                    /*Bundle bundleHome = new Bundle();
+                    bundleHome.putString("username", acc.getDisplayName());*/
+                    navController.navigate(R.id.navigation_home);
+                }
+
+                if (item.getItemId() == R.id.navigation_transactions){
+                    navController.navigate(R.id.navigation_transactions);
+                }
+                return false;
+            }
+        });
+
+        Bundle bundleHome = new Bundle();
+        bundleHome.putString("username", acc.getDisplayName());
+        navController.navigate(R.id.navigation_home,bundleHome);
 
 
     }
 
     private void addControls(){
-        signoutBtn = findViewById(R.id.signOutBtn);
+        /*signoutBtn = findViewById(R.id.signOutBtn);
         dumdum = findViewById(R.id.dumdum);
 
 
@@ -182,16 +258,16 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Intent login = new Intent(this, Login.class);
             startActivity(login);
-        }
+        }*/
     }
 
     private void addEvents(){
-        signoutBtn.setOnClickListener(new View.OnClickListener() {
+        /*signoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signOut();
             }
-        });
+        });*/
     }
 
     private void signOut() {

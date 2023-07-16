@@ -121,7 +121,7 @@ public class ThuNhapChild_AllJamFragment extends Fragment {
             }
             else {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.FL, new ThuNhapFragment());
+                fr.replace(R.id.FLAllJam, new ThuNhapFragment());
                 fr.commit();
             }
         });

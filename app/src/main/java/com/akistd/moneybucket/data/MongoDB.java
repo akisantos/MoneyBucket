@@ -220,8 +220,19 @@ public class MongoDB implements MongoRepository{
     }
 
     @Override
-    public Object getAllJars() {
-        return null;
+    public ArrayList<Jars> getAllJars() {
+        ArrayList<Jars> jars = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Jars[] jarsList = r.where(Jars.class).findAll().toArray(new Jars[0]);
+                for (Jars jar: jarsList) {
+                    jars.add(jar);
+                }
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        return jars;
     }
 
     @Override

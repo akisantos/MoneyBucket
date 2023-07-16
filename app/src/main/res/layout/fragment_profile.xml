@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/loginbg"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/header_title"
+            android:layout_width="match_parent"
+            android:background="#00113C"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin cá nhân"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_below="@id/header_title"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+
+            android:layout_height="wrap_content">
+            <com.google.android.material.card.MaterialCardView
+
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                app:cardCornerRadius="10dp"
+                android:id="@+id/profile_account_wrapper"
+                style="@style/profileCard"
+                android:layout_height="100dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="4"
+
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="75dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/hu1"
+                        android:layout_height="75dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/infoWrapper"
+                        android:layout_toEndOf="@id/profile_image"
+                        android:layout_weight="4"
+                        android:layout_width="0dp"
+                        android:padding="10dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/profile_username"
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Username"
+                            android:textSize="20dp"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="15dp"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/profile_userid"
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="userid"
+                            android:textColor="@color/white"
+                            android:textSize="14dp"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/profile_logoutBtn"
+                        android:src="@drawable/baseline_logout_24"
+                        android:background="@android:color/transparent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        app:tint="@color/white" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <RelativeLayout
+                android:id="@+id/functionWrapper"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/profile_account_wrapper"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@id/functionWrapperHeader"
+                    android:text="Chức năng"
+                    android:textSize="14dp"
+                    android:paddingLeft="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/functionWrapperHeader"
+                    android:layout_marginHorizontal="10dp"
+                    android:orientation="vertical"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/sampleButtonID"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/rounded_bg"
+                        android:text="Cơ cấu hũ"
+                        android:padding="10dp"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false" />
+
+
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/rounded_bg"
+                        android:text="Cái gì đó, chưa biết"
+                        android:padding="10dp"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/rounded_bg"
+                        android:text="Thông tin phần mềm"
+                        android:padding="10dp"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false" />
+
+
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

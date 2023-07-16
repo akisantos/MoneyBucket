@@ -54,10 +54,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imgAva = itemView.findViewById(R.id.imgAva);
+            /*imgAva = itemView.findViewById(R.id.imgAva);
             txtJamName = itemView.findViewById(R.id.txtJamName);
             txtLostMoney = itemView.findViewById(R.id.txtLostMoney);
-            txtMinuteAgo = itemView.findViewById(R.id.txtMinuteAgo);
+            txtMinuteAgo = itemView.findViewById(R.id.txtMinuteAgo);*/
 
         }
     }
