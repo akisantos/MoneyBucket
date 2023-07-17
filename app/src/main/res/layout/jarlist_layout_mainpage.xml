@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_margin="4dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -10,10 +11,8 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/mainpage_jarlist_subbackground"
-        tools:ignore="MissingConstraints">
 
+        android:background="@drawable/mainpage_jarlist_subbackground">
         <ImageView
             android:id="@+id/mainpage_jarlist_img"
             android:layout_width="31dp"
@@ -21,7 +20,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="7dp"
             android:layout_gravity="center_vertical"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/mainpage_jarlist_info"
@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
-            android:textSize="8pt"
-            android:text="TextView" />
+            android:textSize="15dp"
+            android:text="Thiết yếu" />
 
         <TextView
             android:id="@+id/mainpage_jarlist_amount"
@@ -40,8 +40,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="right"
             android:textColor="@color/white"
-            android:textSize="8pt"
-            android:text="TextView" />
+            android:textSize="15dp"
+            android:text="696996 VND" />
 
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

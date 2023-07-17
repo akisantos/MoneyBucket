@@ -1,19 +1,26 @@
 package com.akistd.moneybucket.ui.transaction;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,10 +37,12 @@ public class ChiTieuFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button btnSave, btnAllJam, btnDatePicker;
+    Button btnSave, btnDatePicker;
+    Spinner btnAllJam;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
-
+    private int mYear, mMonth, mDay;
+    JarsChiTieuFragSpinnerAdapter adapter;
     public ChiTieuFragment() {
         // Required empty public constructor
     }
@@ -69,27 +78,71 @@ public class ChiTieuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
+
         return inflater.inflate(R.layout.fragment_chi_tieu, container, false);
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*btnSave = view.findViewById(R.id.btnSave);
         imgBtnOut = view.findViewById(R.id.imgBtnOut);
         btnAllJam = view.findViewById(R.id.btnAllJam);
         btnDatePicker = view.findViewById(R.id.btnDatePicker);
         editTotalMoney = view.findViewById(R.id.editTotalMoney);
         editDescribe = view.findViewById(R.id.editDescribe);
 
-        addEvent();*/
+        addEvent();
     }
 
     private void addEvent() {
-        btnAllJam.setOnClickListener(v-> {
-            FragmentTransaction fr = getFragmentManager().beginTransaction();
-            fr.add(R.id.FLAllJam, new ChiTieuChild_AllJamFragment());
-            fr.commit();
+
+        jarListsSpinnerEvents();
+
+        btnDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get Current Date
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
         });
+    }
+
+    private void jarListsSpinnerEvents(){
+        adapter = new JarsChiTieuFragSpinnerAdapter(getContext(), MongoDB.getInstance().getAllJars());
+        btnAllJam.setAdapter(adapter);
+
+        btnAllJam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Jars clickedItem = (Jars) parent.getItemAtPosition(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 }

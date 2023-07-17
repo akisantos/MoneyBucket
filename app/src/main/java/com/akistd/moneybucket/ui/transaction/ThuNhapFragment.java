@@ -1,19 +1,25 @@
 package com.akistd.moneybucket.ui.transaction;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +41,7 @@ public class ThuNhapFragment extends Fragment {
     Button btnSave, btnAllJam, btnDatePicker;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
+    private int mYear, mMonth, mDay;
     public ThuNhapFragment() {
         // Required empty public constructor
     }
@@ -77,21 +84,70 @@ public class ThuNhapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*btnSave = view.findViewById(R.id.btnSave);
+        /*btnSave = view.findViewById(R.id.btn);*/
         imgBtnOut = view.findViewById(R.id.imgBtnOut);
         btnAllJam = view.findViewById(R.id.btnAllJam);
         btnDatePicker = view.findViewById(R.id.btnDatePicker);
         editTotalMoney = view.findViewById(R.id.editTotalMoney);
         editDescribe = view.findViewById(R.id.editDescribe);
 
-        addEvent();*/
+
+        addEvent();
     }
 
     private void addEvent() {
         btnAllJam.setOnClickListener(v-> {
-            FragmentTransaction fr = getFragmentManager().beginTransaction();
+            /*FragmentTransaction fr = getFragmentManager().beginTransaction();
             fr.add(R.id.FLAllJam, new ThuNhapChild_AllJamFragment());
-            fr.commit();
+            fr.commit();*/
+            Intent jarSettings = new Intent(getContext(), ThuNhapJarsSettingsActivity.class);
+            startActivity(jarSettings);
+        });
+
+        btnDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get Current Date
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        editTotalMoneyEvents();
+    }
+
+    private void editTotalMoneyEvents(){
+        editTotalMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
     }
 

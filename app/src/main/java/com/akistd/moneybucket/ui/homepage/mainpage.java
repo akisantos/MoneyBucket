@@ -59,7 +59,6 @@ public class mainpage extends Fragment {
     GoogleSignInClient gsc;
 
     ListView jars_list_listview;
-    ArrayList<CJarlist> arrayList;
     Cjarlist_listAdapter cjarlistListAdapter;
 
     BarChart moneyFlowChart;
@@ -115,9 +114,7 @@ public class mainpage extends Fragment {
 
         //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
         jars_list_listview = (ListView) view.findViewById(R.id.jars_list_listview);
-        arrayList = CJarlist.jarlist();
-        cjarlistListAdapter = new Cjarlist_listAdapter(getActivity(), R.layout.jarlist_layout_mainpage, arrayList);
-        jars_list_listview.setAdapter(cjarlistListAdapter);
+
 
         //Income,outcome btn
         mainpage_btn_addIncome = (AppCompatButton) view.findViewById(R.id.mainpage_btn_addIncome);
@@ -137,6 +134,13 @@ public class mainpage extends Fragment {
         mainpage_currentBalanceText.setText("Đang cập nhật...");
         loadSoDu();
 
+        //JarsList
+
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        Cjarlist_listAdapter cjarlistListAdapter = new Cjarlist_listAdapter(getContext(), R.layout.jarlist_layout_mainpage, jarsList);
+
+        jars_list_listview.setAdapter(cjarlistListAdapter);
+
         //history events
         mainpage_btn_historySeemore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +149,8 @@ public class mainpage extends Fragment {
                 view.getContext().startActivity(historyIntent);
             }
         });
+
+
 
         //Income, outcome events
         mainpage_btn_addIncome.setOnClickListener(new View.OnClickListener() {
@@ -173,8 +179,10 @@ public class mainpage extends Fragment {
             sodu += jar.getJarBalance();
         }
 
-        mainpage_currentBalanceText.setText(String.format("%.0f",sodu));
+        mainpage_currentBalanceText.setText(String.format("%.0f",sodu) + "VND");
+
     }
+
 
     public void dispMoneyFlowBarchart(){
         moneyFlowChart = view.findViewById(R.id.moneyFlow_barchart);

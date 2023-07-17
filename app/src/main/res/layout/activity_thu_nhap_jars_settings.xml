@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/clickToFinish"
+    android:background="@android:color/transparent"
+    tools:context=".ui.transaction.ThuNhapJarsSettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_bg"
+        android:foregroundTint="#09003e"
+        android:backgroundTint="#09003e"
+        android:layout_gravity="bottom">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/BoardTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tỉ lệ phân bổ các hũ"
+                android:background="@android:color/transparent"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <ListView
+                android:id="@+id/jars_list_listview"
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_height="350dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/BoardTitle" />
+
+            <LinearLayout
+                android:id="@+id/totalWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jars_list_listview"
+                android:background="@drawable/rounded_bg"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/black"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Tổng"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/totalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="100%"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/saveBtn"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/totalWrapper"
+                android:background="@drawable/rounded_bg"
+                android:backgroundTint="#09003e"
+                android:text="Lưu">
+
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

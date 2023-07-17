@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Trang chủ" />
 
-    <item
-        android:id="@+id/navigation_transactions"
-        android:icon="@drawable/baseline_add_circle_outline"
-        android:title="Giao dịch" />
 
     <item
         android:id="@+id/navigation_profile"

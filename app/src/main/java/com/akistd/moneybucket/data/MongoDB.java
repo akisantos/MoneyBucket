@@ -255,8 +255,12 @@ public class MongoDB implements MongoRepository{
         realm.executeTransaction( r ->{
             try {
 
-                Jars queriedTrans = r.where(Jars.class).equalTo("_id == $0", jars.getId()).findFirst();
+                Jars queriedTrans = r.where(Jars.class).equalTo("_id", jars.getId()).findFirst();
                 if (queriedTrans!= null) {
+                    queriedTrans = jars;
+                    queriedTrans.setJarAmount(jars.getJarAmount());
+                    queriedTrans.setJarName(jars.getJarName());
+                    queriedTrans.setJarBalance(jars.getJarBalance());
                     realm.copyToRealmOrUpdate(queriedTrans);
                 }
             }catch (Exception e){

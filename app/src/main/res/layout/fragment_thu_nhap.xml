@@ -40,12 +40,13 @@
                 android:layout_height="50dp"
                 android:layout_weight="4.9"
                 android:paddingLeft="20dp"
+                android:maxLength="20"
                 android:background="#00000000"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:hint="0" />
 
             <TextView
-                android:text="Đ"
+                android:text="VND"
                 android:textSize="20dp"
                 android:paddingRight="10dp"
                 android:layout_weight="0.1"
@@ -62,7 +63,7 @@
             android:background="@drawable/rounded_bg"
             android:backgroundTint="#3D62AF"
             android:paddingLeft="20dp"
-            android:text="Tất cả hũ"
+            android:text="Tất cả hũ (Bấm để thay đổi cơ cấu hũ)"
             android:textSize="15dp"
             android:textAllCaps="false"
             android:textAlignment="viewStart"
@@ -83,6 +84,9 @@
                 <Button
                     android:layout_marginTop="5dp"
                     android:id="@+id/btnDatePicker"
+                    android:drawableLeft="@drawable/baseline_calendar_month_24"
+                    android:background="@android:color/transparent"
+                    android:textAlignment="viewStart"
                     android:backgroundTint="#3D62AF"
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
@@ -91,20 +95,23 @@
 
                 <EditText
                     android:id="@+id/editDescribe"
+                    android:padding="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:hint="Nhập mô tả..."
-                    android:layout_marginBottom="20dp"
                     android:layout_below="@+id/btnDatePicker"
+                    android:layout_marginBottom="20dp"
                     android:drawableBottom="@color/black"
-                    android:inputType="text" />
+                    android:hint="Nhập mô tả..."
+                    android:gravity="top"
+                    android:textColor="@color/white"
+                    android:maxLength="500"
+                    android:inputType="text|textMultiLine"
+                    android:textAlignment="viewStart" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/FLAllJam"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+
 </FrameLayout>

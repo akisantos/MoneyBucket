@@ -1,20 +1,29 @@
 package com.akistd.moneybucket.ui.profile;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
-import com.akistd.moneybucket.ui.auth.Login;
 import com.akistd.moneybucket.util.Constants;
+import com.akistd.moneybucket.util.ImageLoadTask;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,6 +77,7 @@ public class ProfileFragment extends Fragment {
     }
 
     TextView profile_username,profile_userid;
+    ImageView profile_image;
     ImageButton profile_logoutBtn;
     Constants util = new Constants();
     GoogleSignInOptions gso;
@@ -86,11 +96,21 @@ public class ProfileFragment extends Fragment {
         profile_username = v.findViewById(R.id.profile_username);
         profile_userid = v.findViewById(R.id.profile_userid);
         profile_logoutBtn = v.findViewById(R.id.profile_logoutBtn);
+        profile_image = v.findViewById(R.id.profile_image);
     }
 
     private void addEvents(){
+
+        //Lấy thông tin đăng nhập
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
+        gsc = GoogleSignIn.getClient(getActivity(),gso);
+        GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(getContext());
+        acc.getPhotoUrl();
+
+        //User profile info
         profile_username.setText(getArguments().getString("username"));
         profile_userid.setText(getArguments().getString("userId"));
+        new ImageLoadTask(acc.getPhotoUrl().toString(),profile_image).execute();
         profile_logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,17 +118,56 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        //Lấy thông tin đăng nhập
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
-        gsc = GoogleSignIn.getClient(getActivity(),gso);
+
+
     }
 
     private void signOut() {
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                startActivity(new Intent(getActivity(), Login.class));
+                doRestart(getContext());
             }
         });
     }
+
+    public static void doRestart(Context c) {
+        try {
+            //check if the context is given
+            if (c != null) {
+                //fetch the packagemanager so we can get the default launch activity
+                // (you can replace this intent with any other activity if you want
+                PackageManager pm = c.getPackageManager();
+                //check if we got the PackageManager
+                if (pm != null) {
+                    //create the intent with the default start activity for your application
+                    Intent mStartActivity = pm.getLaunchIntentForPackage(
+                            c.getPackageName()
+                    );
+                    if (mStartActivity != null) {
+                        mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //create a pending intent so the application is restarted after System.exit(0) was called.
+                        // We use an AlarmManager to call this intent in 100ms
+                        int mPendingIntentId = 223344;
+                        PendingIntent mPendingIntent = PendingIntent
+                                .getActivity(c, mPendingIntentId, mStartActivity,
+                                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                        AlarmManager mgr = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                        //kill the application
+                        System.exit(0);
+                    } else {
+                        Log.e(TAG, "Was not able to restart application, mStartActivity null");
+                    }
+                } else {
+                    Log.e(TAG, "Was not able to restart application, PM null");
+                }
+            } else {
+                Log.e(TAG, "Was not able to restart application, Context null");
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "Was not able to restart application");
+        }
+    }
+
 }

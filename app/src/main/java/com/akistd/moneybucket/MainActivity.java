@@ -5,14 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -32,6 +35,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import org.bson.types.ObjectId;
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     String signinToken="";
     User user;
     App app;
+
+    FloatingActionButton transactionFAB;
     final androidx.fragment.app.FragmentManager mFragmentManager = getSupportFragmentManager();
     final androidx.fragment.app.FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
     final mainpage mFragment = new mainpage();
@@ -104,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 Log.e("AKILOGG", "Failed to log in. Error: " + r.getError());
+                Toast.makeText(this, "Đăng nhập không thành công! Vui lòng thử lại sau...", Toast.LENGTH_SHORT).show();
+                signOut();
             }
         });
 
@@ -120,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
         //Lấy thông tin đăng nhập
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
         gsc = GoogleSignIn.getClient(this,gso);
+        //Check if user is already registed.
+
     }
 
 
@@ -127,53 +137,58 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean("firstrun", true)) {
                 // Do first run stuff here then set 'firstrun' as false
                 // using the following line to edit/commit prefs
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        if(realm.where(Users.class).equalTo("owner_id", user.getId()).findFirst() == null){
-
-                            //Khởi tạo người dùng mới
-                            Users users = new Users();
-                            users.setId(new ObjectId());
-                            users.setOwner_id(user.getId());
-                            users.setUserBalance(0.0);
-
-                            GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-                            users.setUserName(acc.getDisplayName());
-                            users.setUser_email(acc.getEmail());
-
-                            realm.copyToRealm(users);
-
-                            //Khởi tạo hũ
-
-
-                            Jars thietyeu = new Jars(new ObjectId(),0.55,0.0,"Thiết yếu", user.getId());
-                            Jars giaoduc = new Jars(new ObjectId(),0.1,0.0,"Giáo dục", user.getId());
-                            Jars tietkiem = new Jars(new ObjectId(),0.2,0.0,"Tiết kiệm", user.getId());
-                            Jars huongthu = new Jars(new ObjectId(),0.05,0.0,"Hưởng thụ", user.getId());
-                            Jars dautu = new Jars(new ObjectId(),0.05,0.0,"Đầu tư", user.getId());
-                            Jars thientam = new Jars(new ObjectId(),0.05,0.0,"Thiện tâm", user.getId());
-
-                            realm.copyToRealm(thietyeu);
-                            realm.copyToRealm(giaoduc);
-                            realm.copyToRealm(tietkiem);
-                            realm.copyToRealm(huongthu);
-                            realm.copyToRealm(dautu);
-                            realm.copyToRealm(thientam);
-
-
-                        }
-                    }
-                });
+                RegisterNewUser();
                 prefs.edit().putBoolean("firstrun", false).commit();
             }
-        }
+
+    }
+
+    private void RegisterNewUser(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                if(realm.where(Users.class).equalTo("owner_id", user.getId()).findFirst() == null){
+
+                    //Khởi tạo người dùng mới
+                    Users users = new Users();
+                    users.setId(new ObjectId());
+                    users.setOwner_id(user.getId());
+                    users.setUserBalance(0.0);
+
+                    GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                    users.setUserName(acc.getDisplayName());
+                    users.setUser_email(acc.getEmail());
+
+                    realm.copyToRealm(users);
+
+                    //Khởi tạo hũ
+
+
+                    Jars thietyeu = new Jars(new ObjectId(),55,0.0,"Thiết yếu", user.getId());
+                    Jars giaoduc = new Jars(new ObjectId(),10,0.0,"Giáo dục", user.getId());
+                    Jars tietkiem = new Jars(new ObjectId(),20,0.0,"Tiết kiệm", user.getId());
+                    Jars huongthu = new Jars(new ObjectId(),5,0.0,"Hưởng thụ", user.getId());
+                    Jars dautu = new Jars(new ObjectId(),5,0.0,"Đầu tư", user.getId());
+                    Jars thientam = new Jars(new ObjectId(),5,0.0,"Thiện tâm", user.getId());
+
+                    realm.copyToRealm(thietyeu);
+                    realm.copyToRealm(giaoduc);
+                    realm.copyToRealm(tietkiem);
+                    realm.copyToRealm(huongthu);
+                    realm.copyToRealm(dautu);
+                    realm.copyToRealm(thientam);
+
+
+                }
+            }
+        });
+    }
 
 
     //Khởi chạy khi kết nối db thành công
     protected void onRealmLoaded(Realm realm) {
         configFirstRun();
-
+        RegisterNewUser();
         /*listView = findViewById(R.id.usersListView);
         ArrayList<Users> userList = new ArrayList<>();
         userList.addAll(MongoDB.getInstance().getAllUsersData());
@@ -196,19 +211,35 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+        navigationSetup();
+
+    }
+
+    private void navigationSetup(){
 
 
         GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(this);
-        Log.v("AKI LOGG", acc.getDisplayName());
-
-
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_transactions, R.id.navigation_profile)
                 .build();
+
+
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_trang_chu);
+
+        NavOptions options = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setEnterAnim(R.anim.enter_from_left)
+                .setExitAnim(R.anim.exit_from_right)
+                .build();
+
+        NavOptions options1 = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setEnterAnim(R.anim.enter_from_right)
+                .setExitAnim(R.anim.exit_from_left)
+                .build();
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
@@ -220,13 +251,13 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundleProfile = new Bundle();
                     bundleProfile.putString("username", acc.getDisplayName());
                     bundleProfile.putString("userId", app.currentUser().getId());
-                    navController.navigate(R.id.navigation_profile,bundleProfile);
+                    navController.navigate(R.id.navigation_profile,bundleProfile,options1);
                 }
 
                 if (item.getItemId() == R.id.navigation_home){
                     /*Bundle bundleHome = new Bundle();
                     bundleHome.putString("username", acc.getDisplayName());*/
-                    navController.navigate(R.id.navigation_home);
+                    navController.navigate(R.id.navigation_home,null, options);
                 }
 
                 if (item.getItemId() == R.id.navigation_transactions){
@@ -235,12 +266,16 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        transactionFAB = (FloatingActionButton) findViewById(R.id.transactionFAB);
+        transactionFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.navigation_transactions);
+            }
+        });
         Bundle bundleHome = new Bundle();
         bundleHome.putString("username", acc.getDisplayName());
         navController.navigate(R.id.navigation_home,bundleHome);
-
-
     }
 
     private void addControls(){
@@ -259,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
             Intent login = new Intent(this, Login.class);
             startActivity(login);
         }*/
+
     }
 
     private void addEvents(){
@@ -268,6 +304,8 @@ public class MainActivity extends AppCompatActivity {
                 signOut();
             }
         });*/
+
+
     }
 
     private void signOut() {

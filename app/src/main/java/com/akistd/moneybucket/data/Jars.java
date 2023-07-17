@@ -12,7 +12,7 @@ public class Jars extends RealmObject {
     private ObjectId _id;
 
     @Required
-    private Double jar_amount;
+    private Integer jar_amount;
 
     private Double jar_balance;
 
@@ -26,8 +26,8 @@ public class Jars extends RealmObject {
     public ObjectId getId() { return _id; }
     public void setId(ObjectId _id) { this._id = _id; }
 
-    public Double getJarAmount() { return jar_amount; }
-    public void setJarAmount(Double jar_amount) { this.jar_amount = jar_amount; }
+    public Integer getJarAmount() { return jar_amount; }
+    public void setJarAmount(Integer jar_amount) { this.jar_amount = jar_amount; }
 
     public Double getJarBalance() { return jar_balance; }
     public void setJarBalance(Double jar_balance) { this.jar_balance = jar_balance; }
@@ -46,7 +46,7 @@ public class Jars extends RealmObject {
     public Jars() {
     }
 
-    public Jars(ObjectId _id, Double jar_amount, Double jar_balance, String jar_name, String owner_id) {
+    public Jars(ObjectId _id, Integer jar_amount, Double jar_balance, String jar_name, String owner_id) {
         this._id = _id;
         this.jar_amount = jar_amount;
         this.jar_balance = jar_balance;

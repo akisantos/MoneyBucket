@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginBottom="50dp"
     android:layout_height="wrap_content"
     tools:context=".ui.homepage.mainpage"
     android:background="@drawable/loginbg">
@@ -21,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="20dp"
-
+                android:paddingBottom="100dp"
                 android:paddingRight="20dp">
 
                 <RelativeLayout
@@ -157,7 +156,7 @@
                     android:layout_height="400dp"
                     android:layout_below="@+id/mainpage_mainFunction"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -170,24 +169,18 @@
                         android:layout_marginBottom="10dp"
                         android:text="Danh sách hũ" />
 
-                    <LinearLayout
-                        android:id="@+id/jars_list_jarsList"
+                    <ListView
+                        android:id="@+id/jars_list_listview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/home_page_subbackground"
-                        android:orientation="vertical">
-
-                        <ListView
-                            android:id="@+id/jars_list_listview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-                    </LinearLayout>
+                        android:background="@drawable/rounded_bg"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/mainpage_history"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="450dp"
                     android:layout_below="@id/mainpage_jarsList"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"

@@ -51,13 +51,27 @@
 
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="75dp"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:cardCornerRadius="40dp"
+                        android:layout_centerHorizontal="true"
+                        android:innerRadius="0dp"
+                        android:shape="ring"
+                        android:elevation="12dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/hu1"
-                        android:layout_height="75dp"/>
+                        android:thicknessRatio="1.9"
+                        >
+
+                        <ImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="match_parent"
+                            android:src="@drawable/hu1"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_height="80dp"/>
+                    </androidx.cardview.widget.CardView>
 
                     <LinearLayout
                         android:id="@+id/infoWrapper"
@@ -137,7 +151,6 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/rounded_bg"
                         android:text="Cơ cấu hũ"
-                        android:padding="10dp"
                         android:textAlignment="viewStart"
                         android:textAllCaps="false" />
 
@@ -149,7 +162,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/rounded_bg"
                         android:text="Cái gì đó, chưa biết"
-                        android:padding="10dp"
+
                         android:textAlignment="viewStart"
                         android:textAllCaps="false" />
 
@@ -159,7 +172,6 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/rounded_bg"
                         android:text="Thông tin phần mềm"
-                        android:padding="10dp"
                         android:textAlignment="viewStart"
                         android:textAllCaps="false" />
 
