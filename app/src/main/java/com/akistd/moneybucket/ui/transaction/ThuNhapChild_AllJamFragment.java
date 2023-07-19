@@ -9,12 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
 
@@ -116,14 +114,14 @@ public class ThuNhapChild_AllJamFragment extends Fragment {
         btnConfirm.setOnClickListener(v -> {
             Integer totalPercent = countTotalPercentage();
 
-            if(totalPercent != 100) {
+            /*if(totalPercent != 100) {
                 Toast.makeText(getActivity(),"Total percentage must be 100%",Toast.LENGTH_SHORT).show();
             }
             else {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.FLAllJam, new ThuNhapFragment());
                 fr.commit();
-            }
+            }*/
         });
 
         editPercentTY.addTextChangedListener(new TextWatcher() {

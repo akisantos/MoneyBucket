@@ -2,6 +2,7 @@ package com.akistd.moneybucket.ui.transaction;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.util.InputFilterMinMax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,7 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
 
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -70,7 +72,8 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
         }
 
         final Jars jar = getItem(position);
-        holder.porpotionText.setText(jarsAmountList.get(position).toString());
+
+
         holder.mainpage_jarlist_name.setText(jar.getJarName());
 
         switch (jar.getJarName()) {
@@ -81,6 +84,8 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
             case "Thiết yếu" -> holder.mainpage_jarlist_img.setImageResource(R.drawable.hu5);
             case "Tiết kiệm" -> holder.mainpage_jarlist_img.setImageResource(R.drawable.hu6);
         }
+
+
 
         holder.addPorpotionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,9 +100,45 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
                 addPorpotion(position, holder.porpotionText,-10);
             }
         });
+        holder.porpotionText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
+
+        holder.porpotionText.setText(jarsAmountList.get(position).toString());
+
+        /*holder.porpotionText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //holder.porpotionText.setText(jarsAmountList.get(position).toString());
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                holder.porpotionText.setText(updateEditText(s.toString()));
+            }
+
+            private String updateEditText(String input){
+                String count = input.toString();
+                if(TextUtils.isEmpty(count))
+                    return "0";
+                else{
+
+                    jarsAmountList.set(position, Integer.valueOf(count));
+                    return count;
+                }
+
+            }
+        });*/
+
 
         return convertView;
     }
+
+
 
     private void addPorpotion(int position, EditText porpotionText, int value){
         if (value > 0){

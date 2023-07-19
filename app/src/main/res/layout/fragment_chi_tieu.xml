@@ -62,10 +62,6 @@
             android:layout_height="50dp"
             android:background="@drawable/rounded_bg"
             android:backgroundTint="#3D62AF"
-            android:paddingLeft="20dp"
-            android:text="Thiết yếu"
-            android:drawableLeft="@drawable/rounded_image_button"
-            android:drawableRight="@drawable/baseline_arrow_drop_down_24"
             android:textSize="15dp"
             android:textAllCaps="false"
             android:textAlignment="viewStart"
@@ -112,11 +108,11 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="match_parent"
+            android:text="Lưu"
+            android:layout_height="match_parent"/>
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/FLAllJam"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </FrameLayout>

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -34,7 +33,7 @@ public class TransactionsActivity extends AppCompatActivity {
     private void addControls() {
 
         backButton = (ImageButton) findViewById(R.id.imgBtnOut);
-        saveBtn = (Button) findViewById(R.id.saveBtn);
+
         tabLayoutSetup();
     }
 
@@ -48,12 +47,6 @@ public class TransactionsActivity extends AppCompatActivity {
             }
         });
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(TransactionsActivity.this, "Đang update",Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

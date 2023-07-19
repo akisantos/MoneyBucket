@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
 
@@ -88,10 +87,6 @@ public class ChiTieuChild_AllJamFragment extends Fragment {
     }
 
     void addEvent() {
-        btnConfirm.setOnClickListener(v -> {
-            FragmentTransaction fr = getFragmentManager().beginTransaction();
-            fr.replace(R.id.FLAllJam, new ChiTieuFragment());
-            fr.commit();
-        });
+
     }
 }

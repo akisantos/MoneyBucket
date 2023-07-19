@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     users.setUser_email(acc.getEmail());
 
                     realm.copyToRealm(users);
+                    MongoDB.getInstance().setMoneyUsers(users);
 
                     //Khởi tạo hũ
 
@@ -179,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
                     realm.copyToRealm(thientam);
 
 
+                }else{
+                    Users users = realm.where(Users.class).equalTo("owner_id", user.getId()).findFirst();
+                    MongoDB.getInstance().setMoneyUsers(users);
                 }
             }
         });

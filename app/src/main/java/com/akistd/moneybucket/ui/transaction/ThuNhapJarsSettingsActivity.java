@@ -1,5 +1,6 @@
 package com.akistd.moneybucket.ui.transaction;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +17,18 @@ import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
 
     ArrayList<Jars> data = new ArrayList<>();
+    private List<Integer> jarsAmountList = new ArrayList<>();
     ListView jars_list_listview;
     Button saveBtn;
     TextView totalText;
     JarsThuNhapActivityApdater apdater;
     LinearLayout clickToFinish;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +44,16 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
         apdater = new JarsThuNhapActivityApdater(getApplicationContext(), data);
         jars_list_listview.setAdapter(apdater);
 
+
+
         jars_list_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ThuNhapJarsSettingsActivity.this, position, Toast.LENGTH_SHORT).show();
-                Integer total=0;
-                for (Integer i: apdater.jarsAmountList) {
-                    total +=i;
-                }
-                totalText.setText(total.toString() + "%");
+                updateTotalPercentText();
+
             }
         });
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,15 +80,36 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
 
     private void updateJarAmount(){
         data = apdater.data;
-        for (int i=0; i< data.size(); i++){
-            Jars holder = data.get(i);
+        jarsAmountList = apdater.jarsAmountList;
 
-            Jars updateJar = new Jars(holder.getId(),holder.getJarAmount(),holder.getJarBalance(),holder.getJarName(), holder.getOwner_id());
-            updateJar.setJarAmount(apdater.jarsAmountList.get(i));
-            MongoDB.getInstance().updateJar(updateJar);
+        Integer f =0;
+        for (Integer v: jarsAmountList) {
+            f+=v;
         }
 
-        finish();
+        updateTotalPercentText();
+
+        if (f==100){
+            for (int i=0; i< data.size(); i++){
+                Jars holder = data.get(i);
+                Jars updateJar = new Jars(holder.getId(),holder.getJarAmount(),holder.getJarBalance(),holder.getJarName(), holder.getOwner_id());
+                updateJar.setJarAmount(apdater.jarsAmountList.get(i));
+                MongoDB.getInstance().updateJar(updateJar);
+            }
+            finish();
+        }else {
+            Toast.makeText(getApplicationContext(), "Chia tỉ lệ phải cộng lại = 100 chứ? Bạn có vấn đề à!?" + f.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    @SuppressLint("SetTextI18n")
+    private void updateTotalPercentText(){
+        Integer total=0;
+        for (Integer i: jarsAmountList) {
+            total +=i;
+        }
+
+        totalText.setText(total.toString());
     }
 
 

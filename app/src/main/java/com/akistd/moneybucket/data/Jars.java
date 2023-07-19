@@ -46,6 +46,14 @@ public class Jars extends RealmObject {
     public Jars() {
     }
 
+    public Jars(Jars jarsToCopy){
+        this._id = jarsToCopy.getId();
+        this.jar_amount = jarsToCopy.getJarAmount();
+        this.jar_balance = jarsToCopy.getJarBalance();
+        this.jar_name = jarsToCopy.getJarName();
+        this.owner_id = jarsToCopy.getOwner_id();
+    }
+
     public Jars(ObjectId _id, Integer jar_amount, Double jar_balance, String jar_name, String owner_id) {
         this._id = _id;
         this.jar_amount = jar_amount;

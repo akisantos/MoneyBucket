@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -37,12 +39,13 @@ public class ChiTieuFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button btnSave, btnDatePicker;
+    Button saveBtn, btnDatePicker;
     Spinner btnAllJam;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
     private int mYear, mMonth, mDay;
     JarsChiTieuFragSpinnerAdapter adapter;
+    ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
     public ChiTieuFragment() {
         // Required empty public constructor
     }
@@ -92,6 +95,7 @@ public class ChiTieuFragment extends Fragment {
         btnDatePicker = view.findViewById(R.id.btnDatePicker);
         editTotalMoney = view.findViewById(R.id.editTotalMoney);
         editDescribe = view.findViewById(R.id.editDescribe);
+        saveBtn = view.findViewById(R.id.saveBtn);
 
         addEvent();
     }
@@ -125,24 +129,67 @@ public class ChiTieuFragment extends Fragment {
                 datePickerDialog.show();
             }
         });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEvents();
+            }
+        });
+    }
+
+    private void saveEvents(){
+        createNewIncomeTransaction();
+    }
+
+    private void createNewIncomeTransaction(){
+
+        if (dataValidator()){
+            //Lấy jar được chọn
+            Jars selectedJars = (Jars) btnAllJam.getSelectedItem();
+
+            //Lóc cóc tính tiền!
+            Double newBalance = Double.parseDouble(String.valueOf(editTotalMoney.getText()));
+
+           if (selectedJars.getJarBalance() - newBalance >=0){
+               //Tạo transaction mới
+               Transaction newIncome = new Transaction();
+               newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
+               newIncome.setCreateAt(Calendar.getInstance().getTime());
+               newIncome.setTransAmount(-newBalance);
+               newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
+               newIncome.setJars(selectedJars);
+               newIncome.setTransNote(String.valueOf(editDescribe.getText()));
+               MongoDB.getInstance().insertTransaction(newIncome);
+
+               // Cập nhật hũ
+               Jars modifyJar = new Jars(selectedJars);
+               modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
+               MongoDB.getInstance().updateJar(modifyJar);
+
+               //reload main
+               getActivity().finish();
+           }else {
+               Toast.makeText(getContext(), "You'r totally ran out of money! Beggar!", Toast.LENGTH_SHORT).show();
+           }
+        }
+
+
+    }
+
+    private boolean dataValidator(){
+        if (editTotalMoney.getText().length()>0){
+            return true;
+        }
+
+        return false;
     }
 
     private void jarListsSpinnerEvents(){
-        adapter = new JarsChiTieuFragSpinnerAdapter(getContext(), MongoDB.getInstance().getAllJars());
+        adapter = new JarsChiTieuFragSpinnerAdapter(getContext(), jarsList);
+        adapter.setDropDownViewResource(R.layout.jarlist_chitieu_frag_dropdown);
         btnAllJam.setAdapter(adapter);
 
-        btnAllJam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Jars clickedItem = (Jars) parent.getItemAtPosition(position);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
     }
 }

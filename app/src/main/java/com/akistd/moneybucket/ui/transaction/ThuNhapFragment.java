@@ -18,7 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -38,10 +42,11 @@ public class ThuNhapFragment extends Fragment {
     private String mParam2;
 
     String Root_Frag = "root_fagment";
-    Button btnSave, btnAllJam, btnDatePicker;
+    Button btnSave, btnAllJam, btnDatePicker,saveBtn;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
     private int mYear, mMonth, mDay;
+    ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
     public ThuNhapFragment() {
         // Required empty public constructor
     }
@@ -90,6 +95,7 @@ public class ThuNhapFragment extends Fragment {
         btnDatePicker = view.findViewById(R.id.btnDatePicker);
         editTotalMoney = view.findViewById(R.id.editTotalMoney);
         editDescribe = view.findViewById(R.id.editDescribe);
+        saveBtn = view.findViewById(R.id.saveBtn);
 
 
         addEvent();
@@ -102,6 +108,7 @@ public class ThuNhapFragment extends Fragment {
             fr.commit();*/
             Intent jarSettings = new Intent(getContext(), ThuNhapJarsSettingsActivity.class);
             startActivity(jarSettings);
+
         });
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +137,57 @@ public class ThuNhapFragment extends Fragment {
         });
 
         editTotalMoneyEvents();
+
+        //Save btn
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewIncomeTransaction();
+            }
+        });
+    }
+
+    private void createNewIncomeTransaction(){
+
+       if (dataValidator()){
+           //Lấy ds jars mới nhất
+           jarsList = MongoDB.getInstance().getAllJars();
+
+           //Cập nhật giá trị cho jars và sync
+           for (Jars jar: jarsList) {
+
+               //Tính tiền chia
+               Double newBalance = Double.parseDouble(String.valueOf(editTotalMoney.getText())) * jar.getJarAmount()/100;
+
+               //Tạo transaction mới
+               Transaction newIncome = new Transaction();
+               newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
+               newIncome.setCreateAt(Calendar.getInstance().getTime());
+               newIncome.setTransAmount(newBalance);
+               newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
+               newIncome.setJars(jar);
+               newIncome.setTransNote(String.valueOf(editDescribe.getText()));
+               MongoDB.getInstance().insertTransaction(newIncome);
+
+               // Cập nhật hũ
+               Jars modifyJar = new Jars(jar);
+               modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
+               MongoDB.getInstance().updateJar(modifyJar);
+           }
+
+           //reload main
+           getActivity().finish();
+       }
+
+
+    }
+
+    private boolean dataValidator(){
+        if (editTotalMoney.getText().length()>0){
+            return true;
+        }
+
+        return false;
     }
 
     private void editTotalMoneyEvents(){

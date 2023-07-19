@@ -7,10 +7,13 @@ import com.akistd.moneybucket.util.Constants;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import io.realm.mongodb.App;
 import io.realm.mongodb.User;
 import io.realm.mongodb.sync.MutableSubscriptionSet;
@@ -25,7 +28,15 @@ public class MongoDB implements MongoRepository{
     App app;
     private Realm realm;
     private User user;
+    private Users moneyUsers;
 
+    public Users getMoneyUsers() {
+        return moneyUsers;
+    }
+
+    public void setMoneyUsers(Users moneyUsers) {
+        this.moneyUsers = moneyUsers;
+    }
 
     public Realm getRealm() {
         return realm;
@@ -177,6 +188,81 @@ public class MongoDB implements MongoRepository{
         return null;
     }
 
+    public ArrayList<Transaction> getAllSortedTransaction(){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class).sort("create_at", Sort.DESCENDING).findAll().toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getAllSortedIncomeTransaction(){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class).sort("create_at", Sort.DESCENDING).greaterThan("trans_amount",0).findAll().toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getThisMonthSortedOutcomeTransaction(){
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.set(Calendar.DAY_OF_MONTH, 1);
+        calendarStart.set(Calendar.HOUR, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+
+        Log.v("AKKI LOG", "Start!! "+String.valueOf(calendarStart.getTime()));
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.set(Calendar.DAY_OF_MONTH,calendarEnd.getActualMaximum(Calendar.DATE));
+        calendarEnd.set(Calendar.HOUR, 12);
+        calendarEnd.set(Calendar.MINUTE, 0);
+        calendarEnd.set(Calendar.SECOND, 0);
+
+        Log.v("AKKI LOG", "END!! "+String.valueOf(calendarEnd.getTime()));
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class).greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime()).sort("create_at", Sort.DESCENDING).lessThan("trans_amount",0).findAll().toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getAllSortedOutcomeTransaction(){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class).sort("create_at", Sort.DESCENDING).lessThan("trans_amount",0).findAll().toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList;
+    }
+
     @Override
     public void insertTransaction(Transaction transaction) {
         if (user != null){
@@ -199,6 +285,7 @@ public class MongoDB implements MongoRepository{
 
                 Transaction queriedTrans = r.where(Transaction.class).equalTo("_id == $0", transaction.getId()).findFirst();
                 if (queriedTrans!= null) {
+                    queriedTrans = transaction;
                     realm.copyToRealmOrUpdate(queriedTrans);
                 }
             }catch (Exception e){
@@ -258,9 +345,6 @@ public class MongoDB implements MongoRepository{
                 Jars queriedTrans = r.where(Jars.class).equalTo("_id", jars.getId()).findFirst();
                 if (queriedTrans!= null) {
                     queriedTrans = jars;
-                    queriedTrans.setJarAmount(jars.getJarAmount());
-                    queriedTrans.setJarName(jars.getJarName());
-                    queriedTrans.setJarBalance(jars.getJarBalance());
                     realm.copyToRealmOrUpdate(queriedTrans);
                 }
             }catch (Exception e){

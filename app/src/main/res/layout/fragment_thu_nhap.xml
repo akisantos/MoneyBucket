@@ -110,6 +110,13 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="match_parent"
+            android:text="Lưu"
+            android:layout_height="match_parent"/>
+
+
     </LinearLayout>
 
 

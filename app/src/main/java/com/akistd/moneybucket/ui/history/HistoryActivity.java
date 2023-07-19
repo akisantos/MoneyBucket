@@ -1,6 +1,5 @@
 package com.akistd.moneybucket.ui.history;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -8,7 +7,6 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.akistd.moneybucket.R;
-import com.akistd.moneybucket.TrangChu_Activity;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -33,8 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HistoryActivity.this, TrangChu_Activity.class);
-                startActivity(intent);
+                finish();
             }
         });
 

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class Cjarlist_listAdapter extends BaseAdapter {
 
 
     public Cjarlist_listAdapter(@NonNull Context context, int resource, ArrayList<Jars> objects) {
-        this.arrayList = objects;
+        this.arrayList = MongoDB.getInstance().getAllJars();
         this.context = context;
         this.layout = resource;
         Log.v("AKI LOGG", String.valueOf(arrayList.size()));

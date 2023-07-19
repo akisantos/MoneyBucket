@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
@@ -53,14 +55,15 @@ public class mainpage extends Fragment {
 
     AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome;
 
-    TextView mainpage_welcomeText,mainpage_currentBalanceText;
+    TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
+    ProgressBar main_balance_processBar;
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
     ListView jars_list_listview;
     Cjarlist_listAdapter cjarlistListAdapter;
-
+    ArrayList<Jars> jarsList;
     BarChart moneyFlowChart;
     Constants util = new Constants();
 
@@ -85,6 +88,7 @@ public class mainpage extends Fragment {
         //Lấy thông tin đăng nhập
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(),gso);
+        jarsList = MongoDB.getInstance().getAllJars();
     }
 
 
@@ -102,7 +106,16 @@ public class mainpage extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (cjarlistListAdapter != null){
+            cjarlistListAdapter.notifyDataSetChanged();
+        }
 
+        loadSoDu();
+
+    }
 
     private void addControls(View view){
 
@@ -110,6 +123,8 @@ public class mainpage extends Fragment {
         //HeaderCard
         mainpage_welcomeText = (TextView) view.findViewById(R.id.mainpage_welcomeText);
         mainpage_currentBalanceText = (TextView) view.findViewById(R.id.mainpage_currentBalanceText);
+        main_balance_processBar = view.findViewById(R.id.main_balance_processBar);
+        main_balance_process_numb = view.findViewById(R.id.main_balance_process_numb);
 
 
         //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
@@ -136,8 +151,7 @@ public class mainpage extends Fragment {
 
         //JarsList
 
-        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
-        Cjarlist_listAdapter cjarlistListAdapter = new Cjarlist_listAdapter(getContext(), R.layout.jarlist_layout_mainpage, jarsList);
+        cjarlistListAdapter = new Cjarlist_listAdapter(getContext(), R.layout.jarlist_layout_mainpage, jarsList);
 
         jars_list_listview.setAdapter(cjarlistListAdapter);
 
@@ -179,7 +193,24 @@ public class mainpage extends Fragment {
             sodu += jar.getJarBalance();
         }
 
+        ArrayList<Transaction> thisMonthOutcome = MongoDB.getInstance().getThisMonthSortedOutcomeTransaction();
+        Double totalOutcome= Double.valueOf(0d);
+        for (Transaction tr: thisMonthOutcome) {
+            totalOutcome += tr.getTransAmount() *-1;
+        }
+
+        //Công thức - toàn bộ tiền trong hũ - tiền đã tiêu trong tháng này.
+        Double percentRaw = 100 - totalOutcome/ sodu;
+        if (percentRaw<0){
+            main_balance_process_numb.setText("0%");
+            main_balance_processBar.setProgress(0);
+        }else {
+            main_balance_process_numb.setText(String.format("%.0f",percentRaw) + "%");
+            main_balance_processBar.setProgress(Integer.parseInt(String.format("%.0f",percentRaw)));
+        }
+
         mainpage_currentBalanceText.setText(String.format("%.0f",sodu) + "VND");
+
 
     }
 
