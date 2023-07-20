@@ -157,11 +157,12 @@
 
 
                     <Button
+                        android:id="@+id/deleteInfoBtn"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/rounded_bg"
-                        android:text="Cái gì đó, chưa biết"
+                        android:text="(Test) Xoá dữ liệu"
 
                         android:textAlignment="viewStart"
                         android:textAllCaps="false" />

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.ImageLoadTask;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +32,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +88,7 @@ public class ProfileFragment extends Fragment {
     Constants util = new Constants();
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+    Button deleteInfoBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,6 +104,7 @@ public class ProfileFragment extends Fragment {
         profile_userid = v.findViewById(R.id.profile_userid);
         profile_logoutBtn = v.findViewById(R.id.profile_logoutBtn);
         profile_image = v.findViewById(R.id.profile_image);
+        deleteInfoBtn  = v.findViewById(R.id.deleteInfoBtn);
     }
 
     private void addEvents(){
@@ -119,7 +127,25 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        deleteInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUserInfo();
+            }
+        });
 
+    }
+
+    private void deleteUserInfo(){
+        ArrayList<Jars> allJars = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> allTrans = MongoDB.getInstance().getAllTransaction();
+
+        for (Transaction tr: allTrans) {
+            MongoDB.getInstance().deleteTransaction(tr.getId());
+        }
+        for (Jars j:allJars) {
+            MongoDB.getInstance().deleteJar(j.getId());
+        }
     }
 
     private void signOut() {

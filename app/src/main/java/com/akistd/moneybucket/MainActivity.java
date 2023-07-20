@@ -183,6 +183,25 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Users users = realm.where(Users.class).equalTo("owner_id", user.getId()).findFirst();
                     MongoDB.getInstance().setMoneyUsers(users);
+
+                    if (realm.where(Jars.class).equalTo("owner_id", user.getId()).findFirst() == null){
+                        //Khởi tạo hũ
+
+
+                        Jars thietyeu = new Jars(new ObjectId(),55,0.0,"Thiết yếu", user.getId());
+                        Jars giaoduc = new Jars(new ObjectId(),10,0.0,"Giáo dục", user.getId());
+                        Jars tietkiem = new Jars(new ObjectId(),20,0.0,"Tiết kiệm", user.getId());
+                        Jars huongthu = new Jars(new ObjectId(),5,0.0,"Hưởng thụ", user.getId());
+                        Jars dautu = new Jars(new ObjectId(),5,0.0,"Đầu tư", user.getId());
+                        Jars thientam = new Jars(new ObjectId(),5,0.0,"Thiện tâm", user.getId());
+
+                        realm.copyToRealm(thietyeu);
+                        realm.copyToRealm(giaoduc);
+                        realm.copyToRealm(tietkiem);
+                        realm.copyToRealm(huongthu);
+                        realm.copyToRealm(dautu);
+                        realm.copyToRealm(thientam);
+                    }
                 }
             }
         });

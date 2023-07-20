@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.util.UtilConverter;
 
 import java.util.ArrayList;
 
@@ -74,7 +75,7 @@ public class Cjarlist_listAdapter extends BaseAdapter {
         TextView info = convertView.findViewById(R.id.mainpage_jarlist_info);
         info.setText(jar.getJarName());
         TextView amount = convertView.findViewById(R.id.mainpage_jarlist_amount);
-        amount.setText(String.format("%.0f",jar.getJarBalance())+ " VND");
+        amount.setText(UtilConverter.getInstance().vndCurrencyConverter(jar.getJarBalance()));
 
         return convertView;
     }

@@ -20,6 +20,7 @@ import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
+import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -52,7 +53,6 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-
     AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome;
 
     TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
@@ -76,6 +76,7 @@ public class mainpage extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,15 +194,25 @@ public class mainpage extends Fragment {
             sodu += jar.getJarBalance();
         }
 
+
+        ArrayList<Transaction> latestIncome = MongoDB.getInstance().getAllSortedIncomeTransaction();
+        Double totalIncome= Double.valueOf(0d);
+        if (latestIncome.size()>0){
+
+            for (int i=0; i<6; i++){
+                totalIncome += latestIncome.get(i).getTransAmount();
+            }
+        }
         ArrayList<Transaction> thisMonthOutcome = MongoDB.getInstance().getThisMonthSortedOutcomeTransaction();
         Double totalOutcome= Double.valueOf(0d);
         for (Transaction tr: thisMonthOutcome) {
             totalOutcome += tr.getTransAmount() *-1;
+
         }
 
         //Công thức - toàn bộ tiền trong hũ - tiền đã tiêu trong tháng này.
-        Double percentRaw = 100 - totalOutcome/ sodu;
-        if (percentRaw<0){
+        Double percentRaw = 100 - (totalOutcome/ totalIncome)*100;
+        if (percentRaw<0 || percentRaw.isInfinite() || percentRaw.isNaN()){
             main_balance_process_numb.setText("0%");
             main_balance_processBar.setProgress(0);
         }else {
@@ -209,7 +220,7 @@ public class mainpage extends Fragment {
             main_balance_processBar.setProgress(Integer.parseInt(String.format("%.0f",percentRaw)));
         }
 
-        mainpage_currentBalanceText.setText(String.format("%.0f",sodu) + "VND");
+        mainpage_currentBalanceText.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
 
 
     }
@@ -248,12 +259,16 @@ public class mainpage extends Fragment {
         moneyFlowChart.getAxisRight().setEnabled(true);
         moneyFlowChart.getLegend().setEnabled(true);
 
+        
+
         float[] valOne = {900, 0, 400, 200, 800, 700, 0}; //thu
         float[] valTwo = {1200, 500, 400, 30, 200, 600, 1200};  //chi
 
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
-        ;
+
+
+
         for (int i = 0; i < valOne.length; i++) {
             barOne.add(new BarEntry(i, valOne[i]));
             barTwo.add(new BarEntry(i, valTwo[i]));

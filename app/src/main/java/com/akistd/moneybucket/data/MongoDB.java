@@ -184,8 +184,19 @@ public class MongoDB implements MongoRepository{
     }
 
     @Override
-    public Object getAllTransaction() {
-        return null;
+    public  ArrayList<Transaction> getAllTransaction() {
+        ArrayList<Transaction> jars = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] jarsList = r.where(Transaction.class).findAll().toArray(new Transaction[0]);
+                for (Transaction jar: jarsList) {
+                    jars.add(jar);
+                }
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        return jars;
     }
 
     public ArrayList<Transaction> getAllSortedTransaction(){
@@ -298,7 +309,7 @@ public class MongoDB implements MongoRepository{
     public void deleteTransaction(ObjectId id) {
         realm.executeTransaction( r ->{
             try {
-                Transaction u = r.where(Transaction.class).equalTo("_id==$0", id).findFirst();
+                Transaction u = r.where(Transaction.class).equalTo("_id", id).findFirst();
                 u.deleteFromRealm();
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
@@ -357,7 +368,7 @@ public class MongoDB implements MongoRepository{
     public void deleteJar(ObjectId id) {
         realm.executeTransaction( r ->{
             try {
-                Jars u = r.where(Jars.class).equalTo("_id==$0", id).findFirst();
+                Jars u = r.where(Jars.class).equalTo("_id", id).findFirst();
                 u.deleteFromRealm();
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());

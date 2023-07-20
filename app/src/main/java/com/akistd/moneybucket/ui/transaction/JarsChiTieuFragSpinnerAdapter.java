@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.util.UtilConverter;
 
 import java.util.ArrayList;
 
@@ -71,7 +72,7 @@ public class JarsChiTieuFragSpinnerAdapter extends ArrayAdapter<Jars> {
         }
 
         mainpage_jarlist_name.setText(jar.getJarName());
-        jarBalanceText.setText(String.format("%.0f",jar.getJarBalance()) + "VND");
+        jarBalanceText.setText(UtilConverter.getInstance().vndCurrencyConverter(jar.getJarBalance()));
         return convertView;
     }
 

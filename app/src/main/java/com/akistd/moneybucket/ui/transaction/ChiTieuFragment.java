@@ -136,6 +136,8 @@ public class ChiTieuFragment extends Fragment {
                 saveEvents();
             }
         });
+
+
     }
 
     private void saveEvents(){
