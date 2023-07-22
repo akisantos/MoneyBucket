@@ -36,4 +36,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- Notification -->
+    <string name="channel_name">Notification Channel</string>
+    <string name="channel_description">This is notification channel 1</string>
+
 </resources>

@@ -110,7 +110,6 @@ public class ThuNhapFragment extends Fragment {
             startActivity(jarSettings);
 
         });
-
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

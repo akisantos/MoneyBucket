@@ -1,6 +1,14 @@
 package com.akistd.moneybucket.ui.transaction;
 
+
+import android.Manifest;
 import android.app.DatePickerDialog;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +22,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
@@ -23,6 +34,8 @@ import com.akistd.moneybucket.data.Transaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +59,7 @@ public class ChiTieuFragment extends Fragment {
     private int mYear, mMonth, mDay;
     JarsChiTieuFragSpinnerAdapter adapter;
     ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+
     public ChiTieuFragment() {
         // Required empty public constructor
     }
@@ -83,7 +97,6 @@ public class ChiTieuFragment extends Fragment {
         // Inflate the layout for this fragment
 
 
-
         return inflater.inflate(R.layout.fragment_chi_tieu, container, false);
     }
 
@@ -114,7 +127,6 @@ public class ChiTieuFragment extends Fragment {
                 mDay = c.get(Calendar.DAY_OF_MONTH);
 
 
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                         new DatePickerDialog.OnDateSetListener() {
 
@@ -140,43 +152,73 @@ public class ChiTieuFragment extends Fragment {
 
     }
 
-    private void saveEvents(){
+    private void saveEvents() {
         createNewIncomeTransaction();
     }
 
-    private void createNewIncomeTransaction(){
+    private void createNewIncomeTransaction() {
 
-        if (dataValidator()){
+        if (dataValidator()) {
             //Lấy jar được chọn
             Jars selectedJars = (Jars) btnAllJam.getSelectedItem();
 
             //Lóc cóc tính tiền!
             Double newBalance = Double.parseDouble(String.valueOf(editTotalMoney.getText()));
 
-           if (selectedJars.getJarBalance() - newBalance >=0){
-               //Tạo transaction mới
-               Transaction newIncome = new Transaction();
-               newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
-               newIncome.setCreateAt(Calendar.getInstance().getTime());
-               newIncome.setTransAmount(-newBalance);
-               newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
-               newIncome.setJars(selectedJars);
-               newIncome.setTransNote(String.valueOf(editDescribe.getText()));
-               MongoDB.getInstance().insertTransaction(newIncome);
+            // Nếu tiền trong tài khoản nhiều hơn số tiền chi tiêu thì có thể tạo giao dịch
+            if (selectedJars.getJarBalance() - newBalance >= 0) {
 
-               // Cập nhật hũ
-               Jars modifyJar = new Jars(selectedJars);
-               modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
-               MongoDB.getInstance().updateJar(modifyJar);
+                Double limitMoneyTranAmount = selectedJars.getJarBalance() - newBalance;
+                Double halfJarMoney = selectedJars.getJarBalance() * 0.5;
 
-               //reload main
-               getActivity().finish();
-           }else {
-               Toast.makeText(getContext(), "You'r totally ran out of money! Beggar!", Toast.LENGTH_SHORT).show();
-           }
+                if (limitMoneyTranAmount > halfJarMoney) {
+                    sendNotification();
+                }
+
+                //Tạo transaction mới
+                Transaction newIncome = new Transaction();
+                newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
+                newIncome.setCreateAt(Calendar.getInstance().getTime());
+                newIncome.setTransAmount(-newBalance);
+                newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
+                newIncome.setJars(selectedJars);
+                newIncome.setTransNote(String.valueOf(editDescribe.getText()));
+                MongoDB.getInstance().insertTransaction(newIncome);
+
+                // Cập nhật hũ
+                Jars modifyJar = new Jars(selectedJars);
+                modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
+                MongoDB.getInstance().updateJar(modifyJar);
+
+                //reload main
+                getActivity().finish();
+            } else {
+                Toast.makeText(getContext(), "You'r totally ran out of money! Beggar!", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
 
+    private void sendNotification() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.applogo);
 
+        Notification notification = new NotificationCompat.Builder(requireActivity(), NotificationChannelClass.CHANNEL_ID)
+                .setContentTitle("Cảnh báo vượt quá giới hạn chi tiêu")
+                .setContentText("Tổng số tiền chi tiêu vượt quá 50% tổng số tiền ")
+                .setSmallIcon(R.drawable.too)
+                .setLargeIcon(bitmap)
+                .setColor(getResources().getColor(R.color.teal_200))
+                .build();
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(requireActivity());
+        //check user permission for push notification
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        notificationManagerCompat.notify(getNotificationId(), notification);
+    }
+
+    public int getNotificationId() {
+        return (int) new Date().getTime();
     }
 
     private boolean dataValidator(){
@@ -191,7 +233,6 @@ public class ChiTieuFragment extends Fragment {
         adapter = new JarsChiTieuFragSpinnerAdapter(getContext(), jarsList);
         adapter.setDropDownViewResource(R.layout.jarlist_chitieu_frag_dropdown);
         btnAllJam.setAdapter(adapter);
-
 
     }
 }
