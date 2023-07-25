@@ -3,9 +3,7 @@ package com.akistd.moneybucket.ui.transaction;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,7 +33,6 @@ import com.akistd.moneybucket.data.Transaction;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +56,7 @@ public class ChiTieuFragment extends Fragment {
     private int mYear, mMonth, mDay;
     JarsChiTieuFragSpinnerAdapter adapter;
     ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+    Calendar currentDate;
 
     public ChiTieuFragment() {
         // Required empty public constructor
@@ -121,10 +119,10 @@ public class ChiTieuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Get Current Date
-                final Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
+                currentDate = Calendar.getInstance();
+                mYear = currentDate.get(Calendar.YEAR);
+                mMonth = currentDate.get(Calendar.MONTH);
+                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
 
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
@@ -135,9 +133,12 @@ public class ChiTieuFragment extends Fragment {
                                                   int monthOfYear, int dayOfMonth) {
 
                                 btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
+                                currentDate.set(year,monthOfYear,dayOfMonth);
                             }
+
                         }, mYear, mMonth, mDay);
+
+
                 datePickerDialog.show();
             }
         });
@@ -153,10 +154,10 @@ public class ChiTieuFragment extends Fragment {
     }
 
     private void saveEvents() {
-        createNewIncomeTransaction();
+        createNewOutcomeTransaction();
     }
 
-    private void createNewIncomeTransaction() {
+    private void createNewOutcomeTransaction() {
 
         if (dataValidator()) {
             //Lấy jar được chọn
@@ -171,14 +172,15 @@ public class ChiTieuFragment extends Fragment {
                 Double limitMoneyTranAmount = selectedJars.getJarBalance() - newBalance;
                 Double halfJarMoney = selectedJars.getJarBalance() * 0.5;
 
-                if (limitMoneyTranAmount > halfJarMoney) {
+                if (limitMoneyTranAmount < halfJarMoney) {
                     sendNotification();
                 }
 
                 //Tạo transaction mới
                 Transaction newIncome = new Transaction();
                 newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
-                newIncome.setCreateAt(Calendar.getInstance().getTime());
+
+                newIncome.setCreateAt(currentDate.getTime());
                 newIncome.setTransAmount(-newBalance);
                 newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
                 newIncome.setJars(selectedJars);

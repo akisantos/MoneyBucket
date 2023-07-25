@@ -234,7 +234,7 @@ public class mainpage extends Fragment {
         moneyFlowChart.setPinchZoom(false);
         moneyFlowChart.setDrawGridBackground(true);
         // empty labels so that the names are spread evenly
-        String[] days = {"", "Mon", "Tues", "Weds", "Thu", "Fri", "Sat", "Sun", ""};
+        String[] days = {"", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN", ""};
         XAxis xAxis = moneyFlowChart.getXAxis();
         xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -259,7 +259,7 @@ public class mainpage extends Fragment {
         moneyFlowChart.getAxisRight().setEnabled(true);
         moneyFlowChart.getLegend().setEnabled(true);
 
-        
+        ArrayList<Transaction> incomeTr = MongoDB.getInstance().getAllSortedIncomeTransaction();
 
         float[] valOne = {900, 0, 400, 200, 800, 700, 0}; //thu
         float[] valTwo = {1200, 500, 400, 30, 200, 600, 1200};  //chi
@@ -267,13 +267,27 @@ public class mainpage extends Fragment {
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
 
+        Double totalIncome = Double.valueOf(0d);
+        ArrayList<Transaction> latestIncome= new ArrayList<>();
+
+        /*for (int i =0; i<6; i++){
+            latestIncome.add(incomeTr.get(i));
+            totalIncome += latestIncome.get(i).getTransAmount();
+        }
 
 
-        for (int i = 0; i < valOne.length; i++) {
+        for (int i =0; i<6; i++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(latestIncome.get(i).getCreateAt());
+            barOne.add(new BarEntry(i,valOne));
+
+        }*/
+
+        /*for (int i = 0; i < valOne.length; i++) {
             barOne.add(new BarEntry(i, valOne[i]));
             barTwo.add(new BarEntry(i, valTwo[i]));
 
-        }
+        }*/
 
         BarDataSet set1 = new BarDataSet(barOne, "Thu");
         set1.setColor(Color.GREEN);

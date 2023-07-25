@@ -236,14 +236,14 @@ public class MongoDB implements MongoRepository{
         calendarStart.set(Calendar.MINUTE, 0);
         calendarStart.set(Calendar.SECOND, 0);
 
-        Log.v("AKKI LOG", "Start!! "+String.valueOf(calendarStart.getTime()));
+        //Log.v("AKKI LOG", "Start!! "+String.valueOf(calendarStart.getTime()));
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.set(Calendar.DAY_OF_MONTH,calendarEnd.getActualMaximum(Calendar.DATE));
         calendarEnd.set(Calendar.HOUR, 12);
         calendarEnd.set(Calendar.MINUTE, 0);
         calendarEnd.set(Calendar.SECOND, 0);
 
-        Log.v("AKKI LOG", "END!! "+String.valueOf(calendarEnd.getTime()));
+        //Log.v("AKKI LOG", "END!! "+String.valueOf(calendarEnd.getTime()));
         ArrayList<Transaction> dataList = new ArrayList<>();
         realm.executeTransaction(r->{
             try {
@@ -251,6 +251,9 @@ public class MongoDB implements MongoRepository{
                         .lessThan("create_at",calendarEnd.getTime()).sort("create_at", Sort.DESCENDING).lessThan("trans_amount",0).findAll().toArray(new Transaction[0]);
                 dataList.addAll(Arrays.asList(trans));
 
+                for (Transaction tr: dataList) {
+                    Log.v("DATA IN MONTH LOG", tr.getTransAmount().toString());
+                }
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
             }
