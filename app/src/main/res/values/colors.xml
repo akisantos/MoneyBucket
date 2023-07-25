@@ -10,4 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="navg">#F01E0597</color>
     <color name="whiteBackground">#D9D9D9</color>
+    <color name="doWarning">#ff5252</color>
+    <color name="xanhGood">#7A9D54</color>
 </resources>

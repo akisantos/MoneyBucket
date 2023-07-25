@@ -3,7 +3,6 @@ package com.akistd.moneybucket.ui.transaction;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,18 +40,8 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
 
         jars_list_listview = findViewById(R.id.jars_list_listview);
         data = MongoDB.getInstance().getAllJars();
-        apdater = new JarsThuNhapActivityApdater(getApplicationContext(), data);
+        apdater = new JarsThuNhapActivityApdater(getApplicationContext(), data,totalText);
         jars_list_listview.setAdapter(apdater);
-
-
-
-        jars_list_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                updateTotalPercentText();
-
-            }
-        });
 
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +76,6 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
             f+=v;
         }
 
-        updateTotalPercentText();
 
         if (f==100){
             for (int i=0; i< data.size(); i++){
@@ -101,15 +89,6 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Chia tỉ lệ phải cộng lại = 100 chứ? Bạn có vấn đề à!?" + f.toString(), Toast.LENGTH_SHORT).show();
         }
 
-    }
-    @SuppressLint("SetTextI18n")
-    private void updateTotalPercentText(){
-        Integer total=0;
-        for (Integer i: jarsAmountList) {
-            total +=i;
-        }
-
-        totalText.setText(total.toString());
     }
 
 

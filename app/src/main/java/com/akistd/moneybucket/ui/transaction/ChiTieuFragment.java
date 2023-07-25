@@ -41,14 +41,6 @@ import java.util.Date;
  */
 public class ChiTieuFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     Button saveBtn, btnDatePicker;
     Spinner btnAllJam;
     ImageButton imgBtnOut;
@@ -56,7 +48,7 @@ public class ChiTieuFragment extends Fragment {
     private int mYear, mMonth, mDay;
     JarsChiTieuFragSpinnerAdapter adapter;
     ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
-    Calendar currentDate;
+    Calendar currentDate = Calendar.getInstance();;
 
     public ChiTieuFragment() {
         // Required empty public constructor
@@ -74,8 +66,6 @@ public class ChiTieuFragment extends Fragment {
     public static ChiTieuFragment newInstance(String param1, String param2) {
         ChiTieuFragment fragment = new ChiTieuFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,8 +74,6 @@ public class ChiTieuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -119,7 +107,6 @@ public class ChiTieuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Get Current Date
-                currentDate = Calendar.getInstance();
                 mYear = currentDate.get(Calendar.YEAR);
                 mMonth = currentDate.get(Calendar.MONTH);
                 mDay = currentDate.get(Calendar.DAY_OF_MONTH);
@@ -179,18 +166,23 @@ public class ChiTieuFragment extends Fragment {
                 //Tạo transaction mới
                 Transaction newIncome = new Transaction();
                 newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
-
-                newIncome.setCreateAt(currentDate.getTime());
+                newIncome.setCreateAt(new Date((currentDate.getTime()).getTime()));
                 newIncome.setTransAmount(-newBalance);
                 newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
                 newIncome.setJars(selectedJars);
                 newIncome.setTransNote(String.valueOf(editDescribe.getText()));
                 MongoDB.getInstance().insertTransaction(newIncome);
 
-                // Cập nhật hũ
-                Jars modifyJar = new Jars(selectedJars);
-                modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
-                MongoDB.getInstance().updateJar(modifyJar);
+
+                // Update lại hũ
+                if (MongoDB.getInstance().checkTransactionIsExists(newIncome).size()>0){
+                    Jars modifyJar = new Jars(selectedJars);
+                    modifyJar.setJarBalance(modifyJar.getJarBalance() + newIncome.getTransAmount());
+                    MongoDB.getInstance().updateJar(modifyJar);
+                }else{
+                    Toast.makeText(getContext(),"Cập nhật không thành công, xin thử lại sau!", Toast.LENGTH_SHORT).show();
+                }
+
 
                 //reload main
                 getActivity().finish();

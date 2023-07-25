@@ -277,6 +277,21 @@ public class MongoDB implements MongoRepository{
         return dataList;
     }
 
+    public ArrayList<Transaction> checkTransactionIsExists(Transaction t){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        if (user != null){
+            realm.executeTransaction( r ->{
+                try {
+                    Transaction trans = r.where(Transaction.class).equalTo("_id",t.getId()).findFirst();
+                    dataList.add(trans);
+                }catch (Exception e){
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            });
+        }
+        return  dataList;
+    }
+
     @Override
     public void insertTransaction(Transaction transaction) {
         if (user != null){

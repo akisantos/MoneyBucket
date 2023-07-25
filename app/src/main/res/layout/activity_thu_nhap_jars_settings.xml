@@ -28,12 +28,14 @@
                 android:layout_height="wrap_content"
                 android:text="Tỉ lệ phân bổ các hũ"
                 android:background="@android:color/transparent"
+                android:layout_marginTop="5dp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18dp" />
 
             <ListView
                 android:id="@+id/jars_list_listview"
+
                 android:layout_width="match_parent"
                 android:background="@android:color/transparent"
                 android:layout_height="350dp"
@@ -46,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/jars_list_listview"
                 android:background="@drawable/rounded_bg"
-                android:layout_marginTop="10dp"
                 android:backgroundTint="@color/black"
                 android:orientation="horizontal"
                 android:padding="10dp">

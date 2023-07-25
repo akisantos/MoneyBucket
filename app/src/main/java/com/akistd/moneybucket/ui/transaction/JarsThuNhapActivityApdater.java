@@ -2,12 +2,16 @@ package com.akistd.moneybucket.ui.transaction;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
@@ -21,15 +25,17 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
     public ArrayList<Jars> data = new ArrayList<>();
     private Context context;
     public List<Integer> jarsAmountList = new ArrayList<>();
-    public JarsThuNhapActivityApdater(Context _context, ArrayList<Jars> jarsList){
+    TextView totalText;
+    public JarsThuNhapActivityApdater(Context _context, ArrayList<Jars> jarsList, TextView totalText){
         this.context = _context;
         this.data = jarsList;
-
+        this.totalText = totalText;
         for (Jars jar:data) {
             jarsAmountList.add(jar.getJarAmount());
         }
 
     }
+
 
     @Override
     public int getCount() {
@@ -65,7 +71,6 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
             holder.addPorpotionBtn = convertView.findViewById(R.id.addPorpotionBtn);
             holder.minusPorpotionBtn = convertView.findViewById(R.id.minusPorpotionBtn);
             holder.porpotionText = convertView.findViewById(R.id.porpotionText);
-
             convertView.setTag(holder);
         }else{
             holder = (JarsListViewHolder) convertView.getTag();
@@ -90,49 +95,82 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
         holder.addPorpotionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPorpotion(position, holder.porpotionText,10);
+                addPorpotion(position, holder.porpotionText,1);
             }
         });
 
         holder.minusPorpotionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPorpotion(position, holder.porpotionText,-10);
+                addPorpotion(position, holder.porpotionText,-1);
             }
         });
-        holder.porpotionText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
 
+
+
+        holder.addPorpotionBtn.setOnTouchListener(new View.OnTouchListener() {
+
+            private Handler mHandler;
+
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mHandler != null) return true;
+                        mHandler = new Handler();
+                        mHandler.postDelayed(mAction, 100);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mHandler == null) return true;
+                        mHandler.removeCallbacks(mAction);
+                        mHandler = null;
+                        break;
+                }
+                return false;
+            }
+
+            Runnable mAction = new Runnable() {
+                @Override public void run() {
+                    addPorpotion(position, holder.porpotionText,1);
+                    mHandler.postDelayed(this, 100);
+                }
+            };
+
+        });
+
+        holder.minusPorpotionBtn.setOnTouchListener(new View.OnTouchListener() {
+
+            private Handler mHandler;
+
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mHandler != null) return true;
+                        mHandler = new Handler();
+                        mHandler.postDelayed(mAction, 100);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mHandler == null) return true;
+                        mHandler.removeCallbacks(mAction);
+                        mHandler = null;
+                        break;
+                }
+                return false;
+            }
+
+            Runnable mAction = new Runnable() {
+                @Override public void run() {
+                    addPorpotion(position, holder.porpotionText,-1);
+                    mHandler.postDelayed(this, 100);
+                }
+            };
+
+        });
+
+
+        holder.porpotionText.setFilters(new InputFilter[]{ new InputFilterMinMax("0", "100")});
+        holder.porpotionText.setEnabled(false);
         holder.porpotionText.setText(jarsAmountList.get(position).toString());
 
-        /*holder.porpotionText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //holder.porpotionText.setText(jarsAmountList.get(position).toString());
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                holder.porpotionText.setText(updateEditText(s.toString()));
-            }
-
-            private String updateEditText(String input){
-                String count = input.toString();
-                if(TextUtils.isEmpty(count))
-                    return "0";
-                else{
-
-                    jarsAmountList.set(position, Integer.valueOf(count));
-                    return count;
-                }
-
-            }
-        });*/
 
 
         return convertView;
@@ -140,6 +178,7 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
 
 
 
+    @SuppressLint("SetTextI18n")
     private void addPorpotion(int position, EditText porpotionText, int value){
         if (value > 0){
             if (jarsAmountList.get(position) + value <= 100){
@@ -152,5 +191,16 @@ public class JarsThuNhapActivityApdater extends BaseAdapter {
         }
 
         porpotionText.setText(String.valueOf(jarsAmountList.get(position)));
+        int total = 0;
+        for (int i : jarsAmountList) {
+            total += i;
+        }
+
+        totalText.setText(total +"%");
+        if (total != 100){
+            totalText.setTextColor(Color.parseColor("#ff5252"));
+        }else{
+            totalText.setTextColor(Color.parseColor("#00d5bc"));
+        }
     }
 }
