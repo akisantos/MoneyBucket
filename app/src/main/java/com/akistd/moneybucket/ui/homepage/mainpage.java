@@ -199,7 +199,7 @@ public class mainpage extends Fragment {
         Double totalIncome= Double.valueOf(0d);
         if (latestIncome.size()>0){
 
-            for (int i=0; i<6; i++){
+            for (int i=0; i<5; i++){
                 totalIncome += latestIncome.get(i).getTransAmount();
             }
         }

@@ -24,6 +24,7 @@ import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.ui.transaction.ThuNhapJarsSettingsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.ImageLoadTask;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -88,7 +89,7 @@ public class ProfileFragment extends Fragment {
     Constants util = new Constants();
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
-    Button deleteInfoBtn;
+    Button deleteInfoBtn, sampleButtonID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,9 +106,16 @@ public class ProfileFragment extends Fragment {
         profile_logoutBtn = v.findViewById(R.id.profile_logoutBtn);
         profile_image = v.findViewById(R.id.profile_image);
         deleteInfoBtn  = v.findViewById(R.id.deleteInfoBtn);
+        sampleButtonID = v.findViewById(R.id.sampleButtonID);
     }
 
     private void addEvents(){
+
+        //from sampleButtonID go to ThuNhapJarsSettingsActivity activity
+        sampleButtonID.setOnClickListener(v -> {
+            Intent jarSettings = new Intent(getContext(), ThuNhapJarsSettingsActivity.class);
+            startActivity(jarSettings);
+        });
 
         //Lấy thông tin đăng nhập
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(util.getClientID()).requestEmail().build();

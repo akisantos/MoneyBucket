@@ -156,10 +156,12 @@ public class ChiTieuFragment extends Fragment {
             // Nếu tiền trong tài khoản nhiều hơn số tiền chi tiêu thì có thể tạo giao dịch
             if (selectedJars.getJarBalance() - newBalance >= 0) {
 
-                Double limitMoneyTranAmount = selectedJars.getJarBalance() - newBalance;
+                //thu nhập lúc đầu = 100
+                //chi tiêu 60 -> chi tiêu hơn 50 %
+                //so sánh 100/2 lớn hoặc nhỏ hơn chi tiêu là ra
                 Double halfJarMoney = selectedJars.getJarBalance() * 0.5;
 
-                if (limitMoneyTranAmount < halfJarMoney) {
+                if (halfJarMoney < newBalance) {
                     sendNotification();
                 }
 
