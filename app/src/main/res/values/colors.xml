@@ -10,6 +10,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="navg">#F01E0597</color>
     <color name="whiteBackground">#D9D9D9</color>
-    <color name="doWarning">#ff5252</color>
-    <color name="xanhGood">#7A9D54</color>
+    <color name="doWarning">#e74c3c</color>
+    <color name="xanhGood">#2ecc71</color>
+    <color name="peterriver">#3498db</color>
+    <color name="neph">#27ae60</color>
+    <color name="carrot">#e67e22</color>
+    <color name="ame">#9b59b6</color>
 </resources>
