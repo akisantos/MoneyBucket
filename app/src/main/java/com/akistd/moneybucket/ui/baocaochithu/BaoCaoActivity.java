@@ -170,10 +170,12 @@ public class BaoCaoActivity extends AppCompatActivity {
     private void getDataInComeInWeek(Calendar time){
         ArrayList<Transaction> thisWeekOutcome = MongoDB.getInstance().getWeekSortedIncomeTransaction(time);
         Double totalIncome= Double.valueOf(0d);
+
         for (Transaction tr: thisWeekOutcome) {
-            totalIncome += tr.getTransAmount() *-1;
+            totalIncome += tr.getTransAmount();
+            Log.v("week outcome", "TOTALL IC!! "+String.valueOf(totalIncome));
         }
-        Log.v("week outcome", "Start!! "+String.valueOf(time.getTime()));
+
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(totalIncome));
     }
 

@@ -353,7 +353,7 @@ public class MongoDB implements MongoRepository{
 
                 dataList.addAll(Arrays.asList(trans));
 
-                for (Transaction tr: trans) {
+                /*for (Transaction tr: trans) {
                     Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 
                     if (tr.getCreateAt().after(jan1)){
@@ -361,7 +361,7 @@ public class MongoDB implements MongoRepository{
                         dataList.add(tr);
                     }
 
-                }
+                }*/
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
             }
@@ -411,15 +411,7 @@ public class MongoDB implements MongoRepository{
 
                         dataList.addAll(Arrays.asList(trans));
                         Double totalOutcome = Double.valueOf(0d);
-                        for (Transaction tr : trans) {
-                            Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 
-                            /*if (tr.getCreateAt().after(jan1)){
-                                Log.v("DATA IN WEEK LOG ADDED",tr.getCreateAt() + ">" + calendarStart.getTime());
-                                dataList.add(tr);
-                            }*/
-
-                        }
                         for (Transaction tr : dataList) {
                             totalOutcome += tr.getTransAmount() * -1;
                         }
@@ -439,21 +431,20 @@ public class MongoDB implements MongoRepository{
         ArrayList<Transaction> dataList = new ArrayList<>();
         ArrayList<Double> allData = new ArrayList<>();
         Calendar finTime = time;
-        finTime.set(Calendar.DAY_OF_MONTH, 1);
+        finTime.set(Calendar.DAY_OF_MONTH, 0);
         realm.executeTransaction(r -> {
             for (int i = 0; i<4 ; i++) {
                 dataList.clear();
+                Log.v("getDataInComeInWeek TIME", String.valueOf(finTime.getTime()));
                 try {
                     finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                     Calendar calendarStart = finTime;
-
-
                     calendarStart.set(Calendar.HOUR_OF_DAY, 0);
                     calendarStart.set(Calendar.MINUTE, 0);
                     calendarStart.set(Calendar.SECOND, 0);
                     Date jan1 = new Date(calendarStart.getTimeInMillis());
-                    Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
+                    //Log.v("MONTHOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
 
                     Calendar calendarEnd = finTime;
                     calendarEnd.add(Calendar.DATE, 6);
@@ -461,11 +452,11 @@ public class MongoDB implements MongoRepository{
                     calendarEnd.set(Calendar.MINUTE, 59);
                     calendarEnd.set(Calendar.SECOND, 59);
 
-                    Log.v("WeekOutCome", "END!! " + String.valueOf(calendarEnd.getTime()));
+                    //Log.v("getDataInComeInWeek", "END!! " + String.valueOf(calendarEnd.getTime()));
                     Date jan2 = new Date(calendarEnd.getTimeInMillis());
                     calendarEnd.add(Calendar.DATE, 1);
                     Date tim2 = calendarEnd.getTime();
-                    Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
+                    Log.v("getDataInComeInWeek", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
 
                     Transaction[] trans = realm.where(Transaction.class)
                             .greaterThan("trans_amount", 0)
@@ -473,20 +464,14 @@ public class MongoDB implements MongoRepository{
                             .greaterThanOrEqualTo("create_at", jan1)
                             .findAll().toArray(new Transaction[0]);
 
-
+                    Log.v("getDataInComeInWeek", String.valueOf(trans.length));
                     dataList.addAll(Arrays.asList(trans));
+
                     Double totalOutcome = Double.valueOf(0d);
-                    for (Transaction tr : trans) {
-                        Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 
-                            /*if (tr.getCreateAt().after(jan1)){
-                                Log.v("DATA IN WEEK LOG ADDED",tr.getCreateAt() + ">" + calendarStart.getTime());
-                                dataList.add(tr);
-                            }*/
-
-                    }
                     for (Transaction tr : dataList) {
-                        totalOutcome += tr.getTransAmount() * -1;
+
+                        totalOutcome += tr.getTransAmount();
                     }
                     allData.add(totalOutcome);
                     finTime.setTime(calendarEnd.getTime());
@@ -496,6 +481,10 @@ public class MongoDB implements MongoRepository{
             }
         });
 
+        for (int j =0; j< 4; j++) {
+            Log.v("DATA", String.valueOf(allData.get(j)));
+
+        }
 
         return allData;
     }

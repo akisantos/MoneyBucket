@@ -113,15 +113,16 @@ public class QLtheoTuan_Fragment extends Fragment {
 
         mChart.getAxisRight().setEnabled(false);
         mChart.getLegend().setEnabled(false);
+
         double[] valIncome = new double[getValueInCome.size()];
         double[] valOutCome =  new double[getValueOutCome.size()];
         for (int i = 0; i < getValueInCome.size(); i++) {
             double cal1 = getValueInCome.get(i);
             double cal2 = getValueOutCome.get(i);
-            valIncome[i] = cal1*-1;
-            Log.v("QY mess", String.valueOf(cal1));
+            valIncome[i] = cal1;
             valOutCome[i] = cal2;
         }
+
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
         ;
