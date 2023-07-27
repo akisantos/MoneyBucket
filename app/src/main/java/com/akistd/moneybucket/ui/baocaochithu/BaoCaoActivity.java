@@ -3,36 +3,62 @@ package com.akistd.moneybucket.ui.baocaochithu;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
+import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.data.BarEntry;
 
-import java.util.ArrayList;
+import java.util.ArrayList;import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class BaoCaoActivity extends AppCompatActivity {
     Button btn_tuan,btn_thang;
     ArrayList<ItemHu_bcct> itemHu_bccts;
     AdapterHu_bcct adapterHu_bcct;
     Spinner spinnerhu;
+    ImageButton backButton;
+    TextView tv_soDu,tv_tieuHao;
+    Button btnDatePickerReport;
+    private int mYear, mMonth, mDay;
+    Calendar currentDate = Calendar.getInstance();;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_bao_cao);
+        addControl();
+        addEnvent();
+        loaiHu();
+
+    }
+    private void addControl(){
         btn_tuan = (Button) findViewById(R.id.btn_tuan);
         btn_thang = (Button) findViewById(R.id.btn_thang);
+        tv_tieuHao = (TextView) findViewById(R.id.tv_tieuHao);
+        tv_soDu = (TextView) findViewById(R.id.tv_soDu);
+        btnDatePickerReport = (Button) findViewById(R.id.btnDatePickerReport);
         spinnerhu = (Spinner)findViewById(R.id.spinnerhu);
+        backButton = (ImageButton) findViewById(R.id.imgBtnOut);
+    }
+    private void addEnvent(){
         btn_tuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,11 +71,118 @@ public class BaoCaoActivity extends AppCompatActivity {
                 loadFragment(new QLtheoThang_fragment());
             }
         });
-        gioitinh();
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        btnDatePickerReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get Current Date
+                mYear = currentDate.get(Calendar.YEAR);
+                mMonth = currentDate.get(Calendar.MONTH);
+                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
 
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(BaoCaoActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnDatePickerReport.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                currentDate.set(year,monthOfYear,dayOfMonth);
+                                Log.v("getdat", "Start!! "+String.valueOf(currentDate.getTime()));
+                                Value(currentDate);
+                                getDataOutComeInWeek(currentDate);
+                                getDataInComeInWeek(currentDate);
+                            }
+
+                        }, mYear, mMonth, mDay);
+
+
+                datePickerDialog.show();
+            }
+        });
+    }
+//    private void loadSoDu(){
+//        ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();
+//        Double sodu= Double.valueOf(0d);
+//        for (Jars jar: jars) {
+//            sodu += jar.getJarBalance();
+//        }
+//
+//
+//        ArrayList<Transaction> latestIncome = MongoDB.getInstance().getAllSortedIncomeTransaction();
+//        Double totalIncome= Double.valueOf(0d);
+//        if (latestIncome.size()>0){
+//
+//            for (int i=0; i<5; i++){
+//                totalIncome += latestIncome.get(i).getTransAmount();
+//            }
+//        }
+//        ArrayList<Transaction> thisMonthOutcome = MongoDB.getInstance().getThisMonthSortedOutcomeTransaction();
+//        Double totalOutcome= Double.valueOf(0d);
+//        for (Transaction tr: thisMonthOutcome) {
+//            totalOutcome += tr.getTransAmount() *-1;
+//
+//        }
+//
+//        //Công thức - toàn bộ tiền trong hũ - tiền đã tiêu trong tháng này.
+////        Double percentRaw = 100 - (totalOutcome/ totalIncome)*100;
+////        if (percentRaw<0 || percentRaw.isInfinite() || percentRaw.isNaN()){
+////            main_balance_process_numb.setText("0%");
+////            main_balance_processBar.setProgress(0);
+////        }else {
+////            main_balance_process_numb.setText(String.format("%.0f",percentRaw) + "%");
+////            main_balance_processBar.setProgress(Integer.parseInt(String.format("%.0f",percentRaw)));
+////        }
+//
+//        tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
+//
+//
+//    }
+//    private void loadTieuHao(){
+//        ArrayList<Transaction> thisMonthOutcome = MongoDB.getInstance().getThisMonthSortedOutcomeTransaction();
+//        Double totalOutcome= Double.valueOf(0d);
+//        for (Transaction tr: thisMonthOutcome) {
+//            totalOutcome += tr.getTransAmount() *-1;
+//        }
+//
+//        tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(totalOutcome));
+//    }
+    private void getDataOutComeInWeek(Calendar time){
+        ArrayList<Transaction> thisWeekOutcome = MongoDB.getInstance().getWeekSortedOutcomeTransaction(time);
+        Double totalOutcome= Double.valueOf(0d);
+        for (Transaction tr: thisWeekOutcome) {
+            totalOutcome += tr.getTransAmount() *-1;
+        }
+        Log.v("week outcome", "Start!! "+String.valueOf(time.getTime()));
+        tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(totalOutcome));
+    }
+    private void Value(Calendar time){
 
     }
-    private void gioitinh(){
+
+    private void getDataInComeInWeek(Calendar time){
+        ArrayList<Transaction> thisWeekOutcome = MongoDB.getInstance().getWeekSortedIncomeTransaction(time);
+        Double totalIncome= Double.valueOf(0d);
+        for (Transaction tr: thisWeekOutcome) {
+            totalIncome += tr.getTransAmount() *-1;
+        }
+        Log.v("week outcome", "Start!! "+String.valueOf(time.getTime()));
+        tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(totalIncome));
+    }
+
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    private void loaiHu(){
         int[] img =new int[]{R.drawable.hu2,R.drawable.hu5,R.drawable.hu1,R.drawable.hu6,R.drawable.hu2,R.drawable.hu4,R.drawable.hu3,};
         String[] namejar = new String[]{"Tất cả","Thiết yếu","Giáo dục","Tiết kiệm","Hưỡng thụ","Đầu tư","Thiện tâm"};
 

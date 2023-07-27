@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.ui.baocaochithu.BaoCaoActivity;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
@@ -53,7 +55,7 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome;
+    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome,mainpage_btn_moneyFlowSeemore;
 
     TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
     ProgressBar main_balance_processBar;
@@ -126,7 +128,7 @@ public class mainpage extends Fragment {
         mainpage_currentBalanceText = (TextView) view.findViewById(R.id.mainpage_currentBalanceText);
         main_balance_processBar = view.findViewById(R.id.main_balance_processBar);
         main_balance_process_numb = view.findViewById(R.id.main_balance_process_numb);
-
+        mainpage_btn_moneyFlowSeemore = view.findViewById(R.id.mainpage_btn_moneyFlowSeemore);
 
         //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
         jars_list_listview = (ListView) view.findViewById(R.id.jars_list_listview);
@@ -183,6 +185,14 @@ public class mainpage extends Fragment {
                 Intent transactionIntent = new Intent(view.getContext(), TransactionsActivity.class);
                 transactionIntent.putExtra("tabIndex",1);
                 view.getContext().startActivity(transactionIntent);
+            }
+        });
+
+        mainpage_btn_moneyFlowSeemore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), BaoCaoActivity.class);
+                startActivity(intent);
             }
         });
 

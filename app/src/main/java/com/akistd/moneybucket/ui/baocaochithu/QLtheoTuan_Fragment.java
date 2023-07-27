@@ -5,11 +5,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.MongoDB;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,7 +22,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link QLtheoTuan_Fragment#newInstance} factory method to
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 public class QLtheoTuan_Fragment extends Fragment {
     BarChart mChart;
     View view;
+    Calendar currentDate = Calendar.getInstance();;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -78,6 +81,8 @@ public class QLtheoTuan_Fragment extends Fragment {
         return view;
     }
     public void GroupBarChart(){
+        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
+        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInWeek(currentDate);
         mChart = (BarChart) view.findViewById(R.id.mChart);
         mChart.setDrawBarShadow(false);
         mChart.getDescription().setEnabled(false);
@@ -97,6 +102,7 @@ public class QLtheoTuan_Fragment extends Fragment {
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setTextSize(12);
         leftAxis.setAxisLineColor(Color.WHITE);
@@ -107,16 +113,21 @@ public class QLtheoTuan_Fragment extends Fragment {
 
         mChart.getAxisRight().setEnabled(false);
         mChart.getLegend().setEnabled(false);
-
-        float[] valOne = {90, 20, 30, 40, 80};
-        float[] valTwo = {60, 50, 40, 30, 20};
-
+        double[] valIncome = new double[getValueInCome.size()];
+        double[] valOutCome =  new double[getValueOutCome.size()];
+        for (int i = 0; i < getValueInCome.size(); i++) {
+            double cal1 = getValueInCome.get(i);
+            double cal2 = getValueOutCome.get(i);
+            valIncome[i] = cal1*-1;
+            Log.v("QY mess", String.valueOf(cal1));
+            valOutCome[i] = cal2;
+        }
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
         ;
-        for (int i = 0; i < valOne.length; i++) {
-            barOne.add(new BarEntry(i, valOne[i]));
-            barTwo.add(new BarEntry(i, valTwo[i]));
+        for (int i = 0; i < valIncome.length; i++) {
+            barOne.add(new BarEntry(i, (float) valIncome[i]));
+            barTwo.add(new BarEntry(i, (float) valOutCome[i]));
 
         }
 
