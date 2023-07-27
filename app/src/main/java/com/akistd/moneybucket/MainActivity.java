@@ -24,6 +24,7 @@ import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Users;
 import com.akistd.moneybucket.databinding.ActivityTrangChuBinding;
+import com.akistd.moneybucket.ui.appintro.MoneyBucketIntro;
 import com.akistd.moneybucket.ui.auth.Login;
 import com.akistd.moneybucket.ui.homepage.mainpage;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
@@ -137,7 +138,12 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean("firstrun", true)) {
                 // Do first run stuff here then set 'firstrun' as false
                 // using the following line to edit/commit prefs
+
+
                 RegisterNewUser();
+
+                Intent intro = new Intent(this, MoneyBucketIntro.class);
+                startActivity(intro);
                 prefs.edit().putBoolean("firstrun", false).commit();
             }
 
@@ -223,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+
         navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -267,9 +275,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         BottomNavigationView nav = findViewById(R.id.nav_view);
+        nav.getMenu().getItem(1).setEnabled(false);
         nav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
                 if (item.getItemId() == R.id.navigation_profile){
                     Bundle bundleProfile = new Bundle();
                     bundleProfile.putString("username", acc.getDisplayName());

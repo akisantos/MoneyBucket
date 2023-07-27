@@ -29,6 +29,7 @@ import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.util.UtilConverter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,13 +104,14 @@ public class ChiTieuFragment extends Fragment {
 
         jarListsSpinnerEvents();
 
+        mYear = currentDate.get(Calendar.YEAR);
+        mMonth = currentDate.get(Calendar.MONTH);
+        mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+        btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(currentDate.getTime()));
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get Current Date
-                mYear = currentDate.get(Calendar.YEAR);
-                mMonth = currentDate.get(Calendar.MONTH);
-                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
 
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
@@ -119,7 +121,7 @@ public class ChiTieuFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(currentDate.getTime()));
                                 currentDate.set(year,monthOfYear,dayOfMonth);
                             }
 

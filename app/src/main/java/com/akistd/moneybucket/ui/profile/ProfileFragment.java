@@ -187,7 +187,7 @@ public class ProfileFragment extends Fragment {
                                 .getActivity(c, mPendingIntentId, mStartActivity,
                                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                         AlarmManager mgr = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), mPendingIntent);
                         //kill the application
                         System.exit(0);
                     } else {

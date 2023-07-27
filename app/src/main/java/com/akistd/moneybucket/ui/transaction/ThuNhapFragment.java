@@ -1,5 +1,7 @@
 package com.akistd.moneybucket.ui.transaction;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.util.UtilConverter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,18 +110,26 @@ public class ThuNhapFragment extends Fragment {
             fr.add(R.id.FLAllJam, new ThuNhapChild_AllJamFragment());
             fr.commit();*/
             Intent jarSettings = new Intent(getContext(), ThuNhapJarsSettingsActivity.class);
-            startActivity(jarSettings);
+            startActivity(jarSettings, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
 
         });
+
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(c.getTime()));
+
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 // Get Current Date
-                final Calendar c = Calendar.getInstance();
+                /*final Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
+                btnDatePicker.setText(String.format("%s - %s - %s", mDay, mMonth, mYear));*/
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                         new DatePickerDialog.OnDateSetListener() {
@@ -127,7 +138,11 @@ public class ThuNhapFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                                btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(c.getTime()));
 
                             }
                         }, mYear, mMonth, mDay);
