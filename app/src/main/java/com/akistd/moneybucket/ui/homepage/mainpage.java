@@ -185,6 +185,7 @@ public class mainpage extends Fragment {
                 view.getContext().startActivity(transactionIntent);
             }
         });
+
     }
 
     private void loadSoDu(){

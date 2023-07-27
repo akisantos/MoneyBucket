@@ -9,6 +9,8 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -251,8 +253,61 @@ public class MongoDB implements MongoRepository{
                         .lessThan("create_at",calendarEnd.getTime()).sort("create_at", Sort.DESCENDING).lessThan("trans_amount",0).findAll().toArray(new Transaction[0]);
                 dataList.addAll(Arrays.asList(trans));
 
-                for (Transaction tr: dataList) {
+                /*for (Transaction tr: dataList) {
                     Log.v("DATA IN MONTH LOG", tr.getTransAmount().toString());
+                }*/
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time){
+
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+
+                time.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                Calendar calendarStart = time;
+                calendarStart.set(Calendar.DAY_OF_WEEK, 1);
+                calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                calendarStart.set(Calendar.MINUTE,0);
+                calendarStart.set(Calendar.SECOND,0);
+                Date jan1 = new Date(calendarStart.getTimeInMillis());
+                Log.v("getWeekSortedOutcomeTransaction", "Start!! "+String.valueOf(calendarStart.getTime()));
+
+                Calendar calendarEnd = time;
+                calendarEnd.add(Calendar.DATE, 6);
+                calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                calendarEnd.set(Calendar.MINUTE,59);
+                calendarEnd.set(Calendar.SECOND,59);
+                Log.v("getWeekSortedOutcomeTransaction", "END!! "+ String.valueOf(calendarEnd.getTime()));
+                Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! "+ String.valueOf(jan1 + " " +jan2));
+
+
+
+                Transaction[] trans = realm.where(Transaction.class)
+                        .lessThan("trans_amount",0)
+                        .lessThanOrEqualTo("create_at", jan2)
+                        .greaterThanOrEqualTo("create_at", jan1)
+                        .findAll().toArray(new Transaction[0]);
+
+
+                dataList.addAll(Arrays.asList(trans));
+
+                for (Transaction tr: trans) {
+                    Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
+
+                    /*if (tr.getCreateAt().after(jan1)){
+                        Log.v("DATA IN WEEK LOG ADDED",tr.getCreateAt() + ">" + calendarStart.getTime());
+                        dataList.add(tr);
+                    }*/
+
                 }
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
