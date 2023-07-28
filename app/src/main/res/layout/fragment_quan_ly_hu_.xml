@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/pieChart_tyLeHu" />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/qlh_jars_thietyeu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -86,25 +86,25 @@
                         android:text="Thiết yếu"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imgBtn_cong1"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imgBtn_cong1"
+                        android:id="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_ty"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thietyeu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_ty"
+                        android:id="@+id/qlh_jars_thietyeu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -112,20 +112,20 @@
                         android:hint="60%"
                         android:inputType="text"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imgBtn_tru1"
-                        app:layout_constraintStart_toEndOf="@+id/imgBtn_cong1"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thietyeu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imgBtn_tru1"
+                        android:id="@+id/qlh_jars_thietyeu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_ty"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thietyeu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -135,7 +135,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout2"
+                android:id="@+id/qlh_jars_giaoduc"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="40dp"
@@ -166,11 +166,11 @@
                         android:text="Giáo dục"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton32"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton32"
+                        android:id="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         android:layout_width="30dp"
                         android:textColor="@color/black"
 
@@ -178,14 +178,14 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_gd"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_giaoduc_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_gd"
+                        android:id="@+id/qlh_jars_giaoduc_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -193,20 +193,20 @@
                         android:textColorHint="@color/black"
                         android:inputType="text"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton52"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton32"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_giaoduc_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton52"
+                        android:id="@+id/qlh_jars_giaoduc_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_gd"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_giaoduc_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -215,7 +215,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/qlh_jars_tietkiem"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -223,7 +223,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_thietyeu">
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -246,25 +246,25 @@
                         android:text="Tiết kiệm"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton33"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton33"
+                        android:id="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_tk"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_tietkiem_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_tk"
+                        android:id="@+id/qlh_jars_tietkiem_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -272,20 +272,20 @@
                         android:inputType="text"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton53"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton33"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_tietkiem_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton53"
+                        android:id="@+id/qlh_jars_tietkiem_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_tk"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_tietkiem_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -294,7 +294,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout4"
+                android:id="@+id/qlh_jars_huongthu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="20dp"
@@ -302,7 +302,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_giaoduc">
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -325,25 +325,25 @@
                         android:text="Hưởng thụ"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton34"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_huongthu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton34"
+                        android:id="@+id/qlh_jars_huongthu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_ht"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_huongthu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_ht"
+                        android:id="@+id/qlh_jars_huongthu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -351,20 +351,20 @@
                         android:textColorHint="@color/black"
                         android:inputType="text"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton54"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton34"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_huongthu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_huongthu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton54"
+                        android:id="@+id/qlh_jars_huongthu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_ht"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_huongthu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -373,7 +373,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/qlh_jars_dautu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -381,7 +381,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_tietkiem">
 
                 <ImageView
                     android:id="@+id/imageView7"
@@ -404,25 +404,25 @@
                         android:text="Đầu tư"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton35"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_dautu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton35"
+                        android:id="@+id/qlh_jars_dautu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_dt"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_dautu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_dt"
+                        android:id="@+id/qlh_jars_dautu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -430,20 +430,20 @@
                         android:inputType="text"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton55"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton35"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_dautu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_dautu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton55"
+                        android:id="@+id/qlh_jars_dautu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_dt"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_dautu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -452,14 +452,16 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/qlh_jars_thientam"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_huongthu">
 
                 <ImageView
                     android:id="@+id/imageView8"
@@ -482,25 +484,25 @@
                         android:text="Thiện tâm"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton36"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_thientam_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton36"
+                        android:id="@+id/qlh_jars_thientam_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_tt"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thientam_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_tt"
+                        android:id="@+id/qlh_jars_thientam_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -508,20 +510,20 @@
                         android:inputType="text"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton56"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton36"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thientam_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thientam_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton56"
+                        android:id="@+id/qlh_jars_thientam_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_tt"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thientam_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />

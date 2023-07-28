@@ -8,6 +8,7 @@
     android:background="@drawable/loginbg">
 
     <FrameLayout
+        android:id="@+id/mainpage_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -169,13 +170,14 @@
                         android:layout_marginBottom="10dp"
                         android:text="Danh sách hũ" />
 
-                    <ListView
-                        android:id="@+id/jars_list_listview"
-                        android:layout_width="match_parent"
-                        android:background="@drawable/rounded_bg"
-                        android:padding="10dp"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
+
+                <ListView
+                    android:id="@+id/jars_list_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_bg"
+                    android:padding="10dp" />
 
                 <LinearLayout
                     android:id="@+id/mainpage_history"

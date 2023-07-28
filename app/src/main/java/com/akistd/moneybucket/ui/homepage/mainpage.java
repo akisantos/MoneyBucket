@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
+import com.akistd.moneybucket.ui.quanlihu.QuanLyHu_Fragment;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.UtilConverter;
@@ -53,7 +56,7 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome;
+    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome, mainpage_btn_SeemorejarDistribution;
 
     TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
     ProgressBar main_balance_processBar;
@@ -139,6 +142,9 @@ public class mainpage extends Fragment {
         //History
         mainpage_btn_historySeemore = (AppCompatButton) view.findViewById(R.id.mainpage_btn_historySeemore);
 
+        //Co cau hu
+        mainpage_btn_SeemorejarDistribution = (AppCompatButton) view.findViewById(R.id.mainpage_btn_SeemorejarDistribution);
+
 
     }
 
@@ -186,8 +192,21 @@ public class mainpage extends Fragment {
             }
         });
 
+        mainpage_btn_SeemorejarDistribution.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFrag(new QuanLyHu_Fragment());
+            }
+        });
     }
 
+    //ham load fragment
+    private void loadFrag(Fragment fragment){
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mainpage_frameLayout, fragment);
+        fragmentTransaction.commit();
+    }
     private void loadSoDu(){
         ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();
         Double sodu= Double.valueOf(0d);

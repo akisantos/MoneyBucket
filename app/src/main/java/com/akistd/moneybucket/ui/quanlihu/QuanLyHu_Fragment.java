@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
@@ -63,11 +64,18 @@ public class QuanLyHu_Fragment extends Fragment {
         }
     }
 
+
+    EditText qlh_jars_thietyeu_edt, qlh_jars_giaoduc_edt, qlh_jars_tietkiem_edt, qlh_jars_huongthu_edt, qlh_jars_dautu_edt, qlh_jars_thientam_edt;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quan_ly_hu_,container,false);
+
+        //-----------------------------------------------------------------
+        //load piechart
         PieChart pieChart = view.findViewById(R.id.pieChart_tyLeHu);
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(55,"Thiết yếu"));
@@ -85,6 +93,11 @@ public class QuanLyHu_Fragment extends Fragment {
         pieChart.getDescription().setEnabled(false);
         pieChart.animateY(100);
         pieChart.invalidate();
+
+        //--------------------------------------------------------------
+
+
+
         return view;
     }
 }
