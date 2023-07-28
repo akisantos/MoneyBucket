@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/loginbg"
+    android:background="#081945"
     tools:ignore="SpeakableTextPresentCheck">
 
 
@@ -14,12 +14,27 @@
             android:layout_height="match_parent"
             tools:context=".QuanLyHuActivity">
 
-
+            <Button
+                android:id="@+id/btnDatePikerWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:backgroundTint="#3D62AF"
+                android:drawableLeft="@drawable/baseline_calendar_month_24"
+                android:text="Jul 05 2023"
+                android:textAlignment="viewStart"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints" />
 
             <FrameLayout
-                android:layout_width="match_parent"
                 android:id="@+id/frg_bcct"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnDatePikerWeek"
                 tools:context=".ui.quanlihu.QuanLyHu_Fragment"
                 tools:ignore="InvalidId">
 

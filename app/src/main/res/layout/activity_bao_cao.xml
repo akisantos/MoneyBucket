@@ -201,10 +201,10 @@
             android:id="@+id/frg_bcct"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="10dp"
+            android:background="#081945"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout8"
             tools:context=".ui.quanlihu.QuanLyHu_Fragment"
-            android:background="#081945"
             tools:ignore="InvalidId">
 
             <com.github.mikephil.charting.charts.BarChart
@@ -220,20 +220,20 @@
                 tools:ignore="MissingClass,MissingConstraints,NotSibling"></com.github.mikephil.charting.charts.BarChart>
         </FrameLayout>
 
-        <Button
-            android:id="@+id/btnDatePickerReport"
-            android:drawableLeft="@drawable/baseline_calendar_month_24"
-            android:background="@android:color/transparent"
-            android:textAlignment="viewStart"
-            android:backgroundTint="#3D62AF"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jul 05 2023"
-            app:layout_constraintBottom_toTopOf="@+id/frg_bcct"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+<!--        <Button-->
+<!--            android:id="@+id/btnDatePickerReport"-->
+<!--            android:drawableLeft="@drawable/baseline_calendar_month_24"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:textAlignment="viewStart"-->
+<!--            android:backgroundTint="#3D62AF"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Jul 05 2023"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/frg_bcct"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

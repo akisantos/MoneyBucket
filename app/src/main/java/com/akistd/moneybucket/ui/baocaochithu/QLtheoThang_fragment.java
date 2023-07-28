@@ -1,15 +1,20 @@
 package com.akistd.moneybucket.ui.baocaochithu;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.MongoDB;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,7 +25,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link QLtheoThang_fragment#newInstance} factory method to
@@ -28,7 +33,11 @@ import java.util.ArrayList;
  */
 public class QLtheoThang_fragment extends Fragment {
     BarChart mChart2;
+    Button btnDatePikerWeek;
     View view;
+    private int mYear, mMonth, mDay;
+
+    Calendar currentDate = Calendar.getInstance();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -74,10 +83,41 @@ public class QLtheoThang_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_bao_cao_chi_thu_,container,false);
-        GroupBarChart();
+        btnDatePikerWeek = view.findViewById(R.id.btnDatePikerWeek);
+        //Event
+        btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get Current Date
+                mYear = currentDate.get(Calendar.YEAR);
+                mMonth = currentDate.get(Calendar.MONTH);
+                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnDatePikerWeek.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                currentDate.set(year,monthOfYear,dayOfMonth);
+                                Log.v("getdat", "Start!! "+String.valueOf(currentDate.getTime()));
+                                GroupBarChart(currentDate);
+                            }
+
+                        }, mYear, mMonth, mDay);
+
+
+                datePickerDialog.show();
+            }
+        });
         return view;
     }
-    public void GroupBarChart(){
+    public void GroupBarChart(Calendar time){
+        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInMonth(time);
+        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInMonth(time);
         mChart2 = (BarChart) view.findViewById(R.id.mChart);
         mChart2.setDrawBarShadow(false);
         mChart2.getDescription().setEnabled(false);
@@ -97,6 +137,7 @@ public class QLtheoThang_fragment extends Fragment {
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         YAxis leftAxis = mChart2.getAxisLeft();
+        leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setTextSize(12);
         leftAxis.setAxisLineColor(Color.WHITE);
@@ -108,15 +149,21 @@ public class QLtheoThang_fragment extends Fragment {
         mChart2.getAxisRight().setEnabled(false);
         mChart2.getLegend().setEnabled(false);
 
-        float[] valOne = {90, 20, 30, 40, 80,50, 40, 10, 40, 50,45,68};
-        float[] valTwo = {60, 50, 40, 30, 20,50, 40, 10, 40, 50,45,68};
 
+        double[] valIncome = new double[getValueOutCome.size()];
+        double[] valOutCome =  new double[getValueOutCome.size()];
+        for (int i = 0; i < getValueOutCome.size()-1; i++) {
+            double cal1 = getValueInCome.get(i+1);
+            double cal2 = getValueOutCome.get(i+1);
+            valIncome[i] = cal1;
+            valOutCome[i] = cal2;
+        }
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
-        ;
-        for (int i = 0; i < valOne.length; i++) {
-            barOne.add(new BarEntry(i, valOne[i]));
-            barTwo.add(new BarEntry(i, valTwo[i]));
+
+        for (int i = 0; i < valOutCome.length; i++) {
+            barOne.add(new BarEntry((float) i, (float) valIncome[i]));
+            barTwo.add(new BarEntry((float) i, (float) valOutCome[i]));
 
         }
 

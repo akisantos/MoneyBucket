@@ -54,7 +54,7 @@ public class BaoCaoActivity extends AppCompatActivity {
         btn_thang = (Button) findViewById(R.id.btn_thang);
         tv_tieuHao = (TextView) findViewById(R.id.tv_tieuHao);
         tv_soDu = (TextView) findViewById(R.id.tv_soDu);
-        btnDatePickerReport = (Button) findViewById(R.id.btnDatePickerReport);
+//        btnDatePickerReport = (Button) findViewById(R.id.btnDatePickerReport);
         spinnerhu = (Spinner)findViewById(R.id.spinnerhu);
         backButton = (ImageButton) findViewById(R.id.imgBtnOut);
     }
@@ -77,36 +77,36 @@ public class BaoCaoActivity extends AppCompatActivity {
                 finish();
             }
         });
-        btnDatePickerReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get Current Date
-                mYear = currentDate.get(Calendar.YEAR);
-                mMonth = currentDate.get(Calendar.MONTH);
-                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(BaoCaoActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                btnDatePickerReport.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                                currentDate.set(year,monthOfYear,dayOfMonth);
-                                Log.v("getdat", "Start!! "+String.valueOf(currentDate.getTime()));
-                                Value(currentDate);
-                                getDataOutComeInWeek(currentDate);
-                                getDataInComeInWeek(currentDate);
-                            }
-
-                        }, mYear, mMonth, mDay);
-
-
-                datePickerDialog.show();
-            }
-        });
+//        btnDatePickerReport.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Get Current Date
+//                mYear = currentDate.get(Calendar.YEAR);
+//                mMonth = currentDate.get(Calendar.MONTH);
+//                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+//
+//
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(BaoCaoActivity.this,
+//                        new DatePickerDialog.OnDateSetListener() {
+//
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year,
+//                                                  int monthOfYear, int dayOfMonth) {
+//
+//                                btnDatePickerReport.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+//                                currentDate.set(year,monthOfYear,dayOfMonth);
+//                                Log.v("getdat", "Start!! "+String.valueOf(currentDate.getTime()));
+//                                Value(currentDate);
+//                                getDataOutComeInWeek(currentDate);
+//                                getDataInComeInWeek(currentDate);
+//                            }
+//
+//                        }, mYear, mMonth, mDay);
+//
+//
+//                datePickerDialog.show();
+//            }
+//        });
     }
 //    private void loadSoDu(){
 //        ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();

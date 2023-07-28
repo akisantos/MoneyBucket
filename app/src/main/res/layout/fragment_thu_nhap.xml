@@ -64,10 +64,11 @@
             android:backgroundTint="#3D62AF"
             android:paddingLeft="20dp"
             android:text="Tất cả hũ (Bấm để thay đổi cơ cấu hũ)"
-            android:textSize="15dp"
-            android:textAllCaps="false"
             android:textAlignment="viewStart"
-            android:textColor="@color/white" />
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            tools:ignore="TextSizeCheck" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_marginTop="10dp"
