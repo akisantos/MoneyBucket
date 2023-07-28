@@ -6,21 +6,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.ui.baocaochithu.BaoCaoActivity;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
-import com.akistd.moneybucket.ui.quanlihu.QuanLyHu_Fragment;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.UtilConverter;
@@ -56,7 +55,7 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome, mainpage_btn_SeemorejarDistribution;
+    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome,mainpage_btn_moneyFlowSeemore;
 
     TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
     ProgressBar main_balance_processBar;
@@ -129,7 +128,7 @@ public class mainpage extends Fragment {
         mainpage_currentBalanceText = (TextView) view.findViewById(R.id.mainpage_currentBalanceText);
         main_balance_processBar = view.findViewById(R.id.main_balance_processBar);
         main_balance_process_numb = view.findViewById(R.id.main_balance_process_numb);
-
+        mainpage_btn_moneyFlowSeemore = view.findViewById(R.id.mainpage_btn_moneyFlowSeemore);
 
         //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
         jars_list_listview = (ListView) view.findViewById(R.id.jars_list_listview);
@@ -141,9 +140,6 @@ public class mainpage extends Fragment {
 
         //History
         mainpage_btn_historySeemore = (AppCompatButton) view.findViewById(R.id.mainpage_btn_historySeemore);
-
-        //Co cau hu
-        mainpage_btn_SeemorejarDistribution = (AppCompatButton) view.findViewById(R.id.mainpage_btn_SeemorejarDistribution);
 
 
     }
@@ -192,21 +188,16 @@ public class mainpage extends Fragment {
             }
         });
 
-        mainpage_btn_SeemorejarDistribution.setOnClickListener(new View.OnClickListener() {
+        mainpage_btn_moneyFlowSeemore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFrag(new QuanLyHu_Fragment());
+                Intent intent = new Intent(getContext(), BaoCaoActivity.class);
+                startActivity(intent);
             }
         });
+
     }
 
-    //ham load fragment
-    private void loadFrag(Fragment fragment){
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainpage_frameLayout, fragment);
-        fragmentTransaction.commit();
-    }
     private void loadSoDu(){
         ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();
         Double sodu= Double.valueOf(0d);

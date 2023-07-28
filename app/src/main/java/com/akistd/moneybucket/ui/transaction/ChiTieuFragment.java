@@ -49,7 +49,7 @@ public class ChiTieuFragment extends Fragment {
     private int mYear, mMonth, mDay;
     JarsChiTieuFragSpinnerAdapter adapter;
     ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
-    Calendar currentDate = Calendar.getInstance();;
+    Calendar currentDate = Calendar.getInstance();
 
     public ChiTieuFragment() {
         // Required empty public constructor

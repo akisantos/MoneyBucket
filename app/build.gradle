@@ -11,7 +11,7 @@ apply plugin: "realm-android"
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\tungd\\OneDrive\\Desktop\\MoneyBucket_android\\money\\app\\src\\main\\java\\com\\akistd\\moneybucket\\util\\keys\\debug.keystore')
+            storeFile file('D:\\Android\\MoneyBucket\\app\\src\\main\\java\\com\\akistd\\moneybucket\\util\\keys\\debug.keystore')
         }
     }
     namespace 'com.akistd.moneybucket'
