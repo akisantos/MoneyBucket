@@ -41,9 +41,9 @@ public class AdapterHu_bcct extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ItemHu_bcct item =itemHu_bccts.get(position);
         View rowView = inflater.inflate(layout,null,true);
-        TextView namejar = (TextView) rowView.findViewById(R.id.tv_namejar);
+        TextView namejar = (TextView) rowView.findViewById(R.id.mainpage_jarlist_name);
         namejar.setText(item.getNameJar());
-        ImageView img = (ImageView) rowView.findViewById(R.id.img_jar);
+        ImageView img = (ImageView) rowView.findViewById(R.id.mainpage_jarlist_img);
         img.setImageResource(item.getImg());
         return rowView;
     }
