@@ -45,7 +45,7 @@ public class ThuNhapFragment extends Fragment {
     private String mParam2;
 
     String Root_Frag = "root_fagment";
-    Button btnSave, btnAllJam, btnDatePicker,saveBtn;
+    Button btnAllJam, btnDatePicker,saveBtn;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
     private int mYear, mMonth, mDay;

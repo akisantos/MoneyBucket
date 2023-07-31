@@ -24,7 +24,7 @@ public class JarsChiTieuFragSpinnerAdapter extends ArrayAdapter<Jars> {
     public ArrayList<Jars> data = new ArrayList<>();
     private Context context;
 
-    private TextView jarBalanceText, mainpage_jarlist_name;
+    private TextView jarBalanceText, mainpage_jarlist_name,Title;
     private ImageView mainpage_jarlist_img;
 
     public JarsChiTieuFragSpinnerAdapter(@NonNull Context context, @NonNull ArrayList<Jars> objects) {
@@ -61,6 +61,7 @@ public class JarsChiTieuFragSpinnerAdapter extends ArrayAdapter<Jars> {
         jarBalanceText = convertView.findViewById(R.id.jarBalanceText);
         mainpage_jarlist_name = convertView.findViewById(R.id.mainpage_jarlist_name);
         mainpage_jarlist_img = convertView.findViewById(R.id.mainpage_jarlist_img);
+        Title = convertView.findViewById(R.id.Title);
 
         switch (jar.getJarName()) {
             case "Đầu tư" -> mainpage_jarlist_img.setImageResource(R.drawable.hu1);
@@ -69,10 +70,19 @@ public class JarsChiTieuFragSpinnerAdapter extends ArrayAdapter<Jars> {
             case "Thiện tâm" -> mainpage_jarlist_img.setImageResource(R.drawable.hu4);
             case "Thiết yếu" -> mainpage_jarlist_img.setImageResource(R.drawable.hu5);
             case "Tiết kiệm" -> mainpage_jarlist_img.setImageResource(R.drawable.hu6);
+            default -> {}
         }
 
-        mainpage_jarlist_name.setText(jar.getJarName());
-        jarBalanceText.setText(UtilConverter.getInstance().vndCurrencyConverter(jar.getJarBalance()));
+        if (jar.getJarName().equals("Tất cả hũ")){
+            Title.setText("");
+            jarBalanceText.setText("");
+            mainpage_jarlist_name.setText(jar.getJarName());
+        }else{
+            mainpage_jarlist_name.setText(jar.getJarName());
+            jarBalanceText.setText(UtilConverter.getInstance().vndCurrencyConverter(jar.getJarBalance()));
+        }
+
+
         return convertView;
     }
 

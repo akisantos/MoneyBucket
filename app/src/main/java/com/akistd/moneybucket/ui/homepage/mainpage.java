@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +19,7 @@ import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.baocaochithu.BaoCaoActivity;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
+import com.akistd.moneybucket.ui.history.TransactionHistoryAdapter;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.UtilConverter;
@@ -63,13 +63,17 @@ public class mainpage extends Fragment {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
-    ListView jars_list_listview;
+    ListView jars_list_listview, mainpage_listview_history;
     Cjarlist_listAdapter cjarlistListAdapter;
     ArrayList<Jars> jarsList;
     BarChart moneyFlowChart;
     Constants util = new Constants();
-
+    TextView emptyView, jars_list_listview_emptyView;
     View view;
+
+    ArrayList<Transaction> data;
+    TransactionHistoryAdapter listViewAdapter;
+
     public static mainpage newInstance(String param1, String param2) {
         mainpage fragment = new mainpage();
         Bundle args = new Bundle();
@@ -114,10 +118,13 @@ public class mainpage extends Fragment {
         super.onResume();
         if (cjarlistListAdapter != null){
             cjarlistListAdapter.notifyDataSetChanged();
+            listViewAdapter.notifyDataSetChanged();
+
         }
 
-        loadSoDu();
 
+        loadSoDu();
+        loadHistory();
     }
 
     private void addControls(View view){
@@ -132,6 +139,7 @@ public class mainpage extends Fragment {
 
         //Jars List (nếu đou chạm thì comment lại cho đúng nhe)
         jars_list_listview = (ListView) view.findViewById(R.id.jars_list_listview);
+        jars_list_listview_emptyView = view.findViewById(R.id.jars_list_listview_emptyView);
 
 
         //Income,outcome btn
@@ -140,7 +148,8 @@ public class mainpage extends Fragment {
 
         //History
         mainpage_btn_historySeemore = (AppCompatButton) view.findViewById(R.id.mainpage_btn_historySeemore);
-
+        mainpage_listview_history = view.findViewById(R.id.mainpage_listview_history);
+        emptyView = (TextView)view.findViewById(R.id.emptyView);
 
     }
 
@@ -155,8 +164,9 @@ public class mainpage extends Fragment {
         //JarsList
 
         cjarlistListAdapter = new Cjarlist_listAdapter(getContext(), R.layout.jarlist_layout_mainpage, jarsList);
-
         jars_list_listview.setAdapter(cjarlistListAdapter);
+        jars_list_listview.setEmptyView(jars_list_listview_emptyView);
+
 
         //history events
         mainpage_btn_historySeemore.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +176,12 @@ public class mainpage extends Fragment {
                 view.getContext().startActivity(historyIntent);
             }
         });
+
+        data = MongoDB.getInstance().getThisMonthSortedTransactionByNumber(5);
+        jarsList = MongoDB.getInstance().getAllJars();
+        listViewAdapter = new TransactionHistoryAdapter(getContext(),R.layout.transaction_history_row,data, jarsList);
+        mainpage_listview_history.setEmptyView(emptyView);
+        mainpage_listview_history.setAdapter(listViewAdapter);
 
 
 
@@ -234,6 +250,13 @@ public class mainpage extends Fragment {
         mainpage_currentBalanceText.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
 
 
+    }
+
+    private void loadHistory(){
+        data = MongoDB.getInstance().getThisMonthSortedTransactionByNumber(5);
+        listViewAdapter = new TransactionHistoryAdapter(getContext(),R.layout.transaction_history_row,data, jarsList);
+        mainpage_listview_history.setEmptyView(emptyView);
+        mainpage_listview_history.setAdapter(listViewAdapter);
     }
 
 
