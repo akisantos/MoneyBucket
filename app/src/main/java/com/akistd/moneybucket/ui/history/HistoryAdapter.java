@@ -19,6 +19,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     Context context;
     ArrayList<HistoryClass> historyArrLs;
 
+
     public HistoryAdapter(Context context, ArrayList<HistoryClass> historyArrLs) {
         this.context = context;
         this.historyArrLs = historyArrLs;

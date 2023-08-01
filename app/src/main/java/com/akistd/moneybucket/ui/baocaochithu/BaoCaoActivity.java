@@ -1,33 +1,27 @@
 package com.akistd.moneybucket.ui.baocaochithu;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.akistd.moneybucket.R;
-import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.util.UtilConverter;
-import com.github.mikephil.charting.data.BarEntry;
 
-import java.util.ArrayList;import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class BaoCaoActivity extends AppCompatActivity {
     Button btn_tuan,btn_thang;
@@ -48,6 +42,10 @@ public class BaoCaoActivity extends AppCompatActivity {
         addEnvent();
         loaiHu();
 
+        loadFragment(new QLtheoThang_Fragment());
+        btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+        btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
+
     }
     private void addControl(){
         btn_tuan = (Button) findViewById(R.id.btn_tuan);
@@ -62,13 +60,18 @@ public class BaoCaoActivity extends AppCompatActivity {
         btn_tuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoTuan_Fragment());
+
+                loadFragment(new QLtheoThang_Fragment());
+                btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
         btn_thang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoThang_fragment());
+                loadFragment(new QLtheoNam_fragment());
+                btn_thang.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_tuan.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -186,15 +189,15 @@ public class BaoCaoActivity extends AppCompatActivity {
 
     private void loaiHu(){
         int[] img =new int[]{R.drawable.hu2,R.drawable.hu5,R.drawable.hu1,R.drawable.hu6,R.drawable.hu2,R.drawable.hu4,R.drawable.hu3,};
-        String[] namejar = new String[]{"Tất cả","Thiết yếu","Giáo dục","Tiết kiệm","Hưỡng thụ","Đầu tư","Thiện tâm"};
+        String[] namejar = new String[]{"Tất cả","Thiết yếu","Giáo dục","Tiết kiệm","Hưởng thụ","Đầu tư","Thiện tâm"};
 
         itemHu_bccts= ItemHu_bcct.initSex(img,namejar);
-        adapterHu_bcct =new AdapterHu_bcct(this.getLayoutInflater(),itemHu_bccts,R.layout.item_hu_bcct);
+        adapterHu_bcct =new AdapterHu_bcct(this.getLayoutInflater(),itemHu_bccts,R.layout.baocaochitieu_jar_row);
         spinnerhu.setAdapter(adapterHu_bcct);
         spinnerhu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(),item_gioitinhs.get(position).getSex(),Toast.LENGTH_LONG).show();
+/*                Toast.makeText(getApplicationContext(),"Viết hàm cập nhật lại dữ liệu ở đây",Toast.LENGTH_LONG).show();*/
             }
 
             @Override
@@ -203,6 +206,7 @@ public class BaoCaoActivity extends AppCompatActivity {
             }
         });
     }
+
     public void loadFragment(Fragment fragment) {
 // create a FragmentManager
         FragmentManager fm = getSupportFragmentManager();

@@ -8,7 +8,6 @@
     android:background="@drawable/loginbg">
 
     <FrameLayout
-        android:id="@+id/mainpage_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -170,19 +169,26 @@
                         android:layout_marginBottom="10dp"
                         android:text="Danh sách hũ" />
 
-                </LinearLayout>
+                    <ListView
+                        android:id="@+id/jars_list_listview"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/rounded_bg"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/jars_list_listview_emptyView"
+                        android:layout_width="fill_parent"
+                        android:layout_marginTop="150dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Không có dữ liệu" />
 
-                <ListView
-                    android:id="@+id/jars_list_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_bg"
-                    android:padding="10dp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/mainpage_history"
                     android:layout_width="match_parent"
-                    android:layout_height="450dp"
+                    android:layout_height="480dp"
                     android:layout_below="@id/mainpage_jarsList"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="10dp"
@@ -218,20 +224,31 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="250dp"
+                            android:layout_height="340dp"
                             android:orientation="vertical">
 
                             <ListView
                                 android:id="@+id/mainpage_listview_history"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                tools:listitem="@layout/transaction_history_row"
+                                android:layout_height="match_parent"
+                                tools:ignore="NestedScrolling" />
+
+                            <TextView
+                                android:id="@+id/emptyView"
+                                android:layout_width="fill_parent"
+                                android:layout_marginTop="150dp"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="Không có dữ liệu" />
+
                         </LinearLayout>
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/mainpage_btn_historySeemore"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="15dp"
+                            android:layout_marginBottom="5dp"
                             android:layout_marginTop="10dp"
                             android:background="@drawable/mainpage_seemore"
                             android:textSize="7pt"

@@ -39,7 +39,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/txtJamName"
+            android:id="@+id/jarName"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_marginEnd="5dp"
             android:lineSpacingExtra="5sp"
             android:text="Hũ thiết yếu"
-            android:textAlignment="viewEnd"
+            android:textAlignment="textEnd"
             android:textSize="14dp"
             android:textStyle="bold" />
 
@@ -56,11 +56,12 @@
             android:id="@+id/txtDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtJamName"
+            android:layout_below="@id/jarName"
             android:layout_alignParentRight="true"
             android:layout_marginTop="1dp"
+            android:layout_marginEnd="5dp"
             android:text="10m ago"
-            android:textAlignment="viewEnd"
+            android:textAlignment="textEnd"
             android:textSize="12dp" />
     </RelativeLayout>
 
