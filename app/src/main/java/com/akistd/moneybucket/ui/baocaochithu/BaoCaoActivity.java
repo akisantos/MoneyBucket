@@ -42,6 +42,10 @@ public class BaoCaoActivity extends AppCompatActivity {
         addEnvent();
         loaiHu();
 
+        loadFragment(new QLtheoThang_Fragment());
+        btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+        btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
+
     }
     private void addControl(){
         btn_tuan = (Button) findViewById(R.id.btn_tuan);
@@ -56,13 +60,18 @@ public class BaoCaoActivity extends AppCompatActivity {
         btn_tuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoTuan_Fragment());
+
+                loadFragment(new QLtheoThang_Fragment());
+                btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
         btn_thang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoThang_fragment());
+                loadFragment(new QLtheoNam_fragment());
+                btn_thang.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_tuan.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +197,7 @@ public class BaoCaoActivity extends AppCompatActivity {
         spinnerhu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(),item_gioitinhs.get(position).getSex(),Toast.LENGTH_LONG).show();
+/*                Toast.makeText(getApplicationContext(),"Viết hàm cập nhật lại dữ liệu ở đây",Toast.LENGTH_LONG).show();*/
             }
 
             @Override
@@ -197,6 +206,7 @@ public class BaoCaoActivity extends AppCompatActivity {
             }
         });
     }
+
     public void loadFragment(Fragment fragment) {
 // create a FragmentManager
         FragmentManager fm = getSupportFragmentManager();

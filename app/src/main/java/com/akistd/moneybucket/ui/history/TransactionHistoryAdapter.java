@@ -73,7 +73,7 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         holder.jarName.setText(jars.getJarName());
         String[] dateTrim = UtilConverter.getInstance().vnTimeLocaleConverter(transaction.getCreateAt()).split(",");
         String[] monthTrim = dateTrim[1].split(" ");
-        holder.txtDate.setText(String.format("ngày %s, %s", monthTrim[1],dateTrim[0]));
+        holder.txtDate.setText(String.format("%s, ngày %s",dateTrim[0],monthTrim[1]));
         if (transaction.getTransAmount() >0){
 
             holder.transactionValueTxt.setText("+" + UtilConverter.getInstance().vndCurrencyConverter(transaction.getTransAmount()));

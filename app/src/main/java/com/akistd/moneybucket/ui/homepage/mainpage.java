@@ -253,7 +253,7 @@ public class mainpage extends Fragment {
     }
 
     private void loadHistory(){
-        data = MongoDB.getInstance().getThisMonthSortedTransactionByNumber(5);
+        data = MongoDB.getInstance().getFiveSortedTransactionByNumber();
         listViewAdapter = new TransactionHistoryAdapter(getContext(),R.layout.transaction_history_row,data, jarsList);
         mainpage_listview_history.setEmptyView(emptyView);
         mainpage_listview_history.setAdapter(listViewAdapter);

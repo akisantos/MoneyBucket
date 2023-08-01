@@ -188,18 +188,16 @@ public class MongoDB implements MongoRepository{
 
     @Override
     public  ArrayList<Transaction> getAllTransaction() {
-        ArrayList<Transaction> jars = new ArrayList<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         realm.executeTransaction(r ->{
             try {
-                Transaction[] jarsList = r.where(Transaction.class).findAll().toArray(new Transaction[0]);
-                for (Transaction jar: jarsList) {
-                    jars.add(jar);
-                }
+                Transaction[] transaction = r.where(Transaction.class).findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
             }
         });
-        return jars;
+        return transactions;
     }
 
     public ArrayList<Transaction> getAllSortedTransaction(){
@@ -372,6 +370,15 @@ public class MongoDB implements MongoRepository{
             dataList.subList(0,amount);
         }
         return dataList;
+    }
+
+    public ArrayList<Transaction> getFiveSortedTransactionByNumber(){
+
+        ArrayList<Transaction> transactions = getAllTransaction();
+        if (transactions.size()>5){
+            transactions.subList(0,5);
+        }
+        return transactions;
     }
     public ArrayList<Transaction> getWeekSortedIncomeTransaction(Calendar time){
 

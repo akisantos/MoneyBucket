@@ -1,20 +1,17 @@
 package com.akistd.moneybucket.ui.baocaochithu;
 
-import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
+
+import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.util.ChartCurrencyFormatter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -23,18 +20,21 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QLtheoTuan_Fragment#newInstance} factory method to
+ * Use the {@link QLtheoNam_fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QLtheoTuan_Fragment extends Fragment {
-    BarChart mChart;
-    View view;
+public class QLtheoNam_fragment extends Fragment {
+    BarChart mChart2;
     Button btnDatePikerWeek;
+    View view;
     private int mYear, mMonth, mDay;
 
     Calendar currentDate = Calendar.getInstance();
@@ -47,24 +47,14 @@ public class QLtheoTuan_Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public QLtheoTuan_Fragment() {
+    public QLtheoNam_fragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment QLtheoTuan_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static QLtheoTuan_Fragment newInstance(String param1, String param2) {
-        QLtheoTuan_Fragment fragment = new QLtheoTuan_Fragment();
+
+    public static QLtheoNam_fragment newInstance() {
+        QLtheoNam_fragment fragment = new QLtheoNam_fragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,51 +73,63 @@ public class QLtheoTuan_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_bao_cao_chi_thu_,container,false);
-        //Control
         btnDatePikerWeek = view.findViewById(R.id.btnDatePikerWeek);
         //Event
+
+        currentDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+        currentDate.set(Calendar.DAY_OF_MONTH,currentDate.getActualMinimum(Calendar.DAY_OF_MONTH));
+        mYear = currentDate.get(Calendar.YEAR);
+        mMonth = currentDate.get(Calendar.MONTH);
+        btnDatePikerWeek.setText(String.format("Tháng %s/%s", mMonth+1, mYear));
+        GroupBarChart(currentDate);
         btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
-                        @Override
+            @Override
             public void onClick(View v) {
                 // Get Current Date
-                mYear = currentDate.get(Calendar.YEAR);
-                mMonth = currentDate.get(Calendar.MONTH);
-                mDay = currentDate.get(Calendar.DAY_OF_MONTH);
 
+                MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getContext(), new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+                        btnDatePikerWeek.setText(String.format("Tháng %s/%s", selectedMonth +1, selectedYear));
+                        GroupBarChart(currentDate);
+                    }
+                }, mYear,mMonth);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-
+                builder.setActivatedMonth(mMonth)
+                        .setMinYear(1990)
+                        .setActivatedYear(mYear)
+                        .setTitle("Chọn tháng năm")
+                        .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
                             @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                            public void onMonthChanged(int selectedMonth) {
+                                mMonth = selectedMonth;
+                                currentDate.set(mYear,mMonth,0);
 
-                                btnDatePikerWeek.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                                currentDate.set(year,monthOfYear,dayOfMonth);
-                                Log.v("getdat", "Start!! "+String.valueOf(currentDate.getTime()));
-                                GroupBarChart(currentDate);
                             }
-
-                        }, mYear, mMonth, mDay);
-
-
-                datePickerDialog.show();
+                        })
+                        .setOnYearChangedListener(new MonthPickerDialog.OnYearChangedListener() {
+                            @Override
+                            public void onYearChanged(int year) {
+                                mYear = year;
+                                currentDate.set(mYear,mMonth,0);
+                            }
+                        })
+                        .build().show();
             }
         });
-
         return view;
     }
     public void GroupBarChart(Calendar time){
-        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
-        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInWeek(currentDate);
-        mChart = (BarChart) view.findViewById(R.id.mChart);
-        mChart.setDrawBarShadow(false);
-        mChart.getDescription().setEnabled(false);
-        mChart.setPinchZoom(false);
-        mChart.setDrawGridBackground(true);
+        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInMonth(time);
+        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInMonth(time);
+        mChart2 = (BarChart) view.findViewById(R.id.mChart);
+        mChart2.setDrawBarShadow(false);
+        mChart2.getDescription().setEnabled(false);
+        mChart2.setPinchZoom(false);
+        mChart2.setDrawGridBackground(true);
         // empty labels so that the names are spread evenly
-        String[] labels = {"", "Tuần1", "Tuần2", "Tuần3", "Tuần4", ""};
-        XAxis xAxis = mChart.getXAxis();
+        String[] labels = {"", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", ""};
+        XAxis xAxis = mChart2.getXAxis();
         xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(true);
@@ -138,7 +140,7 @@ public class QLtheoTuan_Fragment extends Fragment {
         xAxis.setAxisMinimum(1f);
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        YAxis leftAxis = mChart.getAxisLeft();
+        YAxis leftAxis = mChart2.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setTextSize(12);
@@ -148,31 +150,31 @@ public class QLtheoTuan_Fragment extends Fragment {
         leftAxis.setLabelCount(8, true);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
 
-        mChart.getAxisRight().setEnabled(false);
-        mChart.getLegend().setEnabled(false);
+        mChart2.getAxisRight().setEnabled(false);
+        mChart2.getLegend().setEnabled(false);
 
-        double[] valIncome = new double[getValueInCome.size()];
+
+        double[] valIncome = new double[getValueOutCome.size()];
         double[] valOutCome =  new double[getValueOutCome.size()];
-        for (int i = 0; i < getValueInCome.size(); i++) {
-            double cal1 = getValueInCome.get(i);
-            double cal2 = getValueOutCome.get(i);
+        for (int i = 0; i < getValueOutCome.size()-1; i++) {
+            double cal1 = getValueInCome.get(i+1);
+            double cal2 = getValueOutCome.get(i+1);
             valIncome[i] = cal1;
             valOutCome[i] = cal2;
         }
-
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
-        ;
-        for (int i = 0; i < valIncome.length; i++) {
-            barOne.add(new BarEntry(i, (float) valIncome[i]));
-            barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+
+        for (int i = 0; i < valOutCome.length; i++) {
+            barOne.add(new BarEntry((float) i, (float) valIncome[i]));
+            barTwo.add(new BarEntry((float) i, (float) valOutCome[i]));
 
         }
 
         BarDataSet set1 = new BarDataSet(barOne, "barOne");
-        set1.setColor(Color.GREEN);
+        set1.setColor(Color.parseColor("#2ecc71"));
         BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
-        set2.setColor(Color.RED);
+        set2.setColor(Color.parseColor("#e74c3c"));
 
 
         set1.setHighlightEnabled(false);
@@ -193,11 +195,16 @@ public class QLtheoTuan_Fragment extends Fragment {
         data.setBarWidth(barWidth);
         // so that the entire chart is shown when scrolled from right to left
         xAxis.setAxisMaximum(labels.length - 1.1f);
-        mChart.setData(data);
-        mChart.setScaleEnabled(false);
-        mChart.setVisibleXRangeMaximum(6f);
-        mChart.groupBars(1f, groupSpace, barSpace);
-        mChart.invalidate();
+        for (int i = 0; i< leftAxis.mEntries.length; i++){
+            leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
+        }
+        leftAxis.setValueFormatter(new ChartCurrencyFormatter());
+
+        mChart2.setData(data);
+        mChart2.setScaleEnabled(false);
+        mChart2.setVisibleXRangeMaximum(6f);
+        mChart2.groupBars(1f, groupSpace, barSpace);
+        mChart2.invalidate();
 
     }
 }
