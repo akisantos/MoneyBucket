@@ -1,11 +1,16 @@
 package com.akistd.moneybucket.ui.quanlihu;
 
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -66,13 +71,18 @@ public class QuanLyHu_Fragment extends Fragment {
 
 
     EditText qlh_jars_thietyeu_edt, qlh_jars_giaoduc_edt, qlh_jars_tietkiem_edt, qlh_jars_huongthu_edt, qlh_jars_dautu_edt, qlh_jars_thientam_edt;
-
+    ImageButton qlh_jars_thietyeu_imgbtn_plus, qlh_jars_thietyeu_imgbtn_minus, qlh_jars_giaoduc_imgbtn_plus, qlh_jars_giaoduc_imgbtn_minus, qlh_jars_tietkiem_imgbtn_plus,
+            qlh_jars_tietkiem_imgbtn_minus, qlh_jars_huongthu_imgbtn_plus, qlh_jars_huongthu_imgbtn_minus, qlh_jars_dautu_imgbtn_plus, qlh_jars_dautu_imgbtn_minus,
+            qlh_jars_thientam_imgbtn_plus, qlh_jars_thientam_imgbtn_minus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quan_ly_hu_,container,false);
+        //-----------------------------------------------------------------
+        addControls();
+
 
         //-----------------------------------------------------------------
         //load piechart
@@ -89,15 +99,57 @@ public class QuanLyHu_Fragment extends Fragment {
         pieDataSet.setColors(Color.parseColor("#0094FF"),Color.parseColor("#00FFE0"),Color.parseColor("#E84DE2"),Color.parseColor("#FFD615"),Color.parseColor("#FF1F5A"),Color.parseColor("#14FF00"),Color.parseColor("#14FF00"));
         PieData pieData  = new PieData(pieDataSet);
         pieChart.setData(pieData);
-
         pieChart.getDescription().setEnabled(false);
         pieChart.animateY(100);
         pieChart.invalidate();
 
         //--------------------------------------------------------------
-
-
-
         return view;
+    }
+
+    public void addControls() {
+        //EditText
+        qlh_jars_thietyeu_edt = (EditText) view.findViewById(R.id.qlh_jars_thietyeu_edt);
+        qlh_jars_giaoduc_edt = (EditText) view.findViewById(R.id.qlh_jars_giaoduc_edt);
+        qlh_jars_tietkiem_edt = (EditText) view.findViewById(R.id.qlh_jars_tietkiem_edt);
+        qlh_jars_huongthu_edt = (EditText) view.findViewById(R.id.qlh_jars_huongthu_edt);
+        qlh_jars_dautu_edt = (EditText) view.findViewById(R.id.qlh_jars_dautu_edt);
+        qlh_jars_thientam_edt = (EditText) view.findViewById(R.id.qlh_jars_thientam_edt);
+        //ImageButton
+        qlh_jars_thietyeu_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_thietyeu_imgbtn_plus);
+        qlh_jars_thietyeu_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_thietyeu_imgbtn_minus);
+
+        qlh_jars_giaoduc_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_giaoduc_imgbtn_plus);
+        qlh_jars_giaoduc_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_giaoduc_imgbtn_minus);
+
+        qlh_jars_tietkiem_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_tietkiem_imgbtn_plus);
+        qlh_jars_tietkiem_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_tietkiem_imgbtn_minus);
+
+        qlh_jars_huongthu_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_huongthu_imgbtn_plus);
+        qlh_jars_huongthu_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_huongthu_imgbtn_minus);
+
+        qlh_jars_dautu_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_dautu_imgbtn_plus);
+        qlh_jars_dautu_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_dautu_imgbtn_minus);
+
+        qlh_jars_thientam_imgbtn_plus = (ImageButton) view.findViewById(R.id.qlh_jars_thientam_imgbtn_plus);
+        qlh_jars_thientam_imgbtn_minus = (ImageButton) view.findViewById(R.id.qlh_jars_thientam_imgbtn_minus);
+
+
+        double dThietYeu = Double.parseDouble(qlh_jars_thietyeu_edt.getText().toString());
+        double dGiaoDuc = Double.parseDouble(qlh_jars_giaoduc_edt.getText().toString());
+        double dTietKiem = Double.parseDouble(qlh_jars_tietkiem_edt.getText().toString());
+        double dHuongThu = Double.parseDouble(qlh_jars_huongthu_edt.getText().toString());
+        double dDauTu = Double.parseDouble(qlh_jars_dautu_edt.getText().toString());
+        double dThienTam = Double.parseDouble(qlh_jars_thientam_edt.getText().toString());
+
+        qlh_jars_thietyeu_imgbtn_plus.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(qlh_jars_thietyeu_imgbtn_plus.isPressed()){
+                    Log.v("help me pls", "holed" );
+                }
+                return false;
+            }
+        });
     }
 }
