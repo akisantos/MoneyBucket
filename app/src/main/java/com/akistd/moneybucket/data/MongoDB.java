@@ -267,6 +267,9 @@ public class MongoDB implements MongoRepository{
 
         return dataList;
     }
+
+
+
     public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time){
 
         ArrayList<Transaction> dataList = new ArrayList<>();
@@ -382,6 +385,8 @@ public class MongoDB implements MongoRepository{
                 calendarStart.set(Calendar.SECOND, 0);
                 calendarStart.set(Calendar.MILLISECOND, 0);
                 Date jan1 = new Date(calendarStart.getTimeInMillis());
+
+
                 Calendar calendarEnd = calendarStart;
                 calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
                 calendarEnd.set(Calendar.HOUR_OF_DAY, 16);
@@ -419,10 +424,32 @@ public class MongoDB implements MongoRepository{
 
     public ArrayList<Transaction> getFiveSortedTransactionByNumber(){
 
-        ArrayList<Transaction> transactions = getAllTransaction();
-        if (transactions.size()>5){
-            transactions.subList(0,5);
-        }
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class).sort("create_at", Sort.DESCENDING).limit(5).findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        return transactions;
+    }
+
+    public ArrayList<Transaction> getAllSortedTransactionOfJar(Jars jar){
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class)
+                        .equalTo("jars._id", jar.getId())
+                        .findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        Collections.reverse(transactions);
         return transactions;
     }
     public ArrayList<Double> getDataOutComeInWeek(Calendar time){

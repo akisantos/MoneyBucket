@@ -2,6 +2,7 @@ package com.akistd.moneybucket.ui.history;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
@@ -92,6 +94,37 @@ public class TransactionHistoryAdapter extends BaseAdapter {
             case "Thiết yếu" -> holder.imgThumb.setImageResource(R.drawable.hu5);
             case "Tiết kiệm" -> holder.imgThumb.setImageResource(R.drawable.hu6);
         }
+
+
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                builder1.setTitle("Thông tin giao dịch");
+
+                String date = UtilConverter.getInstance().vnTimeHourLocaleConverter(transaction.getCreateAt());
+                String note = transaction.getTransNote();
+                if (note.isEmpty()) note = "Trống";
+                String value = UtilConverter.getInstance().vndCurrencyConverter(transaction.getTransAmount());
+
+                builder1.setMessage(String.format("Thuộc hũ: %s \nNgày thực hiện: %s \nGiá trị: %s \nNội dung: %s ",transaction.getJars().getJarName(),date,value,note));
+
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Đóng",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+                return false;
+            }
+        });
 
         return convertView;
     }
