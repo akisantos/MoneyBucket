@@ -338,7 +338,7 @@ public class MongoDB implements MongoRepository{
 
 
                 Calendar calendarEnd = calendarStart;
-                calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+                calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
                 calendarEnd.set(Calendar.HOUR_OF_DAY, 16);
                 calendarEnd.set(Calendar.MINUTE, 59);
                 calendarEnd.set(Calendar.SECOND, 59);
@@ -374,12 +374,35 @@ public class MongoDB implements MongoRepository{
 
     public ArrayList<Transaction> getFiveSortedTransactionByNumber(){
 
-        ArrayList<Transaction> transactions = getAllTransaction();
-        if (transactions.size()>5){
-            transactions.subList(0,5);
-        }
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class).sort("create_at", Sort.DESCENDING).limit(5).findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
         return transactions;
     }
+
+    public ArrayList<Transaction> getAllSortedTransactionOfJar(Jars jar){
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class)
+                        .equalTo("jars._id", jar.getId())
+                        .findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        Collections.reverse(transactions);
+        return transactions;
+    }
+
     public ArrayList<Transaction> getWeekSortedIncomeTransaction(Calendar time){
 
         ArrayList<Transaction> dataList = new ArrayList<>();

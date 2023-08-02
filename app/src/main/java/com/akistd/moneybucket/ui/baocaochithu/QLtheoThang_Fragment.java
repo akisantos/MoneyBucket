@@ -136,8 +136,9 @@ public class QLtheoThang_Fragment extends Fragment {
         mChart = (BarChart) view.findViewById(R.id.mChart);
         mChart.setDrawBarShadow(false);
         mChart.getDescription().setEnabled(false);
-        mChart.setPinchZoom(false);
+        mChart.setPinchZoom(true);
         mChart.setDrawGridBackground(true);
+        mChart.setTouchEnabled(true);
         // empty labels so that the names are spread evenly
         String[] labels = {"", "Tuần1", "Tuần2", "Tuần3", "Tuần4", ""};
         XAxis xAxis = mChart.getXAxis();
@@ -177,44 +178,60 @@ public class QLtheoThang_Fragment extends Fragment {
         ArrayList<BarEntry> barTwo = new ArrayList<>();
         ;
         for (int i = 0; i < valIncome.length; i++) {
-            barOne.add(new BarEntry(i, (float) valIncome[i]));
-            barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+            if (valOutCome[i] !=0) {
+                barOne.add(new BarEntry(i, (float) valIncome[i]));
+                barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+            }
 
         }
 
         BarDataSet set1 = new BarDataSet(barOne, "barOne");
         set1.setColor(Color.parseColor("#2ecc71"));
+        set1.setDrawValues(true);
+        set1.setValueFormatter(new ChartCurrencyFormatter());
         BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
         set2.setColor(Color.parseColor("#e74c3c"));
+        set2.setDrawValues(true);
+        set2.setValueFormatter(new ChartCurrencyFormatter());
 
+        set1.setHighlightEnabled(true);
+        set2.setHighlightEnabled(true);
 
-        set1.setHighlightEnabled(false);
-        set2.setHighlightEnabled(false);
-
-        set1.setDrawValues(false);
-        set2.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(set1);
         dataSets.add(set2);
 
         BarData data = new BarData(dataSets);
-        float groupSpace = 0.4f;
-        float barSpace = 0f;
-        float barWidth = 0.3f;
+        float groupSpace = 0.16f;
+        float barSpace = 0.02f;
+        float barWidth = 0.4f;
         // (barSpace + barWidth) * 2 + groupSpace = 1
         data.setBarWidth(barWidth);
         // so that the entire chart is shown when scrolled from right to left
         xAxis.setAxisMaximum(labels.length - 1.1f);
+
+        data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
+        data.setValueTextSize(10);
 
         for (int i = 0; i< leftAxis.mEntries.length; i++){
             leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
         }
         leftAxis.setValueFormatter(new ChartCurrencyFormatter());
         mChart.setData(data);
+
         mChart.setScaleEnabled(false);
+        mChart.setDrawValueAboveBar(false);
         mChart.setVisibleXRangeMaximum(6f);
+        mChart.setHighlightFullBarEnabled(true);
         mChart.groupBars(1f, groupSpace, barSpace);
+        mChart.animateXY(1000, 1000);
+        mChart.getLegend().setEnabled(false);
+        mChart.setHighlightPerTapEnabled(true);
+        mChart.setTouchEnabled(true);
+        CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
+        mChart.setMarkerView(mv);
+
         mChart.invalidate();
 
     }

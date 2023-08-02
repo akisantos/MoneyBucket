@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
@@ -161,12 +163,10 @@ public class ChiTieuFragment extends Fragment {
                 //thu nhập lúc đầu = 100
                 //chi tiêu 60 -> chi tiêu hơn 50 %
                 //so sánh 100/2 lớn hoặc nhỏ hơn chi tiêu là ra
-                Double halfJarMoney = selectedJars.getJarBalance() * 0.5;
-
-                if (halfJarMoney < newBalance) {
-                    sendNotification();
+                Double halfJarMoney = calHalfJarAmountFromLatestIncome(selectedJars.getJarBalance());
+                if (halfJarMoney > selectedJars.getJarBalance() - newBalance && selectedJars.getJarBalance() > halfJarMoney) {
+                    sendNotification("Nhắc nhở!", "Bạn vừa dùng hơn 75% tổng số tiền trong hũ " + selectedJars.getJarName()+ ".(Từ lần nạp gần nhất)");
                 }
-
                 //Tạo transaction mới
                 Transaction newIncome = new Transaction();
                 newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
@@ -196,15 +196,31 @@ public class ChiTieuFragment extends Fragment {
         }
     }
 
-    private void sendNotification() {
+    private Double calHalfJarAmountFromLatestIncome(Double currentAmount){
+        Jars selectedJars = (Jars) btnAllJam.getSelectedItem();
+        ArrayList<Transaction> transactions = MongoDB.getInstance().getAllSortedTransactionOfJar(selectedJars);
+        Double halfJar = 0d;
+        for (int i=0; i< transactions.size(); i++){
+            if (transactions.get(i).getTransAmount()>0){
+                halfJar = transactions.get(i).getTransAmount();
+
+                break;
+            }
+        }
+        Log.v("HET TIEN HET BAC LA CON NGUOI A LUC TRUOC", String.valueOf(halfJar));
+        return  halfJar *0.75;
+    }
+
+    private void sendNotification(String title, String content) {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.applogo);
 
         Notification notification = new NotificationCompat.Builder(requireActivity(), NotificationChannelClass.CHANNEL_ID)
-                .setContentTitle("Cảnh báo vượt quá giới hạn chi tiêu")
-                .setContentText("Tổng số tiền chi tiêu vượt quá 50% tổng số tiền ")
-                .setSmallIcon(R.drawable.too)
-                .setLargeIcon(bitmap)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setSmallIcon(IconCompat.createWithBitmap(bitmap))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setColor(getResources().getColor(R.color.teal_200))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(requireActivity());
