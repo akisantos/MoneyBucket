@@ -1,17 +1,26 @@
 package com.akistd.moneybucket.ui.baocaochithu;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
+import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
+import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
+import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -35,9 +44,15 @@ public class QLtheoThang_Fragment extends Fragment {
     BarChart mChart;
     View view;
     Button btnDatePikerWeek;
-    private int mYear, mMonth, mDay;
-
+    ArrayList<ItemHu_bcct> itemHu_bccts;
+    AdapterHu_bcct adapterHu_bcct;
+    JarsChiTieuFragSpinnerAdapter spinnerAdapter;
+    Spinner spinnerhu;
+    TextView tv_soDu,tv_tieuHao;
+    private int mYear, mMonth, mDay,selection=0;
+    ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
     Calendar currentDate = Calendar.getInstance();
+    ArrayList<Double> allData;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,7 +65,7 @@ public class QLtheoThang_Fragment extends Fragment {
     public QLtheoThang_Fragment() {
         // Required empty public constructor
     }
-
+    String[] namejar={};
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -85,13 +100,18 @@ public class QLtheoThang_Fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_bao_cao_chi_thu_,container,false);
         //Control
         btnDatePikerWeek = view.findViewById(R.id.btnDatePikerWeek);
+        spinnerhu = (Spinner)view.findViewById(R.id.spinnerhu);
+        tv_soDu = (TextView) view.findViewById(R.id.tv_soDu);
+        tv_tieuHao = (TextView) view.findViewById(R.id.tv_tieuHao);
         //Event
+        jarListsSpinnerEvents();
         currentDate.setTimeZone(TimeZone.getTimeZone("UTC"));
         currentDate.set(Calendar.DAY_OF_MONTH,currentDate.getActualMinimum(Calendar.DAY_OF_MONTH));
         mYear = currentDate.get(Calendar.YEAR);
         mMonth = currentDate.get(Calendar.MONTH);
+        loadSoDu(currentDate);
         btnDatePikerWeek.setText(String.format("Tháng %s/%s", mMonth+1, mYear));
-        GroupBarChart(currentDate);
+        GroupBarChart(currentDate,selection);
         btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +121,8 @@ public class QLtheoThang_Fragment extends Fragment {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
                         btnDatePikerWeek.setText(String.format("Tháng %s/%s", selectedMonth +1, selectedYear));
-                        GroupBarChart(currentDate);
+                        GroupBarChart(currentDate,selection);
+                        loadSoDu(currentDate);
                     }
                 }, mYear,mMonth);
 
@@ -130,9 +151,77 @@ public class QLtheoThang_Fragment extends Fragment {
 
         return view;
     }
-    public void GroupBarChart(Calendar time){
+    double[] IncomeWeek={};
+    double[] OutcomeWeek={};
+    private  ArrayList<Double> getDataBaseOnJarWeek(int position) {
+        ArrayList<Double> dataList = getDataBaseOnTimeAndJorIncomeWeek(currentDate,position);
+        IncomeWeek = new double[dataList.size()];
+        for (int i = 0; i < dataList.size(); i++) {
+            double cal1 = dataList.get(i);
+            IncomeWeek[i] = cal1;
+        }
+        for (int i = 0; i < IncomeWeek.length; i++) {
+            Log.v("dataaaaaaaIn", "!! " + IncomeWeek[i]);
+        }
+        ArrayList<Double> dataList2 = getDataBaseOnTimeAndJorOutComeWeek(currentDate,position);
+        OutcomeWeek = new double[dataList2.size()];
+        for (int i = 0; i < dataList2.size(); i++) {
+            double cal2 = dataList2.get(i);
+            OutcomeWeek[i] = cal2;
+        }
+        for (int i = 0; i < OutcomeWeek.length; i++) {
+            Log.v("dataaaaaaaOut", "!! " + OutcomeWeek[i]);
+        }
+        return dataList;
+    }
+    private ArrayList<Double> getDataBaseOnTimeAndJorOutComeWeek(Calendar time,int position){
+        return MongoDB.getInstance().getDataOfJarOutComeInWeek(time,position);
+    }
+    private ArrayList<Double> getDataBaseOnTimeAndJorIncomeWeek(Calendar time,int position){
+        return MongoDB.getInstance().getDataOfJarInComeInWeek(time,position);
+    }
+    private void jarListsSpinnerEvents(){
+        Jars allJars = new Jars();
+        allJars.setJarName("Tất cả hũ");
+        allJars.setJarBalance(0.0);
+        jarsList.add(0,allJars);
+        spinnerAdapter = new JarsChiTieuFragSpinnerAdapter(getContext(), jarsList);
+        spinnerAdapter.setDropDownViewResource(R.layout.jarlist_chitieu_frag_dropdown);
+        spinnerhu.setAdapter(spinnerAdapter);
+
+        spinnerhu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                getDataBaseOnJarWeek(position);
+                selection = position;
+                GroupBarChart(currentDate,position);
+                loadSoDu(currentDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+    }
+    @SuppressLint("ResourceType")
+    private void loadSoDu(Calendar calendar){
+        ArrayList<Transaction> transactions = MongoDB.getInstance().getWeekSortedIncomeTransaction(calendar);
+        Double sodu= Double.valueOf(0d);
+        for (Transaction tr: transactions) {
+            sodu += tr.getTransAmount();
+        }
+        tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
+    }
+    public void GroupBarChart(Calendar time,int position){
         ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
         ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInWeek(currentDate);
+        ArrayList<Double> getValueInComeBaseOnJar = MongoDB.getInstance().getDataOfJarInComeInWeek(time,position);
+        ArrayList<Double> getValueIOutComeBaseOnJar = MongoDB.getInstance().getDataOfJarOutComeInWeek(time,position);
+
         mChart = (BarChart) view.findViewById(R.id.mChart);
         mChart.setDrawBarShadow(false);
         mChart.getDescription().setEnabled(false);
@@ -163,25 +252,33 @@ public class QLtheoThang_Fragment extends Fragment {
 
         mChart.getAxisRight().setEnabled(false);
         mChart.getLegend().setEnabled(false);
-
         double[] valIncome = new double[getValueInCome.size()];
         double[] valOutCome =  new double[getValueOutCome.size()];
-        for (int i = 0; i < getValueInCome.size(); i++) {
-            double cal1 = getValueInCome.get(i);
-            double cal2 = getValueOutCome.get(i);
-            valIncome[i] = cal1;
-            valOutCome[i] = cal2;
-        }
-
         ArrayList<BarEntry> barOne = new ArrayList<>();
         ArrayList<BarEntry> barTwo = new ArrayList<>();
-        ;
-        for (int i = 0; i < valIncome.length; i++) {
-            barOne.add(new BarEntry(i, (float) valIncome[i]));
-            barTwo.add(new BarEntry(i, (float) valOutCome[i]));
-
+        if(selection ==0){
+            for (int i = 0; i < getValueInCome.size(); i++) {
+                double cal1 = getValueInCome.get(i);
+                double cal2 = getValueOutCome.get(i);
+                valIncome[i] = cal1;
+                valOutCome[i] = cal2;
+            }
+            for (int i = 0; i < valIncome.length; i++) {
+                barOne.add(new BarEntry(i, (float) valIncome[i]));
+                barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+            }
+        }else {
+            for (int i = 0; i < getValueInCome.size(); i++) {
+                double cal1 = getValueInComeBaseOnJar.get(i);
+                double cal2 = getValueIOutComeBaseOnJar.get(i);
+                IncomeWeek[i] = cal1;
+                OutcomeWeek[i] = cal2;
+            }
+            for (int i = 0; i < IncomeWeek.length; i++) {
+                barOne.add(new BarEntry(i, (float) IncomeWeek[i]));
+                barTwo.add(new BarEntry(i, (float) OutcomeWeek[i]));
+            }
         }
-
         BarDataSet set1 = new BarDataSet(barOne, "barOne");
         set1.setColor(Color.parseColor("#2ecc71"));
         BarDataSet set2 = new BarDataSet(barTwo, "barTwo");

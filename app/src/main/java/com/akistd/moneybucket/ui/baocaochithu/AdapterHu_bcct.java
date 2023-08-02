@@ -47,4 +47,5 @@ public class AdapterHu_bcct extends BaseAdapter {
         img.setImageResource(item.getImg());
         return rowView;
     }
+
 }
