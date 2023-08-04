@@ -270,9 +270,10 @@ public class MongoDB implements MongoRepository{
 
 
 
-    public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time){
-
+    public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time,int position){
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
         ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
         realm.executeTransaction(r->{
             try {
                 time.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -304,7 +305,18 @@ public class MongoDB implements MongoRepository{
 
 
                 dataList.addAll(Arrays.asList(trans));
+                if (dataList.size() > 0) {
+                    for (Transaction t : dataList) {
+                        if (position == 0) {
+                            dataList2.add(t);
+                        } else {
+                            if (Objects.equals(jarsList.get(position - 1).getId(), t.getJars().getId())) {
+                                dataList2.add(t);
+                            }
 
+                        }
+                    }
+                }
                 for (Transaction tr: trans) {
                     Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 
@@ -319,10 +331,11 @@ public class MongoDB implements MongoRepository{
             }
         });
 
-        return dataList;
+        return dataList2;
     }
-    public ArrayList<Transaction> getWeekSortedIncomeTransaction(Calendar time){
-
+    public ArrayList<Transaction> getWeekSortedIncomeTransaction(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
         ArrayList<Transaction> dataList = new ArrayList<>();
         realm.executeTransaction(r->{
             try {
@@ -354,7 +367,18 @@ public class MongoDB implements MongoRepository{
                         .findAll().toArray(new Transaction[0]);
 
                 dataList.addAll(Arrays.asList(trans));
+                if (dataList.size() > 0) {
+                    for (Transaction t : dataList) {
+                        if (position == 0) {
+                            dataList2.add(t);
+                        } else {
+                            if (Objects.equals(jarsList.get(position - 1).getId(), t.getJars().getId())) {
+                                dataList2.add(t);
+                            }
 
+                        }
+                    }
+                }
                 /*for (Transaction tr: trans) {
                     Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 

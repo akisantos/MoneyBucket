@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +18,7 @@ import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
+import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -39,6 +41,7 @@ import java.util.TimeZone;
 public class QLtheoNam_fragment extends Fragment {
     BarChart mChart2;
     Button btnDatePikerWeek;
+    TextView tv_soDu,tv_tieuHao;
     View view;
     JarsChiTieuFragSpinnerAdapter spinnerAdapter;
     Spinner spinnerhu;
@@ -137,6 +140,8 @@ public class QLtheoNam_fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_bao_cao_chi_thu_,container,false);
         btnDatePikerWeek = view.findViewById(R.id.btnDatePikerWeek);
         spinnerhu = (Spinner)view.findViewById(R.id.spinnerhu);
+        tv_soDu = (TextView) view.findViewById(R.id.tv_soDu);
+        tv_tieuHao = (TextView) view.findViewById(R.id.tv_tieuHao);
 
         //Event
         jarListsSpinnerEvents();
@@ -144,6 +149,7 @@ public class QLtheoNam_fragment extends Fragment {
         currentDate.set(Calendar.DAY_OF_MONTH,currentDate.getActualMinimum(Calendar.DAY_OF_MONTH));
         mYear = currentDate.get(Calendar.YEAR);
         mMonth = currentDate.get(Calendar.MONTH);
+        loadSoDu(currentDate,selection);
         btnDatePikerWeek.setText(String.format("Tháng %s/%s", mMonth+1, mYear));
         GroupBarChart(currentDate,selection);
         btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +162,7 @@ public class QLtheoNam_fragment extends Fragment {
                     public void onDateSet(int selectedMonth, int selectedYear) {
                         btnDatePikerWeek.setText(String.format("Tháng %s/%s", selectedMonth +1, selectedYear));
                         GroupBarChart(currentDate,selection);
+                        loadSoDu(currentDate,selection);
                     }
                 }, mYear,mMonth);
 
@@ -182,6 +189,20 @@ public class QLtheoNam_fragment extends Fragment {
             }
         });
         return view;
+    }
+    private void loadSoDu(Calendar calendar,int position){
+        ArrayList<Double> transactionsSoDu = MongoDB.getInstance().getDataOfJarInComeInMonth2(calendar,position);
+        Double sodu= Double.valueOf(0d);
+        for (Double tr: transactionsSoDu) {
+            sodu += tr.doubleValue();
+        }
+        ArrayList<Double> transactionsTieuHao = MongoDB.getInstance().getDataOfJarOutComeInMonth2(calendar,position);
+        Double tieuhao= Double.valueOf(0d);
+        for (Double tr: transactionsTieuHao) {
+            tieuhao += tr.doubleValue()*-1;
+        }
+        tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
+        tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(tieuhao));
     }
     public void GroupBarChart(Calendar time,int position){
         ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInMonth(time);
@@ -232,12 +253,12 @@ public class QLtheoNam_fragment extends Fragment {
                 valIncome[i] = cal1;
                 valOutCome[i] = cal2;
             }
-            for (int i = 0; i < valIncome.length; i++) {
+            for (int i = 1; i < valIncome.length; i++) {
                 barOne.add(new BarEntry(i, (float) valIncome[i]));
                 barTwo.add(new BarEntry(i, (float) valOutCome[i]));
             }
         }else {
-            for (int i = 0; i < getValueInCome.size(); i++) {
+            for (int i = 1; i < getValueInCome.size(); i++) {
                 double cal1 = getValueInComeBaseOnJar.get(i);
                 double cal2 = getValueIOutComeBaseOnJar.get(i);
                 IncomeMonth[i] = cal1;

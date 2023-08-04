@@ -195,7 +195,6 @@ public class QLtheoThang_Fragment extends Fragment {
                 getDataBaseOnJarWeek(position);
                 selection = position;
                 GroupBarChart(currentDate,position);
-                loadSoDu(currentDate);
             }
 
             @Override
@@ -209,12 +208,18 @@ public class QLtheoThang_Fragment extends Fragment {
     }
     @SuppressLint("ResourceType")
     private void loadSoDu(Calendar calendar){
-        ArrayList<Transaction> transactions = MongoDB.getInstance().getWeekSortedIncomeTransaction(calendar);
+        ArrayList<Transaction> transactionsSoDu = MongoDB.getInstance().getWeekSortedIncomeTransaction(calendar,selection);
         Double sodu= Double.valueOf(0d);
-        for (Transaction tr: transactions) {
+        for (Transaction tr: transactionsSoDu) {
             sodu += tr.getTransAmount();
         }
+        ArrayList<Transaction> transactionsTieuHao = MongoDB.getInstance().getWeekSortedOutcomeTransaction(calendar,selection);
+        Double tieuhao= Double.valueOf(0d);
+        for (Transaction tr: transactionsTieuHao) {
+            tieuhao += tr.getTransAmount()*-1;
+        }
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
+        tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(tieuhao));
     }
     public void GroupBarChart(Calendar time,int position){
         ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
@@ -239,7 +244,6 @@ public class QLtheoThang_Fragment extends Fragment {
         xAxis.setTextSize(12);
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setAxisMinimum(1f);
-
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setAxisMinimum(0);
