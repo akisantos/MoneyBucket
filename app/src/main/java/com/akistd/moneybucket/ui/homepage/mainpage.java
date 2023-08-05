@@ -21,15 +21,20 @@ import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.baocaochithu.BaoCaoActivity;
 import com.akistd.moneybucket.ui.history.HistoryActivity;
 import com.akistd.moneybucket.ui.history.TransactionHistoryAdapter;
+import com.akistd.moneybucket.ui.quanlihu.quanLyHu;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -57,7 +62,7 @@ public class mainpage extends Fragment {
         // Required empty public constructor
     }
 
-    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome,mainpage_btn_moneyFlowSeemore;
+    AppCompatButton mainpage_btn_historySeemore, mainpage_btn_addIncome, mainpage_btn_addOutcome,mainpage_btn_moneyFlowSeemore, mainpage_btn_SeemorejarDistribution;
 
     TextView mainpage_welcomeText,mainpage_currentBalanceText,main_balance_process_numb;
     ProgressBar main_balance_processBar;
@@ -111,6 +116,7 @@ public class mainpage extends Fragment {
         addEvents();
 
         dispMoneyFlowBarchart();
+        loadPiechart_mainpage();
 
         return view;
     }
@@ -123,7 +129,7 @@ public class mainpage extends Fragment {
             listViewAdapter.notifyDataSetChanged();
 
         }
-
+        loadPiechart_mainpage();
 
         loadSoDu();
         loadHistory();
@@ -153,6 +159,8 @@ public class mainpage extends Fragment {
         mainpage_listview_history = view.findViewById(R.id.mainpage_listview_history);
         emptyView = (TextView)view.findViewById(R.id.emptyView);
 
+        //co cau hu
+        mainpage_btn_SeemorejarDistribution = (AppCompatButton) view.findViewById(R.id.mainpage_btn_SeemorejarDistribution);
     }
 
     private void addEvents(){
@@ -214,7 +222,17 @@ public class mainpage extends Fragment {
             }
         });
 
+        mainpage_btn_SeemorejarDistribution.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), quanLyHu.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
+
 
     private void loadSoDu(){
         ArrayList<Jars> jars = MongoDB.getInstance().getAllJars();
@@ -310,25 +328,6 @@ public class mainpage extends Fragment {
         Double totalIncome = Double.valueOf(0d);
         ArrayList<Transaction> latestIncome= new ArrayList<>();
 
-        /*for (int i =0; i<6; i++){
-            latestIncome.add(incomeTr.get(i));
-            totalIncome += latestIncome.get(i).getTransAmount();
-        }
-
-
-        for (int i =0; i<6; i++){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(latestIncome.get(i).getCreateAt());
-            barOne.add(new BarEntry(i,valOne));
-
-        }*/
-
-        /*for (int i = 0; i < valOne.length; i++) {
-            barOne.add(new BarEntry(i, valOne[i]));
-            barTwo.add(new BarEntry(i, valTwo[i]));
-
-        }*/
-
         BarDataSet set1 = new BarDataSet(barOne, "Thu");
         set1.setColor(Color.GREEN);
         BarDataSet set2 = new BarDataSet(barTwo, "Chi");
@@ -353,5 +352,32 @@ public class mainpage extends Fragment {
         moneyFlowChart.groupBars(1f, groupSpace, barSpace);
         moneyFlowChart.invalidate();
 
+    }
+
+    private void loadPiechart_mainpage(){
+        ArrayList<Jars> JarsAList = MongoDB.getInstance().getAllJars();
+        Integer percThietYeu =  JarsAList.get(0).getJarAmount();
+        Integer percGiaoDuc = JarsAList.get(1).getJarAmount();
+        Integer percTietKiem =  JarsAList.get(2).getJarAmount();
+        Integer percHuongThu = JarsAList.get(3).getJarAmount();
+        Integer percDauTu =  JarsAList.get(4).getJarAmount();
+        Integer percThienTam = JarsAList.get(5).getJarAmount();
+
+        PieChart pieChart = view.findViewById(R.id.jarsDistributeChart);
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry((float) percThietYeu,"Thiết yếu"));
+        entries.add(new PieEntry((float) percGiaoDuc,"Giáo dục"));
+        entries.add(new PieEntry((float) percTietKiem,"Tiết kiệm"));
+        entries.add(new PieEntry((float) percHuongThu,"Hưởng thụ"));
+        entries.add(new PieEntry((float) percDauTu,"Đầu tư"));
+        entries.add(new PieEntry((float) percThienTam,"Thiện tâm"));
+        PieDataSet pieDataSet  = new PieDataSet(entries,"");
+        pieDataSet.setValueTextSize(0f);
+        pieDataSet.setColors(Color.parseColor("#0094FF"),Color.parseColor("#00FFE0"),Color.parseColor("#E84DE2"),Color.parseColor("#FFD615"),Color.parseColor("#FF1F5A"),Color.parseColor("#14FF00"),Color.parseColor("#14FF00"));
+        PieData pieData  = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.animateY(100);
+        pieChart.invalidate();
     }
 }
