@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
-import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
 import com.akistd.moneybucket.util.UtilConverter;
@@ -109,7 +108,6 @@ public class QLtheoThang_Fragment extends Fragment {
         currentDate.set(Calendar.DAY_OF_MONTH,currentDate.getActualMinimum(Calendar.DAY_OF_MONTH));
         mYear = currentDate.get(Calendar.YEAR);
         mMonth = currentDate.get(Calendar.MONTH);
-        loadSoDu(currentDate);
         btnDatePikerWeek.setText(String.format("Tháng %s/%s", mMonth+1, mYear));
         GroupBarChart(currentDate,selection);
         btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +120,7 @@ public class QLtheoThang_Fragment extends Fragment {
                     public void onDateSet(int selectedMonth, int selectedYear) {
                         btnDatePikerWeek.setText(String.format("Tháng %s/%s", selectedMonth +1, selectedYear));
                         GroupBarChart(currentDate,selection);
-                        loadSoDu(currentDate);
+                        loadSoDu(currentDate,selection);
                     }
                 }, mYear,mMonth);
 
@@ -195,6 +193,7 @@ public class QLtheoThang_Fragment extends Fragment {
                 getDataBaseOnJarWeek(position);
                 selection = position;
                 GroupBarChart(currentDate,position);
+                loadSoDu(currentDate,position);
             }
 
             @Override
@@ -207,16 +206,16 @@ public class QLtheoThang_Fragment extends Fragment {
 
     }
     @SuppressLint("ResourceType")
-    private void loadSoDu(Calendar calendar){
-        ArrayList<Transaction> transactionsSoDu = MongoDB.getInstance().getWeekSortedIncomeTransaction(calendar,selection);
+    private void loadSoDu(Calendar calendar,int position){
+        ArrayList<Double> transactionsSoDu = MongoDB.getInstance().getDataOfJarInComeInWeek(calendar,position);
         Double sodu= Double.valueOf(0d);
-        for (Transaction tr: transactionsSoDu) {
-            sodu += tr.getTransAmount();
+        for (Double tr: transactionsSoDu) {
+            sodu += tr.doubleValue();
         }
-        ArrayList<Transaction> transactionsTieuHao = MongoDB.getInstance().getWeekSortedOutcomeTransaction(calendar,selection);
+        ArrayList<Double> transactionsTieuHao = MongoDB.getInstance().getDataOfJarOutComeInWeek(calendar,position);
         Double tieuhao= Double.valueOf(0d);
-        for (Transaction tr: transactionsTieuHao) {
-            tieuhao += tr.getTransAmount()*-1;
+        for (Double tr: transactionsTieuHao) {
+            tieuhao += tr.doubleValue()*-1;
         }
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
         tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(tieuhao));
@@ -245,6 +244,7 @@ public class QLtheoThang_Fragment extends Fragment {
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setAxisMinimum(1f);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);

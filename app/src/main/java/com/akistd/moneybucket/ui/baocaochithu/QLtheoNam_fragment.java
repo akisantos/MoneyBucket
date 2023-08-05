@@ -122,6 +122,7 @@ public class QLtheoNam_fragment extends Fragment {
                 getDataBaseOnJarWeek(position);
                 selection = position;
                 GroupBarChart(currentDate,position);
+                loadSoDu(currentDate,position);
             }
 
             @Override
@@ -176,6 +177,7 @@ public class QLtheoNam_fragment extends Fragment {
                                 mMonth = selectedMonth;
                                 currentDate.set(mYear,mMonth,0);
 
+
                             }
                         })
                         .setOnYearChangedListener(new MonthPickerDialog.OnYearChangedListener() {
@@ -183,6 +185,7 @@ public class QLtheoNam_fragment extends Fragment {
                             public void onYearChanged(int year) {
                                 mYear = year;
                                 currentDate.set(mYear,mMonth,0);
+
                             }
                         })
                         .build().show();
@@ -191,8 +194,16 @@ public class QLtheoNam_fragment extends Fragment {
         return view;
     }
     private void loadSoDu(Calendar calendar,int position){
+        Double sodu;
+        if(position == 0){
+            ArrayList<Double> transactionsSoDu = MongoDB.getInstance().getDataOutComeInMonth(calendar);
+             sodu= Double.valueOf(0d);
+            for (Double tr: transactionsSoDu) {
+                sodu += tr.doubleValue();
+            }
+        }
         ArrayList<Double> transactionsSoDu = MongoDB.getInstance().getDataOfJarInComeInMonth2(calendar,position);
-        Double sodu= Double.valueOf(0d);
+         sodu= Double.valueOf(0d);
         for (Double tr: transactionsSoDu) {
             sodu += tr.doubleValue();
         }

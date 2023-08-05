@@ -393,7 +393,7 @@ public class MongoDB implements MongoRepository{
             }
         });
 
-        return dataList;
+        return dataList2;
     }
     public ArrayList<Transaction> getThisMonthSortedTransaction(Calendar time){
 
