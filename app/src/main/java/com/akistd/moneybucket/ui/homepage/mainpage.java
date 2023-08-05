@@ -3,6 +3,7 @@ package com.akistd.moneybucket.ui.homepage;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -223,22 +225,26 @@ public class mainpage extends Fragment {
 
 
         ArrayList<Transaction> latestIncome = MongoDB.getInstance().getAllSortedIncomeTransaction();
-        Double totalIncome= Double.valueOf(0d);
+        Date incomeTime = new Date();
         if (latestIncome.size()>0){
-
-            for (int i=0; i<5; i++){
-                totalIncome += latestIncome.get(i).getTransAmount();
+            for (int i=0; i<6; i++){
+                incomeTime = latestIncome.get(i).getCreateAt();
             }
         }
         ArrayList<Transaction> thisMonthOutcome = MongoDB.getInstance().getThisMonthSortedOutcomeTransaction();
         Double totalOutcome= Double.valueOf(0d);
-        for (Transaction tr: thisMonthOutcome) {
-            totalOutcome += tr.getTransAmount() *-1;
 
+        for (Transaction tr: thisMonthOutcome) {
+            if (tr.getCreateAt().after(incomeTime)) {
+                totalOutcome += tr.getTransAmount() *-1;
+
+            }
         }
 
-        //Công thức - toàn bộ tiền trong hũ - tiền đã tiêu trong tháng này.
-        Double percentRaw = 100 - (totalOutcome/ totalIncome)*100;
+        Log.v("Akii log THU", UtilConverter.getInstance().vndCurrencyConverter(sodu+totalOutcome));
+        Log.v("AKKI LOGG CHI", UtilConverter.getInstance().vndCurrencyConverter(totalOutcome));
+        //Từ thời điểm nạp lần nhất đến hiện tại đã dùng hết bao nhiêu tiền.
+        Double percentRaw = 100 - (totalOutcome/ (sodu + totalOutcome))*100;
         if (percentRaw<0 || percentRaw.isInfinite() || percentRaw.isNaN()){
             main_balance_process_numb.setText("0%");
             main_balance_processBar.setProgress(0);

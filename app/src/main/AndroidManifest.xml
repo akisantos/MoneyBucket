@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
+        android:enableOnBackInvokedCallback="true"
         tools:replace="android:icon"
         android:name=".ui.transaction.NotificationChannelClass"
         android:allowBackup="true"
@@ -17,7 +18,7 @@
         android:roundIcon="@drawable/applogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoneyBucket"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".ui.appintro.MoneyBucketIntro"

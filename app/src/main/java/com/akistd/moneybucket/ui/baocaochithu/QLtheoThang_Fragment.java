@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -269,8 +270,8 @@ public class QLtheoThang_Fragment extends Fragment {
                 valOutCome[i] = cal2;
             }
             for (int i = 0; i < valIncome.length; i++) {
-                barOne.add(new BarEntry(i, (float) valIncome[i]));
-                barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+                if (valIncome[i] !=0) barOne.add(new BarEntry(i, (float) valIncome[i]));
+                if (valOutCome[i] !=0) barTwo.add(new BarEntry(i, (float) valOutCome[i]));
             }
         }else {
             for (int i = 0; i < getValueInCome.size(); i++) {
@@ -280,59 +281,62 @@ public class QLtheoThang_Fragment extends Fragment {
                 OutcomeWeek[i] = cal2;
             }
             for (int i = 0; i < IncomeWeek.length; i++) {
-                barOne.add(new BarEntry(i, (float) IncomeWeek[i]));
-                barTwo.add(new BarEntry(i, (float) OutcomeWeek[i]));
+                if (IncomeWeek[i] !=0) barOne.add(new BarEntry(i, (float) IncomeWeek[i]));
+                if (OutcomeWeek[i] !=0) barTwo.add(new BarEntry(i, (float) OutcomeWeek[i]));
             }
         }
 
-        BarDataSet set1 = new BarDataSet(barOne, "barOne");
-        set1.setColor(Color.parseColor("#2ecc71"));
-        set1.setDrawValues(true);
-        set1.setValueFormatter(new ChartCurrencyFormatter());
-        BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
-        set2.setColor(Color.parseColor("#e74c3c"));
-        set2.setDrawValues(true);
-        set2.setValueFormatter(new ChartCurrencyFormatter());
+        if (barOne.size() >0){
+            BarDataSet set1 = new BarDataSet(barOne, "barOne");
+            set1.setColor(Color.parseColor("#2ecc71"));
+            set1.setDrawValues(true);
+            set1.setValueFormatter(new ChartCurrencyFormatter());
+            BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
+            set2.setColor(Color.parseColor("#e74c3c"));
+            set2.setDrawValues(true);
+            set2.setValueFormatter(new ChartCurrencyFormatter());
 
-        set1.setHighlightEnabled(true);
-        set2.setHighlightEnabled(true);
+            set1.setHighlightEnabled(true);
+            set2.setHighlightEnabled(true);
 
 
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set1);
-        dataSets.add(set2);
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(set1);
+            dataSets.add(set2);
 
-        BarData data = new BarData(dataSets);
-        float groupSpace = 0.16f;
-        float barSpace = 0.02f;
-        float barWidth = 0.4f;
-        // (barSpace + barWidth) * 2 + groupSpace = 1
-        data.setBarWidth(barWidth);
-        // so that the entire chart is shown when scrolled from right to left
-        xAxis.setAxisMaximum(labels.length - 1.1f);
+            BarData data = new BarData(dataSets);
+            float groupSpace = 0.16f;
+            float barSpace = 0.02f;
+            float barWidth = 0.4f;
+            // (barSpace + barWidth) * 2 + groupSpace = 1
+            data.setBarWidth(barWidth);
+            // so that the entire chart is shown when scrolled from right to left
+            xAxis.setAxisMaximum(labels.length - 1.1f);
 
-        data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
-        data.setValueTextSize(10);
+            data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
+            data.setValueTextSize(10);
 
-        for (int i = 0; i< leftAxis.mEntries.length; i++){
-            leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
-        }
-        leftAxis.setValueFormatter(new ChartCurrencyFormatter());
-        mChart.setData(data);
+            for (int i = 0; i< leftAxis.mEntries.length; i++){
+                leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
+            }
+            leftAxis.setValueFormatter(new ChartCurrencyFormatter());
+            mChart.setData(data);
 
-        mChart.setScaleEnabled(false);
-        mChart.setDrawValueAboveBar(false);
-        mChart.setVisibleXRangeMaximum(6f);
-        mChart.setHighlightFullBarEnabled(true);
-        mChart.groupBars(1f, groupSpace, barSpace);
-        mChart.animateXY(1000, 1000);
-        mChart.getLegend().setEnabled(false);
-        mChart.setHighlightPerTapEnabled(true);
-        mChart.setTouchEnabled(true);
-        CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
-        mChart.setMarkerView(mv);
+            mChart.setScaleEnabled(false);
+            mChart.setDrawValueAboveBar(false);
+            mChart.setVisibleXRangeMaximum(6f);
+            mChart.setHighlightFullBarEnabled(true);
+            mChart.groupBars(1f, groupSpace, barSpace);
+            mChart.animateXY(1000, 1000);
+            mChart.getLegend().setEnabled(false);
+            mChart.setHighlightPerTapEnabled(true);
+            mChart.setTouchEnabled(true);
+            CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
+            mChart.setMarkerView(mv);
 
-        mChart.invalidate();
+            mChart.invalidate();
+        }else Toast.makeText(getContext(), "Không có dữ liệu",Toast.LENGTH_SHORT).show();
+
 
     }
 }

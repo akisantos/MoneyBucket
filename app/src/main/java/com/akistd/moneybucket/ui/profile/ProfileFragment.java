@@ -1,11 +1,14 @@
 package com.akistd.moneybucket.ui.profile;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.akistd.moneybucket.R;
@@ -89,7 +93,7 @@ public class ProfileFragment extends Fragment {
     Constants util = new Constants();
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
-    Button deleteInfoBtn, sampleButtonID;
+    Button deleteInfoBtn, sampleButtonID, appInfoBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,6 +111,8 @@ public class ProfileFragment extends Fragment {
         profile_image = v.findViewById(R.id.profile_image);
         deleteInfoBtn  = v.findViewById(R.id.deleteInfoBtn);
         sampleButtonID = v.findViewById(R.id.sampleButtonID);
+        appInfoBtn = v.findViewById(R.id.appInfoBtn);
+
     }
 
     private void addEvents(){
@@ -142,18 +148,72 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        appInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                builder1.setTitle("MoneyBucket");
+
+
+                builder1.setMessage("Phiên bản 0.0.1\nNhóm thực hiện:Tuấn Tú, Thái Vỹ, Anh Tùng, Bá Huy, Quang An");
+
+
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Đóng",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                builder1.setNegativeButton("Xoá dữ liệu", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteUserInfo();
+                    }
+                });
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }
+        });
+
     }
 
     private void deleteUserInfo(){
-        ArrayList<Jars> allJars = MongoDB.getInstance().getAllJars();
-        ArrayList<Transaction> allTrans = MongoDB.getInstance().getAllTransaction();
+        AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+        builder2.setTitle("Xác nhận xoá mọi dữ liệu");
+        builder2.setMessage("Hành động này sẽ xoá toàn bộ dữ liệu hiện tại của bạn và đặt về trạng thái mặc định!\nBạn chắc chứ?");
+        builder2.setNegativeButton("Huỷ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        for (Transaction tr: allTrans) {
-            MongoDB.getInstance().deleteTransaction(tr.getId());
-        }
-        for (Jars j:allJars) {
-            MongoDB.getInstance().deleteJar(j.getId());
-        }
+            }
+        });
+
+        builder2.setPositiveButton("Xoá và khởi động lại", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<Jars> allJars = MongoDB.getInstance().getAllJars();
+                ArrayList<Transaction> allTrans = MongoDB.getInstance().getAllTransaction();
+
+                for (Transaction tr: allTrans) {
+                    MongoDB.getInstance().deleteTransaction(tr.getId());
+                }
+                for (Jars j:allJars) {
+                    MongoDB.getInstance().deleteJar(j.getId());
+                }
+                SharedPreferences prefs = getContext().getSharedPreferences("com.akistd.moneyBucket", MODE_PRIVATE);
+                prefs.edit().clear().apply();
+                prefs.edit().putBoolean("firstrun", true).commit();
+                signOut();
+                doRestart(getContext());
+            }
+        });
+
+        builder2.show();
+
     }
 
     private void signOut() {

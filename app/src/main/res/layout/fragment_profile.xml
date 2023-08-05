@@ -67,7 +67,7 @@
                         <ImageView
                             android:id="@+id/profile_image"
                             android:layout_width="match_parent"
-                            android:src="@drawable/hu1"
+                            android:src="@drawable/too"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:layout_height="80dp"/>
@@ -168,6 +168,7 @@
                         android:textAllCaps="false" />
 
                     <Button
+                        android:id="@+id/appInfoBtn"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginBottom="5dp"
