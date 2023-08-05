@@ -6,15 +6,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.quanlihu.QuanLyHu_Fragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.quanlihu.QuanLyHu_Fragment">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="40dp"
             tools:context=".QuanLyHuActivity">
 
 
@@ -23,7 +24,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints">
+                <LinearLayout
+                    android:id="@+id/titleHeader"
+                    android:layout_width="match_parent"
+                    android:weightSum="4"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                    <ImageButton
+                        android:id="@+id/qlh_imgbtn_back"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/baseline_arrow_back_ios_24"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.2"
+                        android:text="Cơ cấu hũ"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </LinearLayout>
 
 
             <com.github.mikephil.charting.charts.PieChart
@@ -31,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="446dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -41,13 +70,12 @@
             </com.github.mikephil.charting.charts.PieChart>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button"
+                android:id="@+id/btn_luuHu"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_themhu"
-                android:drawableEnd="@drawable/baseline_add_24"
-                android:text="Tạo hũ mới"
+                android:text="Lưu thay đổi"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
@@ -63,7 +91,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button">
+                app:layout_constraintTop_toBottomOf="@+id/btn_luuHu">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -143,7 +171,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button">
+                app:layout_constraintTop_toBottomOf="@+id/btn_luuHu">
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -534,5 +562,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</FrameLayout>
+    </FrameLayout>
 </ScrollView>
