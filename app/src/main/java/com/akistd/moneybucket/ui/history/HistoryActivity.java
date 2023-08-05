@@ -18,7 +18,6 @@ import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;

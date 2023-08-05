@@ -29,9 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:text="Tên cái hũ"
             android:textColor="@color/white"
             android:textSize="15dp"
-            android:text="Tên cái hũ" />
+            tools:ignore="TextSizeCheck" />
 
         <!--<LinearLayout
             android:layout_width="match_parent"

@@ -14,11 +14,162 @@
             android:layout_height="match_parent"
             tools:context=".QuanLyHuActivity">
 
+            <LinearLayout
+                android:id="@+id/in_out_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/btnDatePikerWeek">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mainpage_btn_addIncome"
+                    android:layout_width="150dp"
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_bg"
+                    android:backgroundTint="#00113C"
+                    app:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="1"
+                                android:text="Thu nhập"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/xanhGood"
+                                android:textSize="20dp" />
+
+                            <ImageView
+                                android:id="@+id/imageView9"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/baseline_add_24"
+                                app:tint="@color/xanhGood" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_soDu"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:paddingHorizontal="15dp"
+                            android:text="0"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/xanhGood"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            tools:ignore="RtlCompat" />
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+
+                    android:id="@+id/mainpage_btn_addOutcome"
+                    android:layout_width="150dp"
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#00113C"
+                    app:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Tiêu hao"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/doWarning"
+                                android:textSize="20dp"
+                                tools:ignore="RtlCompat" />
+
+                            <ImageView
+                                android:id="@+id/imageView11"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/minus_icon"
+                                app:tint="@color/doWarning" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_tieuHao"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:paddingHorizontal="15dp"
+                            android:text="0"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/doWarning"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            tools:ignore="RtlCompat" />
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spinnerhu"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/rounded_bg"
+                android:backgroundTint="#3D62AF"
+                android:spinnerMode="dropdown"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
             <Button
                 android:id="@+id/btnDatePikerWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@android:color/transparent"
                 android:backgroundTint="#3D62AF"
                 android:drawableLeft="@drawable/baseline_calendar_month_24"
@@ -27,14 +178,15 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerhu"
                 tools:ignore="MissingConstraints" />
 
             <FrameLayout
                 android:id="@+id/frg_bcct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnDatePikerWeek"
+                android:layout_marginTop="15dp"
+                app:layout_constraintTop_toBottomOf="@+id/in_out_button"
                 tools:context=".ui.quanlihu.QuanLyHu_Fragment"
                 tools:ignore="InvalidId">
 

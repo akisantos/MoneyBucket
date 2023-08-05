@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -29,6 +30,12 @@ public class UtilConverter {
     public String vnTimeLocaleConverter(Date date){
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
         return format.format(date);
+    }
+
+    public String vnTimeHourLocaleConverter(Date date){
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL, new Locale("vi", "VN"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        return simpleDateFormat.format(date)+" "+ format.format(date);
     }
 
     public static synchronized UtilConverter getInstance(){

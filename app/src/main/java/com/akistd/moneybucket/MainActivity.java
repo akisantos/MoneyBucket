@@ -138,15 +138,11 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean("firstrun", true)) {
                 // Do first run stuff here then set 'firstrun' as false
                 // using the following line to edit/commit prefs
-
-
                 RegisterNewUser();
-
                 Intent intro = new Intent(this, MoneyBucketIntro.class);
                 startActivity(intro);
                 prefs.edit().putBoolean("firstrun", false).commit();
             }
-
     }
 
     private void RegisterNewUser(){

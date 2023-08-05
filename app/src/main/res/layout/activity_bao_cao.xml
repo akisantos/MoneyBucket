@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
@@ -34,7 +34,7 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/baseline_arrow_back_ios_24"
                 app:tint="@color/white"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,37 +57,20 @@
 
         </LinearLayout>
 
-        <Spinner
-            android:layout_below="@+id/titleHeader"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_bg"
-            android:backgroundTint="#3D62AF"
-            android:textSize="15dp"
-            android:layout_marginHorizontal="5dp"
-            android:textAllCaps="false"
-            android:textAlignment="viewStart"
-            android:id="@+id/spinnerhu"
-            android:layout_marginTop="20dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleHeader"
-            tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
         <LinearLayout
-            android:layout_below="@+id/spinnerhu"
-            android:layout_centerHorizontal="true"
             android:id="@+id/linearLayout6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_below="@+id/titleHeader"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
             android:background="@drawable/transparent_bg"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerhu"
+            app:layout_constraintTop_toBottomOf="@+id/titleHeader"
             tools:ignore="MissingConstraints">
 
             <Button
@@ -107,255 +90,27 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
                 android:background="@drawable/button_themhu"
                 android:text="Theo năm"
                 android:textColor="@color/white"
-                android:layout_marginHorizontal="10dp"
                 app:layout_constraintTop_toBottomOf="@+id/spinner2"
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/in_out_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout6"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_marginHorizontal="10dp"
-                app:cardCornerRadius="15dp"
-                android:id="@+id/mainpage_btn_addIncome"
-                android:background="@drawable/rounded_bg"
-                android:layout_width="150dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                android:backgroundTint="#00113C"
-                >
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/textView7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Thu nhập"
-                            android:layout_marginLeft="10dp"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/xanhGood"
-                            android:textSize="20dp" />
-
-                        <ImageView
-                            android:id="@+id/imageView9"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/baseline_add_24"
-                            app:tint="@color/xanhGood" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_soDu"
-                        android:paddingHorizontal="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="0"
-                        android:textColor="@color/xanhGood"
-                        android:textSize="20dp"
-                        android:textAlignment="textStart"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-
-                app:cardCornerRadius="15dp"
-                android:id="@+id/mainpage_btn_addOutcome"
-                android:layout_width="150dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#00113C"
-                >
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center"
-                            android:text="Tiêu hao"
-                            android:layout_marginStart="10dp"
-                            android:textColor="@color/doWarning"
-                            android:textAlignment="textStart"
-                            android:textSize="20dp" />
-
-                        <ImageView
-                            android:id="@+id/imageView11"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/minus_icon"
-                            app:tint="@color/doWarning" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_tieuHao"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@color/doWarning"
-                        android:textSize="20dp"
-                        android:paddingHorizontal="15dp"
-                        android:textAlignment="textStart"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-
-        </LinearLayout>
-        <!--<LinearLayout
-            android:id="@+id/linearLayout7"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_themhu"
-            android:orientation="vertical"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
-            tools:ignore="MissingConstraints">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:text="Tiêu hao"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/white"
-                    android:textSize="20dp" />
-
-                &lt;!&ndash;<ImageView
-                    android:id="@+id/imageView11"
-                    android:layout_width="90dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/baseline_wallet" />&ndash;&gt;
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_tieuHao"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="5.000.000"
-                android:textColor="#FF0606"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout8"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/rounded_bg"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
-            tools:ignore="MissingConstraints">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_gravity="center_vertical"
-                    android:text="Thu nhập"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/white"
-                    android:textSize="20dp" />
-
-                &lt;!&ndash;<ImageView
-                    android:id="@+id/imageView9"
-                    android:layout_width="90dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/baseline_wallet_24" />&ndash;&gt;
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_soDu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="9.000.000"
-                android:textColor="#06FF2F"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-        </LinearLayout>-->
 
         <FrameLayout
             android:id="@+id/frg_bcct"
-            android:layout_below="@+id/in_out_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/linearLayout6"
+            android:layout_marginTop="50dp"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@+id/in_out_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
             tools:context=".ui.quanlihu.QuanLyHu_Fragment"
-            tools:ignore="InvalidId">
+            tools:ignore="InvalidId"
+            tools:layout_editor_absoluteX="10dp">
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/mChart"
@@ -363,8 +118,7 @@
                 android:layout_height="400dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@android:color/transparent"
-                 />
+                android:background="@android:color/transparent" />
         </FrameLayout>
 
 <!--        <Button-->
@@ -382,7 +136,7 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />-->
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
