@@ -86,11 +86,19 @@ public class ChartCurrencyFormatter implements IValueFormatter, IAxisValueFormat
         r = r.replace(",K","K");
         r = r.replace(",T","T");
         r = r.replace(",Nt","Nt");
+
+        if (r.contains("K") & r.length()>3){
+            r = r.substring(0,3) + "K";
+        }
         return r;
     }
 
     public int getDecimalDigits() {
         return 0;
+    }
+
+    public String getPrettiedValue(double v){
+        return makePretty(v);
     }
 
 }

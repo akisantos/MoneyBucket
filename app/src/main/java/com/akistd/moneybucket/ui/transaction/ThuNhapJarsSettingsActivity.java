@@ -3,6 +3,7 @@ package com.akistd.moneybucket.ui.transaction;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,7 +34,7 @@ public class ThuNhapJarsSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thu_nhap_jars_settings);
 
-
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         saveBtn = findViewById(R.id.saveBtn);
         totalText = findViewById(R.id.totalText);
         clickToFinish = findViewById(R.id.clickToFinish);

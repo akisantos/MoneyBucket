@@ -1,5 +1,5 @@
 package com.akistd.moneybucket.ui.homepage;
-import java.util.TimeZone;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
@@ -28,6 +27,7 @@ import com.akistd.moneybucket.ui.quanlihu.quanLyHu;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
 import com.akistd.moneybucket.util.Constants;
+import com.akistd.moneybucket.util.CustomPercentFormatter;
 import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -49,8 +49,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link mainpage#newInstance} factory method to
@@ -130,15 +131,17 @@ public class mainpage extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         if (cjarlistListAdapter != null){
             cjarlistListAdapter.notifyDataSetChanged();
             listViewAdapter.notifyDataSetChanged();
 
         }
-        loadPiechart_mainpage();
 
         loadSoDu();
         loadHistory();
+        dispMoneyFlowBarchart();
+        loadPiechart_mainpage();
     }
 
     private void addControls(View view){
@@ -369,7 +372,7 @@ public class mainpage extends Fragment {
 
         data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
         data.setValueTextSize(10);
-
+        data.setValueFormatter(new CustomPercentFormatter());
         for (int i = 0; i< leftAxis.mEntries.length; i++){
             leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
         }
@@ -387,7 +390,8 @@ public class mainpage extends Fragment {
         moneyFlowChart.setTouchEnabled(true);
         CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
         moneyFlowChart.setMarkerView(mv);
-
+        moneyFlowChart.getXAxis().setYOffset(20f);
+        moneyFlowChart.setExtraBottomOffset(30f);
         moneyFlowChart.invalidate();
     }
 

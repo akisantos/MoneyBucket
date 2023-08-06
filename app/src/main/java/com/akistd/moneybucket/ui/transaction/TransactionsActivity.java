@@ -2,6 +2,7 @@ package com.akistd.moneybucket.ui.transaction;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -22,7 +23,7 @@ public class TransactionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
 
-
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         addControls();
         addEvents();
         openTab(this.getIntent().getIntExtra("tabIndex",0));

@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -21,6 +20,7 @@ import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
+import com.akistd.moneybucket.util.CustomPercentFormatter;
 import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -220,7 +220,7 @@ public class QLtheoThang_Fragment extends Fragment {
                 sodu += tr.doubleValue();
             }
             for (Double tr: transactionsTieuHaotong) {
-                tieuhao += tr.doubleValue()*-1;
+                tieuhao += tr.doubleValue();
             }
         }else{
             sodu= Double.valueOf(0d);
@@ -229,7 +229,7 @@ public class QLtheoThang_Fragment extends Fragment {
                 sodu += tr.doubleValue();
             }
             for (Double tr: transactionsTieuHao) {
-                tieuhao += tr.doubleValue()*-1;
+                tieuhao += tr.doubleValue();
             }
         }
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
@@ -324,7 +324,7 @@ public class QLtheoThang_Fragment extends Fragment {
 
         data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
         data.setValueTextSize(10);
-
+        data.setValueFormatter(new CustomPercentFormatter());
         for (int i = 0; i< leftAxis.mEntries.length; i++){
             leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
         }
@@ -339,6 +339,8 @@ public class QLtheoThang_Fragment extends Fragment {
         mChart.animateXY(1000, 1000);
         mChart.getLegend().setEnabled(false);
         mChart.setHighlightPerTapEnabled(true);
+        mChart.getXAxis().setYOffset(20f);
+        mChart.setExtraBottomOffset(30f);
         mChart.setTouchEnabled(true);
         CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
         mChart.setMarkerView(mv);

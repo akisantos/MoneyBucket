@@ -19,6 +19,7 @@ import com.akistd.moneybucket.data.MongoDB;
 import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
+import com.akistd.moneybucket.util.CustomPercentFormatter;
 import com.akistd.moneybucket.util.UtilConverter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -316,6 +317,7 @@ public class QLtheoNam_fragment extends Fragment {
             data.setBarWidth(barWidth);
             data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
             data.setValueTextSize(10);
+            data.setValueFormatter(new CustomPercentFormatter());
             // so that the entire chart is shown when scrolled from right to left
             xAxis.setAxisMaximum(labels.length - 1.1f);
             for (int i = 0; i< leftAxis.mEntries.length; i++){
@@ -332,6 +334,8 @@ public class QLtheoNam_fragment extends Fragment {
             mChart2.animateXY(1000, 1000);
             mChart2.getLegend().setEnabled(false);
             mChart2.setHighlightPerTapEnabled(true);
+            mChart2.getXAxis().setYOffset(20f);
+            mChart2.setExtraBottomOffset(30f);
             mChart2.setTouchEnabled(true);
             CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
             mChart2.setMarkerView(mv);

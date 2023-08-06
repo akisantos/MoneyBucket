@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ public class quanLyHu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quan_ly_hu);
-
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         for (Jars jar:JarsAList) {
             if (Objects.equals(jar.getJarName(), "Thiết yếu")){
                 jarAmountList.add(0, jar.getJarAmount());
@@ -97,6 +98,14 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_huongthu_edt = (EditText) findViewById(R.id.qlh_jars_huongthu_edt);
         qlh_jars_dautu_edt = (EditText) findViewById(R.id.qlh_jars_dautu_edt);
         qlh_jars_thientam_edt = (EditText) findViewById(R.id.qlh_jars_thientam_edt);
+
+        qlh_jars_thietyeu_edt.setEnabled(false);
+        qlh_jars_giaoduc_edt.setEnabled(false);
+        qlh_jars_tietkiem_edt.setEnabled(false);
+        qlh_jars_huongthu_edt.setEnabled(false);
+        qlh_jars_dautu_edt.setEnabled(false);
+        qlh_jars_thientam_edt.setEnabled(false);
+
         //ImageButton
         qlh_jars_thietyeu_imgbtn_plus = (ImageButton) findViewById(R.id.qlh_jars_thietyeu_imgbtn_plus);
         qlh_jars_thietyeu_imgbtn_minus = (ImageButton) findViewById(R.id.qlh_jars_thietyeu_imgbtn_minus);

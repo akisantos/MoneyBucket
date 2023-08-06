@@ -3,6 +3,7 @@ package com.akistd.moneybucket.ui.history;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -44,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         addControls();
         addEvents();
 

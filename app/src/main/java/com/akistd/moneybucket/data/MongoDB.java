@@ -287,7 +287,7 @@ public class MongoDB implements MongoRepository{
                 Log.v("WeekOutCome", "Start!! "+String.valueOf(calendarStart.getTime()));
 
                 Calendar calendarEnd = time;
-                calendarEnd.add(Calendar.DATE, 6);
+                calendarEnd.add(Calendar.DATE, 7);
                 calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
                 calendarEnd.set(Calendar.MINUTE,59);
                 calendarEnd.set(Calendar.SECOND,59);
@@ -351,7 +351,7 @@ public class MongoDB implements MongoRepository{
                 Log.v("weekincome", "Start!! "+String.valueOf(calendarStart.getTime()));
 
                 Calendar calendarEnd = time;
-                calendarEnd.add(Calendar.DATE, 6);
+                calendarEnd.add(Calendar.DATE, 7);
                 calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
                 calendarEnd.set(Calendar.MINUTE,59);
                 calendarEnd.set(Calendar.SECOND,59);
@@ -490,14 +490,15 @@ public class MongoDB implements MongoRepository{
                         Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
 
                         Calendar calendarEnd = finTime;
-                        calendarEnd.add(Calendar.DATE, 6);
+                        calendarEnd.add(Calendar.DATE, 7);
                         calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
                         calendarEnd.set(Calendar.MINUTE, 59);
                         calendarEnd.set(Calendar.SECOND, 59);
-
+                        if (calendarEnd.get(Calendar.DAY_OF_MONTH)>=29) calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)- calendarEnd.get(Calendar.DAY_OF_MONTH));
                         Log.v("WeekOutCome", "END!! " + String.valueOf(calendarEnd.getTime()));
                         Date jan2 = new Date(calendarEnd.getTimeInMillis());
-                        calendarEnd.add(Calendar.DATE, 1);
+                        //calendarEnd.add(Calendar.DATE, 1);
+
                         Date tim2 = calendarEnd.getTime();
                         Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
 
@@ -601,7 +602,6 @@ public class MongoDB implements MongoRepository{
         ArrayList<Double> allData = new ArrayList<>();
         Calendar finTime = time;
         finTime.set(Calendar.DAY_OF_MONTH, 1);
-        finTime.set(Calendar.DAY_OF_MONTH, 1);
         realm.executeTransaction(r -> {
             for (int i = 0; i<4 ; i++) {
                 dataList.clear();
@@ -687,14 +687,14 @@ public class MongoDB implements MongoRepository{
                     Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
 
                     Calendar calendarEnd = finTime;
-                    calendarEnd.add(Calendar.DATE, 6);
+                    calendarEnd.add(Calendar.DATE, 7);
                     calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
                     calendarEnd.set(Calendar.MINUTE, 59);
                     calendarEnd.set(Calendar.SECOND, 59);
-
                     Log.v("WeekOutCome", "END!! " + String.valueOf(calendarEnd.getTime()));
                     Date jan2 = new Date(calendarEnd.getTimeInMillis());
-                    calendarEnd.add(Calendar.DATE, 1);
+                    //calendarEnd.add(Calendar.DATE, 1);
+                    if (calendarEnd.get(Calendar.DAY_OF_MONTH)>=29) calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH)- calendarEnd.get(Calendar.DAY_OF_MONTH));
                     Date tim2 = calendarEnd.getTime();
                     Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
 
