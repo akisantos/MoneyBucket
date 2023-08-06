@@ -1,28 +1,27 @@
 package com.akistd.moneybucket.ui.quanlihu;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
-import com.akistd.moneybucket.ui.homepage.mainpage;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -124,24 +123,8 @@ public class quanLyHu extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     public void addEvents(){
-        //Load pie chart
-        PieChart pieChart = findViewById(R.id.pieChart_tyLeHu);
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry((float) percThietYeu,"Thiết yếu"));
-        entries.add(new PieEntry((float) percGiaoDuc,"Giáo dục"));
-        entries.add(new PieEntry((float) percTietKiem,"Tiết kiệm"));
-        entries.add(new PieEntry((float) percHuongThu,"Hưởng thụ"));
-        entries.add(new PieEntry((float) percDauTu,"Đầu tư"));
-        entries.add(new PieEntry((float) percThienTam,"Thiện tâm"));
-        PieDataSet pieDataSet  = new PieDataSet(entries,"");
-        pieDataSet.setValueTextSize(0f);
-        pieDataSet.setColors(Color.parseColor("#0094FF"),Color.parseColor("#00FFE0"),Color.parseColor("#E84DE2"),Color.parseColor("#FFD615"),Color.parseColor("#FF1F5A"),Color.parseColor("#14FF00"),Color.parseColor("#14FF00"));
-        PieData pieData  = new PieData(pieDataSet);
-        pieChart.setData(pieData);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.animateY(100);
-        pieChart.invalidate();
-        
+
+        Chart();
         //=======================================================================
         qlh_imgbtn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,8 +151,8 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_thietyeu_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(0,jarAmountList.get(0)+5);
-                qlh_jars_thietyeu_edt.setText(jarAmountList.get(0) + "%");
+
+                addPorpotion(0 ,qlh_jars_thietyeu_edt,1);
 
             }
         });
@@ -177,8 +160,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_thietyeu_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(0,jarAmountList.get(0)-5);
-                qlh_jars_thietyeu_edt.setText(jarAmountList.get(0) + "%");
+                addPorpotion(0 ,qlh_jars_thietyeu_edt,-1);
 
             }
         });
@@ -241,8 +223,8 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_giaoduc_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(1,jarAmountList.get(1)+5);
-                qlh_jars_giaoduc_edt.setText(jarAmountList.get(1) + "%");
+
+                addPorpotion(1 ,qlh_jars_giaoduc_edt,1);
 
             }
         });
@@ -250,8 +232,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_giaoduc_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(1,jarAmountList.get(1)-5);
-                qlh_jars_giaoduc_edt.setText(jarAmountList.get(1) + "%");
+                addPorpotion(1 ,qlh_jars_giaoduc_edt,-1);
 
             }
         });
@@ -314,8 +295,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_tietkiem_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(2,jarAmountList.get(2)+5);
-                qlh_jars_tietkiem_edt.setText(jarAmountList.get(2) + "%");
+                addPorpotion(2 ,qlh_jars_tietkiem_edt,1);
 
             }
         });
@@ -323,8 +303,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_tietkiem_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(2,jarAmountList.get(2)-5);
-                qlh_jars_tietkiem_edt.setText(jarAmountList.get(2) + "%");
+                addPorpotion(2 ,qlh_jars_tietkiem_edt,-1);
 
             }
         });
@@ -387,8 +366,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_huongthu_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(3,jarAmountList.get(3)+5);
-                qlh_jars_huongthu_edt.setText(jarAmountList.get(3) + "%");
+                addPorpotion(3 ,qlh_jars_huongthu_edt,1);
 
             }
         });
@@ -396,8 +374,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_huongthu_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(3,jarAmountList.get(3)-5);
-                qlh_jars_huongthu_edt.setText(jarAmountList.get(3) + "%");
+                addPorpotion(3 ,qlh_jars_huongthu_edt,-1);
 
             }
         });
@@ -463,8 +440,8 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_dautu_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(4,jarAmountList.get(4)+5);
-                qlh_jars_dautu_edt.setText(jarAmountList.get(4) + "%");
+
+                addPorpotion(4 ,qlh_jars_dautu_edt,1);
 
             }
         });
@@ -472,8 +449,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_dautu_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(4,jarAmountList.get(4)-5);
-                qlh_jars_dautu_edt.setText(jarAmountList.get(4) + "%");
+                addPorpotion(4 ,qlh_jars_dautu_edt,-1);
 
             }
         });
@@ -537,8 +513,8 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_thientam_imgbtn_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(5,jarAmountList.get(5)+5);
-                qlh_jars_thientam_edt.setText(jarAmountList.get(5) + "%");
+
+                addPorpotion(5 ,qlh_jars_thientam_edt,1);
 
             }
         });
@@ -546,8 +522,7 @@ public class quanLyHu extends AppCompatActivity {
         qlh_jars_thientam_imgbtn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jarAmountList.set(5,jarAmountList.get(5)-5);
-                qlh_jars_thientam_edt.setText(jarAmountList.get(5) + "%");
+                addPorpotion(5 ,qlh_jars_thientam_edt,-1);
 
             }
         });
@@ -622,11 +597,62 @@ public class quanLyHu extends AppCompatActivity {
         }
 
         porpotionText.setText(String.valueOf(jarAmountList.get(position)));
+
+
         int total = 0;
+        percThietYeu = jarAmountList.get(0);
+        percGiaoDuc = jarAmountList.get(1);
+        percTietKiem = jarAmountList.get(2);
+        percHuongThu = jarAmountList.get(3);
+        percDauTu = jarAmountList.get(4);
+        percThienTam = jarAmountList.get(5);
+
         for (int i : jarAmountList) {
+
             total += i;
         }
 
+        Chart();
+
+    }
+
+    private void Chart(){
+        //Load pie chart
+        PieChart pieChart = findViewById(R.id.pieChart_tyLeHu);
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry((float) percThietYeu,"Thiết yếu"));
+        entries.add(new PieEntry((float) percGiaoDuc,"Giáo dục"));
+        entries.add(new PieEntry((float) percTietKiem,"Tiết kiệm"));
+        entries.add(new PieEntry((float) percHuongThu,"Hưởng thụ"));
+        entries.add(new PieEntry((float) percDauTu,"Đầu tư"));
+        entries.add(new PieEntry((float) percThienTam,"Thiện tâm"));
+        PieDataSet pieDataSet  = new PieDataSet(entries,"Tỉ lệ phân bổ");
+        pieDataSet.setValueTextSize(12f);
+        pieDataSet.setColors(Color.parseColor("#0094FF"),
+                Color.parseColor("#00FFE0"),
+                Color.parseColor("#E84DE2"),
+                Color.parseColor("#FFD615"),
+                Color.parseColor("#FF1F5A"),
+                Color.parseColor("#14FF00"),
+                Color.parseColor("#14FF00"));
+        PieData pieData  = new PieData(pieDataSet);
+
+        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueTextColor(Color.parseColor("#ffffff"));
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.animateY(100);
+
+        pieChart.setDrawCenterText(true);
+        pieChart.setCenterTextSize(20f);
+        pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+        pieChart.setCenterTextColor(Color.parseColor("#222222"));
+        pieChart.setEntryLabelColor(Color.parseColor("#ffffff"));
+        pieChart.setCenterText("Tỉ lệ phân bổ");
+        pieChart.getLegend().setTextColor(Color.WHITE);
+        //pieChart.spin( 500,0,-360f, Easing.EasingOption.EaseInBounce);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.invalidate();
     }
 
 

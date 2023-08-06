@@ -2,6 +2,7 @@ package com.akistd.moneybucket.ui.homepage;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.akistd.moneybucket.ui.quanlihu.quanLyHu;
 import com.akistd.moneybucket.ui.transaction.TransactionsActivity;
 import com.akistd.moneybucket.util.Constants;
 import com.akistd.moneybucket.util.UtilConverter;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -36,6 +38,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -371,13 +374,40 @@ public class mainpage extends Fragment {
         entries.add(new PieEntry((float) percHuongThu,"Hưởng thụ"));
         entries.add(new PieEntry((float) percDauTu,"Đầu tư"));
         entries.add(new PieEntry((float) percThienTam,"Thiện tâm"));
-        PieDataSet pieDataSet  = new PieDataSet(entries,"");
-        pieDataSet.setValueTextSize(0f);
-        pieDataSet.setColors(Color.parseColor("#0094FF"),Color.parseColor("#00FFE0"),Color.parseColor("#E84DE2"),Color.parseColor("#FFD615"),Color.parseColor("#FF1F5A"),Color.parseColor("#14FF00"),Color.parseColor("#14FF00"));
+        PieDataSet pieDataSet  = new PieDataSet(entries,"Tỉ lệ phân bổ");
+        pieDataSet.setValueTextSize(12f);
+        pieDataSet.setColors(Color.parseColor("#0094FF"),
+                Color.parseColor("#00FFE0"),
+                Color.parseColor("#E84DE2"),
+                Color.parseColor("#FFD615"),
+                Color.parseColor("#FF1F5A"),
+                Color.parseColor("#14FF00"),
+                Color.parseColor("#14FF00"));
+
+
+
+
         PieData pieData  = new PieData(pieDataSet);
+        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueTextColor(Color.parseColor("#000000"));
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
         pieChart.animateY(100);
+
+        pieChart.spin( 500,0,-360f, Easing.EasingOption.EaseInBounce);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setDrawCenterText(true);
+        pieChart.setCenterTextSize(20f);
+        pieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
+        pieChart.setCenterTextColor(Color.parseColor("#222222"));
+        pieChart.setCenterText("100%");
+        pieChart.setUsePercentValues(true);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(50);
+        pieChart.setTouchEnabled(false);
+
+
+
         pieChart.invalidate();
     }
 }

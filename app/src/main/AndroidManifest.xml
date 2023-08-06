@@ -43,16 +43,9 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TrangChu_Activity"
-            android:exported="false"
-            android:label="@string/title_activity_trang_chu" />
-        <activity
             android:name=".ui.baocaochithu.BaoCaoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".adapters.testing.JarsInfo"
-            android:exported="false" />
         <activity
             android:name=".ui.auth.Login"
             android:exported="true"

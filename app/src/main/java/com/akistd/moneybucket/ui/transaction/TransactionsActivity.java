@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.akistd.moneybucket.R;
-import com.akistd.moneybucket.adapters.transaction.TransactionTabLayoutAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class TransactionsActivity extends AppCompatActivity {

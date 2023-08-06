@@ -1,13 +1,10 @@
-package com.akistd.moneybucket.adapters.transaction;
+package com.akistd.moneybucket.ui.transaction;
 
 import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-
-import com.akistd.moneybucket.ui.transaction.ChiTieuFragment;
-import com.akistd.moneybucket.ui.transaction.ThuNhapFragment;
 
 public class TransactionTabLayoutAdapter extends FragmentPagerAdapter {
     private Context context;
