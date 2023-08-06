@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/loginbg"
+    android:paddingHorizontal="10dp"
     tools:context=".ui.history.HistoryActivity">
 
     <LinearLayout
@@ -43,12 +44,64 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myRecyclerView"
+    <Spinner
+        android:id="@+id/btnAllJam"
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_bg"
+        android:backgroundTint="#3D62AF"
+        android:textSize="15dp"
+        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/titleHeader"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/custom_recyclerview_history">
+        android:textAlignment="viewStart"
+        android:textColor="@color/white" />
 
-    </androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnAllJam"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/home_page_subbackground"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_marginTop="5dp"
+            android:id="@+id/btnDatePicker"
+            android:drawableLeft="@drawable/baseline_calendar_month_24"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:textColor="@color/neph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jul 05 2023" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#372E20" />
+
+        <ListView
+
+            android:id="@+id/transactionListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/transaction_history_row">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/transactionListView_emptyView"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="150dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Không có dữ liệu" />
+
+
+
+    </LinearLayout>
+
 </RelativeLayout>

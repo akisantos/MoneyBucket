@@ -9,7 +9,9 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -187,18 +189,16 @@ public class MongoDB implements MongoRepository{
 
     @Override
     public  ArrayList<Transaction> getAllTransaction() {
-        ArrayList<Transaction> jars = new ArrayList<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
         realm.executeTransaction(r ->{
             try {
-                Transaction[] jarsList = r.where(Transaction.class).findAll().toArray(new Transaction[0]);
-                for (Transaction jar: jarsList) {
-                    jars.add(jar);
-                }
+                Transaction[] transaction = r.where(Transaction.class).findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
             }catch (Exception e){
                 Log.v("AKI EXCEPTION", e.getMessage().toString());
             }
         });
-        return jars;
+        return transactions;
     }
 
     public ArrayList<Transaction> getAllSortedTransaction(){
@@ -249,8 +249,12 @@ public class MongoDB implements MongoRepository{
         ArrayList<Transaction> dataList = new ArrayList<>();
         realm.executeTransaction(r->{
             try {
-                Transaction[] trans = realm.where(Transaction.class).greaterThanOrEqualTo("create_at", calendarStart.getTime())
-                        .lessThan("create_at",calendarEnd.getTime()).sort("create_at", Sort.DESCENDING).lessThan("trans_amount",0).findAll().toArray(new Transaction[0]);
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime())
+                        .sort("create_at", Sort.DESCENDING)
+                        .lessThan("trans_amount",0).findAll()
+                        .toArray(new Transaction[0]);
                 dataList.addAll(Arrays.asList(trans));
 
                 /*for (Transaction tr: dataList) {
@@ -264,12 +268,14 @@ public class MongoDB implements MongoRepository{
         return dataList;
     }
 
-    public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time){
 
+
+    public ArrayList<Transaction> getWeekSortedOutcomeTransaction(Calendar time,int position){
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
         ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
         realm.executeTransaction(r->{
             try {
-
                 time.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                 Calendar calendarStart = time;
@@ -278,14 +284,14 @@ public class MongoDB implements MongoRepository{
                 calendarStart.set(Calendar.MINUTE,0);
                 calendarStart.set(Calendar.SECOND,0);
                 Date jan1 = new Date(calendarStart.getTimeInMillis());
-                Log.v("getWeekSortedOutcomeTransaction", "Start!! "+String.valueOf(calendarStart.getTime()));
+                Log.v("WeekOutCome", "Start!! "+String.valueOf(calendarStart.getTime()));
 
                 Calendar calendarEnd = time;
                 calendarEnd.add(Calendar.DATE, 6);
                 calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
                 calendarEnd.set(Calendar.MINUTE,59);
                 calendarEnd.set(Calendar.SECOND,59);
-                Log.v("getWeekSortedOutcomeTransaction", "END!! "+ String.valueOf(calendarEnd.getTime()));
+                Log.v("WeekOutCome", "END!! "+ String.valueOf(calendarEnd.getTime()));
                 Date jan2 = new Date(calendarEnd.getTimeInMillis());
                 Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! "+ String.valueOf(jan1 + " " +jan2));
 
@@ -299,7 +305,18 @@ public class MongoDB implements MongoRepository{
 
 
                 dataList.addAll(Arrays.asList(trans));
+                if (dataList.size() > 0) {
+                    for (Transaction t : dataList) {
+                        if (position == 0) {
+                            dataList2.add(t);
+                        } else {
+                            if (Objects.equals(jarsList.get(position - 1).getId(), t.getJars().getId())) {
+                                dataList2.add(t);
+                            }
 
+                        }
+                    }
+                }
                 for (Transaction tr: trans) {
                     Log.v("DATA IN WEEK LOG", tr.getCreateAt().toString());
 
@@ -314,6 +331,693 @@ public class MongoDB implements MongoRepository{
             }
         });
 
+        return dataList2;
+    }
+    public ArrayList<Transaction> getWeekSortedIncomeTransaction(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+
+                time.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                Calendar calendarStart = time;
+                calendarStart.set(Calendar.DAY_OF_WEEK, 1);
+                calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                calendarStart.set(Calendar.MINUTE,0);
+                calendarStart.set(Calendar.SECOND,0);
+                Date jan1 = new Date(calendarStart.getTimeInMillis());
+                Log.v("weekincome", "Start!! "+String.valueOf(calendarStart.getTime()));
+
+                Calendar calendarEnd = time;
+                calendarEnd.add(Calendar.DATE, 6);
+                calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                calendarEnd.set(Calendar.MINUTE,59);
+                calendarEnd.set(Calendar.SECOND,59);
+                Log.v("weekincome", "END!! "+ String.valueOf(calendarEnd.getTime()));
+                Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                Log.v("weekincome", "BETWWEN!! "+ String.valueOf(jan1 + " " +jan2));
+
+
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThan("trans_amount",0)
+                        .lessThanOrEqualTo("create_at", jan2)
+                        .greaterThanOrEqualTo("create_at", jan1)
+                        .findAll().toArray(new Transaction[0]);
+
+                dataList.addAll(Arrays.asList(trans));
+                if (dataList.size() > 0) {
+                    for (Transaction t : dataList) {
+                        if (position == 0) {
+                            dataList2.add(t);
+                        } else {
+                            if (Objects.equals(jarsList.get(position - 1).getId(), t.getJars().getId())) {
+                                dataList2.add(t);
+                            }
+
+                        }
+                    }
+                }
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        return dataList2;
+    }
+    public ArrayList<Transaction> getThisMonthSortedTransaction(Calendar time){
+
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        realm.executeTransaction(r->{
+            try {
+                time.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                Calendar calendarStart = time;
+                calendarStart.set(Calendar.DAY_OF_MONTH, calendarStart.getActualMinimum(Calendar.DAY_OF_MONTH));
+                calendarStart.set(Calendar.HOUR_OF_DAY, -7);
+                calendarStart.set(Calendar.MINUTE, 0);
+                calendarStart.set(Calendar.SECOND, 0);
+                calendarStart.set(Calendar.MILLISECOND, 0);
+                Date jan1 = new Date(calendarStart.getTimeInMillis());
+
+
+                Calendar calendarEnd = calendarStart;
+                calendarEnd.add(Calendar.DATE, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+                calendarEnd.set(Calendar.HOUR_OF_DAY, 16);
+                calendarEnd.set(Calendar.MINUTE, 59);
+                calendarEnd.set(Calendar.SECOND, 59);
+                calendarEnd.set(Calendar.MILLISECOND, 999);
+                Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! "+ String.valueOf(jan1 + " " +jan2));
+
+
+
+                Transaction[] trans = realm.where(Transaction.class)
+                        .lessThanOrEqualTo("create_at", jan2)
+                        .greaterThanOrEqualTo("create_at", jan1)
+                        .findAll().toArray(new Transaction[0]);
+
+
+                dataList.addAll(Arrays.asList(trans));
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        Collections.reverse(dataList);
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getThisMonthSortedTransactionByNumber(int amount){
+        ArrayList<Transaction> dataList = getThisMonthSortedTransaction(Calendar.getInstance());
+        if (amount<= dataList.size()){
+            dataList.subList(0,amount);
+        }
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getFiveSortedTransactionByNumber(){
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class).sort("create_at", Sort.DESCENDING).limit(5).findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        return transactions;
+    }
+
+    public ArrayList<Transaction> getAllSortedTransactionOfJar(Jars jar){
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        realm.executeTransaction(r ->{
+            try {
+                Transaction[] transaction = r.where(Transaction.class)
+                        .equalTo("jars._id", jar.getId())
+                        .findAll().toArray(new Transaction[0]);
+                transactions.addAll(Arrays.asList(transaction));
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+
+        Collections.reverse(transactions);
+        return transactions;
+    }
+    public ArrayList<Double> getDataOutComeInWeek(Calendar time){
+
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_MONTH, 1);
+            realm.executeTransaction(r -> {
+                for (int i = 0; i<4 ; i++) {
+                    dataList.clear();
+                    try {
+                        finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                        Calendar calendarStart = finTime;
+
+
+                        calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                        calendarStart.set(Calendar.MINUTE, 0);
+                        calendarStart.set(Calendar.SECOND, 0);
+                        Date jan1 = new Date(calendarStart.getTimeInMillis());
+                        Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
+
+                        Calendar calendarEnd = finTime;
+                        calendarEnd.add(Calendar.DATE, 6);
+                        calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                        calendarEnd.set(Calendar.MINUTE, 59);
+                        calendarEnd.set(Calendar.SECOND, 59);
+
+                        Log.v("WeekOutCome", "END!! " + String.valueOf(calendarEnd.getTime()));
+                        Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                        calendarEnd.add(Calendar.DATE, 1);
+                        Date tim2 = calendarEnd.getTime();
+                        Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
+
+                        Transaction[] trans = realm.where(Transaction.class)
+                                .lessThan("trans_amount", 0)
+                                .lessThanOrEqualTo("create_at", jan2)
+                                .greaterThanOrEqualTo("create_at", jan1)
+                                .findAll().toArray(new Transaction[0]);
+
+
+                        dataList.addAll(Arrays.asList(trans));
+                        Double totalOutcome = Double.valueOf(0d);
+
+                        for (Transaction tr : dataList) {
+                            totalOutcome += tr.getTransAmount() * -1;
+                        }
+                        allData.add(totalOutcome);
+                        finTime.setTime(calendarEnd.getTime());
+                    } catch (Exception e) {
+                        Log.v("AKI EXCEPTION", e.getMessage().toString());
+                    }
+                }
+            });
+
+
+        return allData;
+    }
+    public ArrayList<Double> getDataOfJarInComeInWeek(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_MONTH, 1);
+        realm.executeTransaction(r -> {
+            for (int i = 0; i<4 ; i++) {
+                dataList.clear();
+                try {
+                    finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                    Calendar calendarStart = finTime;
+
+
+                    calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                    calendarStart.set(Calendar.MINUTE, 0);
+                    calendarStart.set(Calendar.SECOND, 0);
+                    Date jan1 = new Date(calendarStart.getTimeInMillis());
+
+                    Calendar calendarEnd = finTime;
+                    calendarEnd.add(Calendar.DATE, 6);
+                    calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    calendarEnd.set(Calendar.MINUTE, 59);
+                    calendarEnd.set(Calendar.SECOND, 59);
+
+                    Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                    calendarEnd.add(Calendar.DATE, 1);
+                    Date tim2 = calendarEnd.getTime();
+
+
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .greaterThan("trans_amount", 0)
+                            .lessThanOrEqualTo("create_at", jan2)
+                            .greaterThanOrEqualTo("create_at", jan1)
+                            .findAll().toArray(new Transaction[0]);
+
+
+                    dataList.addAll(Arrays.asList(trans));
+
+                    Double totalIncome = Double.valueOf(0d);
+                    if (dataList.size() > 0) {
+                        for (Transaction t : dataList) {
+                            if (position == 0) {
+                                dataList2.add(t);
+                            } else {
+                                if (Objects.equals(jarsList.get(position-1).getId(), t.getJars().getId())){
+                                    dataList2.add(t);
+                                }
+
+                            }
+                        }
+
+                        for (Transaction tr : dataList2) {
+                            totalIncome += tr.getTransAmount() ;
+                        }
+                    }
+                    allData.add(totalIncome);
+                    finTime.setTime(calendarEnd.getTime());
+                } catch (Exception e) {
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            }
+        });
+
+
+        return allData;
+    }
+    public ArrayList<Double> getDataOfJarOutComeInWeek(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_MONTH, 1);
+        finTime.set(Calendar.DAY_OF_MONTH, 1);
+        realm.executeTransaction(r -> {
+            for (int i = 0; i<4 ; i++) {
+                dataList.clear();
+                try {
+                    finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                    Calendar calendarStart = finTime;
+
+
+                    calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                    calendarStart.set(Calendar.MINUTE, 0);
+                    calendarStart.set(Calendar.SECOND, 0);
+                    Date jan1 = new Date(calendarStart.getTimeInMillis());
+                    Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
+
+                    Calendar calendarEnd = finTime;
+                    calendarEnd.add(Calendar.DATE, 6);
+                    calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    calendarEnd.set(Calendar.MINUTE, 59);
+                    calendarEnd.set(Calendar.SECOND, 59);
+
+                    Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                    calendarEnd.add(Calendar.DATE, 1);
+                    Date tim2 = calendarEnd.getTime();
+
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .lessThan("trans_amount", 0)
+                            .lessThanOrEqualTo("create_at", jan2)
+                            .greaterThanOrEqualTo("create_at", jan1)
+                            .findAll().toArray(new Transaction[0]);
+
+
+
+                    dataList.addAll(Arrays.asList(trans));
+
+                    Double totaloutcome = Double.valueOf(0d);
+                    if (dataList.size() > 0) {
+                        for (Transaction t : dataList) {
+                            if (position == 0) {
+                                dataList2.add(t);
+                            } else {
+                                if (Objects.equals(jarsList.get(position-1).getId(), t.getJars().getId())){
+                                    dataList2.add(t);
+                                } ;
+
+                            }
+                        }
+
+                        for (Transaction tr : dataList2) {
+                            totaloutcome += tr.getTransAmount()*-1 ;
+                        }
+                    }
+                    allData.add(totaloutcome);
+                    finTime.setTime(calendarEnd.getTime());
+                } catch (Exception e) {
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            }
+        });
+
+
+        return allData;
+    }
+    public ArrayList<Double> getDataInComeInWeek(Calendar time){
+
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_MONTH, 1);
+        realm.executeTransaction(r -> {
+            for (int i = 0; i<4 ; i++) {
+                dataList.clear();
+                try {
+                    finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                    Calendar calendarStart = finTime;
+
+
+                    calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                    calendarStart.set(Calendar.MINUTE, 0);
+                    calendarStart.set(Calendar.SECOND, 0);
+                    Date jan1 = new Date(calendarStart.getTimeInMillis());
+                    Log.v("WeekOutCome", "Start!! " + String.valueOf(calendarStart.getTime()));
+
+                    Calendar calendarEnd = finTime;
+                    calendarEnd.add(Calendar.DATE, 6);
+                    calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    calendarEnd.set(Calendar.MINUTE, 59);
+                    calendarEnd.set(Calendar.SECOND, 59);
+
+                    Log.v("WeekOutCome", "END!! " + String.valueOf(calendarEnd.getTime()));
+                    Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                    calendarEnd.add(Calendar.DATE, 1);
+                    Date tim2 = calendarEnd.getTime();
+                    Log.v("getWeekSortedOutcomeTransaction", "BETWWEN!! " + String.valueOf(jan1 + " " + jan2));
+
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .greaterThan("trans_amount", 0)
+                            .lessThanOrEqualTo("create_at", jan2)
+                            .greaterThanOrEqualTo("create_at", jan1)
+                            .findAll().toArray(new Transaction[0]);
+
+
+                    dataList.addAll(Arrays.asList(trans));
+                    Double totalIncome = Double.valueOf(0d);
+
+                    for (Transaction tr : dataList) {
+                        totalIncome += tr.getTransAmount();
+                    }
+                    allData.add(totalIncome);
+                    finTime.setTime(calendarEnd.getTime());
+                } catch (Exception e) {
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            }
+        });
+
+
+        return allData;
+    }
+    public ArrayList<Double> getDataInComeInMonth(Calendar time) {
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_YEAR,1);
+        for (int i = 0; i < 13; i++) {
+            dataList.clear();
+            Calendar calendarStart = (Calendar) finTime.clone();
+            calendarStart.set(Calendar.DAY_OF_MONTH, 1);
+            calendarStart.set(Calendar.HOUR, 0);
+            calendarStart.set(Calendar.MINUTE, 0);
+            calendarStart.set(Calendar.SECOND, 0);
+            Date jan1 = new Date(calendarStart.getTimeInMillis());
+            Calendar calendarEnd = (Calendar) calendarStart.clone();
+            calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+            calendarEnd.set(Calendar.MINUTE, 59);
+            calendarEnd.set(Calendar.SECOND, 59);
+            Date jan2 = new Date(calendarEnd.getTimeInMillis());
+            //Log.v("getDataInComeInMonth", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2));
+
+            // Realm transaction and retrieval of transactions
+            realm.executeTransaction(r->{
+                try {
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .greaterThanOrEqualTo("create_at", jan1)
+                            .lessThan("create_at",jan2)
+                            .sort("create_at", Sort.DESCENDING)
+                            .greaterThan("trans_amount",0).findAll()
+                            .toArray(new Transaction[0]);
+                    dataList.addAll(Arrays.asList(trans));
+
+                /*for (Transaction tr: dataList) {
+                    Log.v("DATA IN MONTH LOG", tr.getTransAmount().toString());
+                }*/
+                }catch (Exception e){
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            });
+            Double totalIncome = 0.0;
+            for (Transaction tr : dataList) {
+                totalIncome += tr.getTransAmount();
+            }
+            allData.add(totalIncome);
+            finTime.set(Calendar.MONTH, i);
+        }
+
+        for (int j = 0; j < 12; j++) {
+            Log.v("DataInMonth", String.valueOf(allData.get(j)));
+        }
+
+        return allData;
+    }
+    public ArrayList<Double> getDataOutComeInMonth(Calendar time) {
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_YEAR,2);
+        for (int i = 0; i <= 12; i++) {
+            dataList.clear();
+            Calendar calendarStart = (Calendar) finTime.clone();
+            calendarStart.set(Calendar.DAY_OF_MONTH, 1);
+            calendarStart.set(Calendar.HOUR, 0);
+            calendarStart.set(Calendar.MINUTE, 0);
+            calendarStart.set(Calendar.SECOND, 0);
+            Date jan1 = new Date(calendarStart.getTimeInMillis());
+            Calendar calendarEnd = (Calendar) calendarStart.clone();
+            calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+            calendarEnd.set(Calendar.MINUTE, 59);
+            calendarEnd.set(Calendar.SECOND, 59);
+            Date jan2 = new Date(calendarEnd.getTimeInMillis());
+            //Log.v("getDataOutComeInMonth", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2));
+
+            // Realm transaction and retrieval of transactions
+            realm.executeTransaction(r->{
+                try {
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                            .lessThan("create_at",calendarEnd.getTime())
+                            .sort("create_at", Sort.DESCENDING)
+                            .lessThan("trans_amount",0).findAll()
+                            .toArray(new Transaction[0]);
+                    dataList.addAll(Arrays.asList(trans));
+
+                /*for (Transaction tr: dataList) {
+                    Log.v("DATA IN MONTH LOG", tr.getTransAmount().toString());
+                }*/
+                }catch (Exception e){
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            });
+            Double totalOutcome = 0.0;
+            for (Transaction tr : dataList) {
+                totalOutcome += tr.getTransAmount()*-1;
+            }
+            allData.add(totalOutcome);
+            finTime.set(Calendar.MONTH, i);
+        }
+
+        for (int j = 0; j < 12; j++) {
+            Log.v("ThaivyyygetDataOutComeInMonth", j+ " " + String.valueOf(allData.get(j)));
+        }
+
+        return allData;
+    }
+    public ArrayList<Double> getDataOfJarInComeInMonth2(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_YEAR,1);
+        realm.executeTransaction(r -> {
+            for (int i = 0; i<13 ; i++) {
+                dataList.clear();
+                try {
+                    finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Calendar calendarStart = (Calendar) finTime.clone();
+                    calendarStart.set(Calendar.DAY_OF_MONTH, 1);
+                    calendarStart.set(Calendar.HOUR, 0);
+                    calendarStart.set(Calendar.MINUTE, 0);
+                    calendarStart.set(Calendar.SECOND, 0);
+                    Date jan1 = new Date(calendarStart.getTimeInMillis());
+                    Calendar calendarEnd = (Calendar) calendarStart.clone();
+                    calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    calendarEnd.set(Calendar.MINUTE, 59);
+                    calendarEnd.set(Calendar.SECOND, 59);
+                    Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                    //Log.v("getDataInComeInMonth2", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2));
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                            .lessThan("create_at",calendarEnd.getTime())
+                            .sort("create_at", Sort.DESCENDING)
+                            .greaterThan("trans_amount",0).findAll()
+                            .toArray(new Transaction[0]);
+
+
+                    dataList.addAll(Arrays.asList(trans));
+
+                    Double totalIncome = Double.valueOf(0d);
+                    if (dataList.size() > 0) {
+                        for (Transaction t : dataList) {
+                            if (position == 0) {
+                                dataList2.add(t);
+                            } else {
+                                if (Objects.equals(jarsList.get(position-1).getId(), t.getJars().getId())){
+                                    dataList2.add(t);
+                                }
+
+                            }
+                        }
+
+                        for (Transaction tr : dataList2) {
+                            totalIncome += tr.getTransAmount() ;
+                        }
+                    }
+                    allData.add(totalIncome);
+                    finTime.set(Calendar.MONTH, i);
+                } catch (Exception e) {
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            }
+        });
+        return allData;
+    }
+    public ArrayList<Double> getDataOfJarOutComeInMonth2(Calendar time,int position){
+        ArrayList<Transaction> dataList2 = new ArrayList<>();
+        ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        ArrayList<Double> allData = new ArrayList<>();
+        Calendar finTime = time;
+        finTime.set(Calendar.DAY_OF_YEAR,1);
+        realm.executeTransaction(r -> {
+            for (int i = 0; i<13 ; i++) {
+                dataList.clear();
+                try {
+                    finTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Calendar calendarStart = (Calendar) finTime.clone();
+                    calendarStart.set(Calendar.DAY_OF_MONTH, 1);
+                    calendarStart.set(Calendar.HOUR, 0);
+                    calendarStart.set(Calendar.MINUTE, 0);
+                    calendarStart.set(Calendar.SECOND, 0);
+                    Date jan1 = new Date(calendarStart.getTimeInMillis());
+                    Calendar calendarEnd = (Calendar) calendarStart.clone();
+                    calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    calendarEnd.set(Calendar.MINUTE, 59);
+                    calendarEnd.set(Calendar.SECOND, 59);
+                    Date jan2 = new Date(calendarEnd.getTimeInMillis());
+                    //Log.v("getDataInComeInMonth2", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2));
+                    Transaction[] trans = realm.where(Transaction.class)
+                            .lessThan("trans_amount", 0)
+                            .lessThanOrEqualTo("create_at", jan2)
+                            .greaterThanOrEqualTo("create_at", jan1)
+                            .findAll().toArray(new Transaction[0]);
+
+
+
+                    dataList.addAll(Arrays.asList(trans));
+
+                    Double totalIncome = Double.valueOf(0d);
+                    if (dataList.size() > 0) {
+                        for (Transaction t : dataList) {
+                            if (position == 0) {
+                                dataList2.add(t);
+                            } else {
+                                if (Objects.equals(jarsList.get(position-1).getId(), t.getJars().getId())){
+                                    dataList2.add(t);
+                                }
+
+                            }
+                        }
+
+                        for (Transaction tr : dataList2) {
+                            totalIncome += tr.getTransAmount()*-1 ;
+                        }
+                    }
+                    allData.add(totalIncome);
+                    finTime.set(Calendar.MONTH, i);
+                } catch (Exception e) {
+                    Log.v("AKI EXCEPTION", e.getMessage().toString());
+                }
+            }
+        });
+        return allData;
+    }
+
+    public ArrayList<Transaction> getAllIncomeTransactionInYear(Calendar time){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        dataList.clear();
+        Calendar calendarStart = time;
+        calendarStart.set(Calendar.DAY_OF_YEAR, calendarStart.getActualMinimum(Calendar.DAY_OF_YEAR));
+        calendarStart.set(Calendar.HOUR, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+        Date jan1 = new Date(calendarStart.getTimeInMillis());
+        Calendar calendarEnd = (Calendar) calendarStart.clone();
+        calendarEnd.set(Calendar.DAY_OF_YEAR, calendarEnd.getActualMaximum(Calendar.DAY_OF_YEAR));
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+        calendarEnd.set(Calendar.MINUTE, 59);
+        calendarEnd.set(Calendar.SECOND, 59);
+        Date jan2 = new Date(calendarEnd.getTimeInMillis());
+
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime())
+                        .sort("create_at", Sort.DESCENDING)
+                        .greaterThan("trans_amount",0).findAll()
+                        .toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        Log.v("KE CHUYEN DEM KHUYA", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2) + "ASDF " + dataList.size());
+        return dataList;
+    }
+
+    public ArrayList<Transaction> getAllOutcomeTransactionInYear(Calendar time){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        dataList.clear();
+        Calendar calendarStart = time;
+        calendarStart.set(Calendar.DAY_OF_YEAR, calendarStart.getActualMinimum(Calendar.DAY_OF_YEAR));
+        calendarStart.set(Calendar.HOUR, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+        Date jan1 = new Date(calendarStart.getTimeInMillis());
+        Calendar calendarEnd = (Calendar) calendarStart.clone();
+        calendarEnd.set(Calendar.DAY_OF_YEAR, calendarEnd.getActualMaximum(Calendar.DAY_OF_YEAR));
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+        calendarEnd.set(Calendar.MINUTE, 59);
+        calendarEnd.set(Calendar.SECOND, 59);
+        Date jan2 = new Date(calendarEnd.getTimeInMillis());
+
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime())
+                        .sort("create_at", Sort.DESCENDING)
+                        .lessThan("trans_amount",0).findAll()
+                        .toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        Log.v("KE CHUYEN DEM KHUYA", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2) + "ASDF " + dataList.size());
         return dataList;
     }
 

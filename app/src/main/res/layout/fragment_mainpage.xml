@@ -8,6 +8,7 @@
     android:background="@drawable/loginbg">
 
     <FrameLayout
+        android:id="@+id/mainpage_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -172,9 +173,18 @@
                     <ListView
                         android:id="@+id/jars_list_listview"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/rounded_bg"
-                        android:padding="10dp"
-                        android:layout_height="wrap_content" />
+                        android:padding="10dp" />
+
+                    <TextView
+                        android:id="@+id/jars_list_listview_emptyView"
+                        android:layout_width="fill_parent"
+                        android:layout_marginTop="150dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Không có dữ liệu" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -223,6 +233,14 @@
                                 android:id="@+id/mainpage_listview_history"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent" />
+
+                            <TextView
+                                android:id="@+id/emptyView"
+                                android:layout_width="fill_parent"
+                                android:layout_marginTop="150dp"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="Không có dữ liệu" />
                         </LinearLayout>
 
                         <androidx.appcompat.widget.AppCompatButton
@@ -329,8 +347,7 @@
                             android:padding="20dp"
                             android:orientation="vertical">
 
-                            <com.github.mikephil.charting.charts.BarChart
-
+                            <com.github.mikephil.charting.charts.PieChart
                                 android:id="@+id/jarsDistributeChart"
                                 android:layout_width="match_parent"
                                 android:layout_height="300dp"/>

@@ -6,15 +6,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.quanlihu.QuanLyHu_Fragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.quanlihu.QuanLyHu_Fragment">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="40dp"
             tools:context=".QuanLyHuActivity">
 
 
@@ -23,7 +24,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints">
+                <LinearLayout
+                    android:id="@+id/titleHeader"
+                    android:layout_width="match_parent"
+                    android:weightSum="4"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                    <ImageButton
+                        android:id="@+id/qlh_imgbtn_back"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/baseline_arrow_back_ios_24"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.2"
+                        android:text="Cơ cấu hũ"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </LinearLayout>
 
 
             <com.github.mikephil.charting.charts.PieChart
@@ -31,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="446dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -41,13 +70,12 @@
             </com.github.mikephil.charting.charts.PieChart>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button"
+                android:id="@+id/btn_luuHu"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_themhu"
-                android:drawableEnd="@drawable/baseline_add_24"
-                android:text="Tạo hũ mới"
+                android:text="Lưu thay đổi"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
@@ -55,7 +83,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/pieChart_tyLeHu" />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/qlh_jars_thietyeu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -63,7 +91,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button">
+                app:layout_constraintTop_toBottomOf="@+id/btn_luuHu">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -86,46 +114,46 @@
                         android:text="Thiết yếu"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imgBtn_cong1"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imgBtn_cong1"
+                        android:id="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_ty"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thietyeu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_ty"
+                        android:id="@+id/qlh_jars_thietyeu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:textColorHint="@color/black"
                         android:hint="60%"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imgBtn_tru1"
-                        app:layout_constraintStart_toEndOf="@+id/imgBtn_cong1"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thietyeu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thietyeu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imgBtn_tru1"
+                        android:id="@+id/qlh_jars_thietyeu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_ty"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thietyeu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -135,7 +163,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout2"
+                android:id="@+id/qlh_jars_giaoduc"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="40dp"
@@ -143,7 +171,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button">
+                app:layout_constraintTop_toBottomOf="@+id/btn_luuHu">
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -166,47 +194,47 @@
                         android:text="Giáo dục"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton32"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton32"
+                        android:id="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         android:layout_width="30dp"
-                        android:textColor="@color/black"
-
                         android:layout_height="30dp"
+
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_gd"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_giaoduc_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_gd"
+                        android:id="@+id/qlh_jars_giaoduc_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="10%"
                         android:textColorHint="@color/black"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton52"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton32"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_giaoduc_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_giaoduc_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton52"
+                        android:id="@+id/qlh_jars_giaoduc_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_gd"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_giaoduc_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView2"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -215,7 +243,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/qlh_jars_tietkiem"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -223,7 +251,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_thietyeu">
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -246,46 +274,46 @@
                         android:text="Tiết kiệm"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton33"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton33"
+                        android:id="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_tk"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_tietkiem_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_tk"
+                        android:id="@+id/qlh_jars_tietkiem_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="20%"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton53"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton33"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_tietkiem_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_tietkiem_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton53"
+                        android:id="@+id/qlh_jars_tietkiem_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_tk"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_tietkiem_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -294,7 +322,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout4"
+                android:id="@+id/qlh_jars_huongthu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="20dp"
@@ -302,7 +330,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_giaoduc">
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -325,46 +353,46 @@
                         android:text="Hưởng thụ"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton34"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_huongthu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton34"
+                        android:id="@+id/qlh_jars_huongthu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_ht"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_huongthu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_ht"
+                        android:id="@+id/qlh_jars_huongthu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="5%"
                         android:textColorHint="@color/black"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton54"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton34"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_huongthu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_huongthu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton54"
+                        android:id="@+id/qlh_jars_huongthu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_ht"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_huongthu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView4"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -373,7 +401,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/qlh_jars_dautu"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginStart="20dp"
@@ -381,7 +409,7 @@
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_tietkiem">
 
                 <ImageView
                     android:id="@+id/imageView7"
@@ -404,46 +432,46 @@
                         android:text="Đầu tư"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton35"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_dautu_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton35"
+                        android:id="@+id/qlh_jars_dautu_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_dt"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_dautu_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_dt"
+                        android:id="@+id/qlh_jars_dautu_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="5%"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton55"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton35"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_dautu_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_dautu_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton55"
+                        android:id="@+id/qlh_jars_dautu_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_dt"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_dautu_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -452,14 +480,16 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/qlh_jars_thientam"
                 android:layout_width="158dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/layout_jar"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+                app:layout_constraintTop_toBottomOf="@+id/qlh_jars_huongthu">
 
                 <ImageView
                     android:id="@+id/imageView8"
@@ -482,46 +512,46 @@
                         android:text="Thiện tâm"
                         android:textSize="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/imageButton36"
+                        app:layout_constraintStart_toStartOf="@+id/qlh_jars_thientam_imgbtn_plus"
                         tools:ignore="MissingConstraints" />
 
                     <ImageButton
-                        android:id="@+id/imageButton36"
+                        android:id="@+id/qlh_jars_thientam_imgbtn_plus"
                         android:layout_width="30dp"
 
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/add_square_fill"
-                        app:layout_constraintEnd_toStartOf="@+id/edtText_tt"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thientam_edt"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         app:srcCompat="@android:drawable/divider_horizontal_bright"
                         tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <EditText
-                        android:id="@+id/edtText_tt"
+                        android:id="@+id/qlh_jars_thientam_edt"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="5%"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:textColorHint="@color/black"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@+id/imageButton56"
-                        app:layout_constraintStart_toEndOf="@+id/imageButton36"
+                        app:layout_constraintEnd_toStartOf="@+id/qlh_jars_thientam_imgbtn_minus"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thientam_imgbtn_plus"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         tools:ignore="TouchTargetSizeCheck" />
 
                     <ImageButton
-                        android:id="@+id/imageButton56"
+                        android:id="@+id/qlh_jars_thientam_imgbtn_minus"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/add_mun_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/edtText_tt"
+                        app:layout_constraintStart_toEndOf="@+id/qlh_jars_thientam_edt"
                         app:layout_constraintTop_toBottomOf="@+id/textView6"
                         app:srcCompat="?attr/listChoiceBackgroundIndicator"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -532,5 +562,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</FrameLayout>
+    </FrameLayout>
 </ScrollView>

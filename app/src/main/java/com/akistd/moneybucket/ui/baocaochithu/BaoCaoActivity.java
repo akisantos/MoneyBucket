@@ -1,73 +1,90 @@
 package com.akistd.moneybucket.ui.baocaochithu;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.ImageButton;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import com.akistd.moneybucket.R;
-import com.github.mikephil.charting.data.BarEntry;
 
-import java.util.ArrayList;
+import com.akistd.moneybucket.R;
+
+import java.util.Calendar;
 
 public class BaoCaoActivity extends AppCompatActivity {
     Button btn_tuan,btn_thang;
-    ArrayList<ItemHu_bcct> itemHu_bccts;
-    AdapterHu_bcct adapterHu_bcct;
-    Spinner spinnerhu;
+
+    ImageButton backButton;
+
+    Button btnDatePickerReport;
+    private int mYear, mMonth, mDay, selection = 0;
+    Calendar currentDate = Calendar.getInstance();;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_bao_cao);
+        addControl();
+        addEnvent();
+
+        loadFragment(new QLtheoThang_Fragment());
+        btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+        btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
+
+    }
+    private void addControl(){
         btn_tuan = (Button) findViewById(R.id.btn_tuan);
         btn_thang = (Button) findViewById(R.id.btn_thang);
-        spinnerhu = (Spinner)findViewById(R.id.spinnerhu);
+
+//        btnDatePickerReport = (Button) findViewById(R.id.btnDatePickerReport);
+
+        backButton = (ImageButton) findViewById(R.id.imgBtnOut);
+    }
+    private void addEnvent(){
         btn_tuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoTuan_Fragment());
+
+                loadFragment(new QLtheoThang_Fragment());
+                btn_tuan.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_thang.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
         btn_thang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new QLtheoThang_fragment());
+                loadFragment(new QLtheoNam_fragment());
+                btn_thang.setBackground(getDrawable(R.drawable.button_themhu));
+                btn_tuan.setBackground(getDrawable(R.drawable.transparent_bg));
             }
         });
-        gioitinh();
-
-
-    }
-    private void gioitinh(){
-        int[] img =new int[]{R.drawable.hu2,R.drawable.hu5,R.drawable.hu1,R.drawable.hu6,R.drawable.hu2,R.drawable.hu4,R.drawable.hu3,};
-        String[] namejar = new String[]{"Tất cả","Thiết yếu","Giáo dục","Tiết kiệm","Hưỡng thụ","Đầu tư","Thiện tâm"};
-
-        itemHu_bccts= ItemHu_bcct.initSex(img,namejar);
-        adapterHu_bcct =new AdapterHu_bcct(this.getLayoutInflater(),itemHu_bccts,R.layout.item_hu_bcct);
-        spinnerhu.setAdapter(adapterHu_bcct);
-        spinnerhu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getApplicationContext(),item_gioitinhs.get(position).getSex(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                finish();
             }
         });
     }
+
+
+
+    private void Value(Calendar time){
+
+    }
+
+
+
+    public void onResume() {
+        super.onResume();
+
+    }
+
+
+
     public void loadFragment(Fragment fragment) {
 // create a FragmentManager
         FragmentManager fm = getSupportFragmentManager();

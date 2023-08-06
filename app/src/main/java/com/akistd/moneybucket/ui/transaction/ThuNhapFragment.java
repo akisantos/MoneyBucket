@@ -45,11 +45,13 @@ public class ThuNhapFragment extends Fragment {
     private String mParam2;
 
     String Root_Frag = "root_fagment";
-    Button btnSave, btnAllJam, btnDatePicker,saveBtn;
+    Button btnAllJam, btnDatePicker,saveBtn;
     ImageButton imgBtnOut;
     EditText editTotalMoney, editDescribe;
     private int mYear, mMonth, mDay;
     ArrayList<Jars> jarsList = MongoDB.getInstance().getAllJars();
+
+    Calendar currentDate = Calendar.getInstance();
     public ThuNhapFragment() {
         // Required empty public constructor
     }
@@ -114,11 +116,10 @@ public class ThuNhapFragment extends Fragment {
 
         });
 
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(c.getTime()));
+        mYear = currentDate.get(Calendar.YEAR);
+        mMonth = currentDate.get(Calendar.MONTH);
+        mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+        btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(currentDate.getTime()));
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -138,11 +139,9 @@ public class ThuNhapFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                c.set(Calendar.YEAR, year);
-                                c.set(Calendar.MONTH, monthOfYear);
-                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                currentDate.set(year,monthOfYear,dayOfMonth);
 
-                                btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(c.getTime()));
+                                btnDatePicker.setText(UtilConverter.getInstance().vnTimeLocaleConverter(currentDate.getTime()));
 
                             }
                         }, mYear, mMonth, mDay);
@@ -176,7 +175,7 @@ public class ThuNhapFragment extends Fragment {
                //Tạo transaction mới
                Transaction newIncome = new Transaction();
                newIncome.setOwner_id(MongoDB.getInstance().getUser().getId());
-               newIncome.setCreateAt(Calendar.getInstance().getTime());
+               newIncome.setCreateAt(currentDate.getTime());
                newIncome.setTransAmount(newBalance);
                newIncome.setUser(MongoDB.getInstance().getMoneyUsers());
                newIncome.setJars(jar);
