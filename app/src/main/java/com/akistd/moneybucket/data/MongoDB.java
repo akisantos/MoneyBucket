@@ -1020,7 +1020,74 @@ public class MongoDB implements MongoRepository{
         Log.v("KE CHUYEN DEM KHUYA", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2) + "ASDF " + dataList.size());
         return dataList;
     }
+    public ArrayList<Transaction> getAllIncomeTransactionInMonth(Calendar time){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        dataList.clear();
+        Calendar calendarStart = time;
+        calendarStart.set(Calendar.DAY_OF_MONTH, calendarStart.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendarStart.set(Calendar.HOUR, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+        Date jan1 = new Date(calendarStart.getTimeInMillis());
+        Calendar calendarEnd = (Calendar) calendarStart.clone();
+        calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+        calendarEnd.set(Calendar.MINUTE, 59);
+        calendarEnd.set(Calendar.SECOND, 59);
+        Date jan2 = new Date(calendarEnd.getTimeInMillis());
 
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime())
+                        .sort("create_at", Sort.DESCENDING)
+                        .greaterThan("trans_amount",0).findAll()
+                        .toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        Log.v("TEXTBAR THANG", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2) + "ASDF " + dataList.size());
+        return dataList;
+    }
+    public ArrayList<Transaction> getAllOutcomeTransactionInMonth(Calendar time){
+        ArrayList<Transaction> dataList = new ArrayList<>();
+        dataList.clear();
+        Calendar calendarStart = time;
+        calendarStart.set(Calendar.DAY_OF_MONTH, calendarStart.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendarStart.set(Calendar.HOUR, 0);
+        calendarStart.set(Calendar.MINUTE, 0);
+        calendarStart.set(Calendar.SECOND, 0);
+        Date jan1 = new Date(calendarStart.getTimeInMillis());
+        Calendar calendarEnd = (Calendar) calendarStart.clone();
+        calendarEnd.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+        calendarEnd.set(Calendar.MINUTE, 59);
+        calendarEnd.set(Calendar.SECOND, 59);
+        Date jan2 = new Date(calendarEnd.getTimeInMillis());
+
+        realm.executeTransaction(r->{
+            try {
+                Transaction[] trans = realm.where(Transaction.class)
+                        .greaterThanOrEqualTo("create_at", calendarStart.getTime())
+                        .lessThan("create_at",calendarEnd.getTime())
+                        .sort("create_at", Sort.DESCENDING)
+                        .lessThan("trans_amount",0).findAll()
+                        .toArray(new Transaction[0]);
+                dataList.addAll(Arrays.asList(trans));
+
+
+            }catch (Exception e){
+                Log.v("AKI EXCEPTION", e.getMessage().toString());
+            }
+        });
+        Log.v("TEXTBAR THANG", "BETWEEN!! " + String.valueOf(jan1 + " " + jan2) + "ASDF " + dataList.size());
+        return dataList;
+    }
     public ArrayList<Transaction> getAllSortedOutcomeTransaction(){
         ArrayList<Transaction> dataList = new ArrayList<>();
         realm.executeTransaction(r->{

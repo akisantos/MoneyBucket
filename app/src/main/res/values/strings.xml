@@ -21,7 +21,7 @@
         <item>date</item>
         <item>date</item>
     </string-array>
-    <string name="title_activity_money_bucket_login">moneyBucket_Login</string>
+    <string name="title_activity_money_bucket_login">MoneyBucket</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
