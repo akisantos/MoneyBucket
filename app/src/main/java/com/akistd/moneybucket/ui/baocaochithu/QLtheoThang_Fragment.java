@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.akistd.moneybucket.R;
 import com.akistd.moneybucket.data.Jars;
 import com.akistd.moneybucket.data.MongoDB;
+import com.akistd.moneybucket.data.Transaction;
 import com.akistd.moneybucket.ui.transaction.JarsChiTieuFragSpinnerAdapter;
 import com.akistd.moneybucket.util.ChartCurrencyFormatter;
 import com.akistd.moneybucket.util.UtilConverter;
@@ -110,7 +111,6 @@ public class QLtheoThang_Fragment extends Fragment {
         mYear = currentDate.get(Calendar.YEAR);
         mMonth = currentDate.get(Calendar.MONTH);
         btnDatePikerWeek.setText(String.format("Tháng %s/%s", mMonth+1, mYear));
-        GroupBarChart(currentDate,selection);
         btnDatePikerWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,8 +120,7 @@ public class QLtheoThang_Fragment extends Fragment {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) {
                         btnDatePikerWeek.setText(String.format("Tháng %s/%s", selectedMonth +1, selectedYear));
-                        GroupBarChart(currentDate,selection);
-                        loadSoDu(currentDate,selection);
+                        getDataBaseOnJarWeek(selection);
                     }
                 }, mYear,mMonth);
 
@@ -152,32 +151,37 @@ public class QLtheoThang_Fragment extends Fragment {
     }
     double[] IncomeWeek={};
     double[] OutcomeWeek={};
-    private  ArrayList<Double> getDataBaseOnJarWeek(int position) {
-        ArrayList<Double> dataList = getDataBaseOnTimeAndJorIncomeWeek(currentDate,position);
-        IncomeWeek = new double[dataList.size()];
-        for (int i = 0; i < dataList.size(); i++) {
-            double cal1 = dataList.get(i);
+    private  void getDataBaseOnJarWeek(int position) {
+        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
+        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInWeek(currentDate);
+        ArrayList<Double> getValueInComeBaseOnJar = MongoDB.getInstance().getDataOfJarInComeInWeek(currentDate,position);
+        ArrayList<Double> getValueIOutComeBaseOnJar = MongoDB.getInstance().getDataOfJarOutComeInWeek(currentDate,position);
+
+        ArrayList<Transaction> allInComeYearTransaction = MongoDB.getInstance().getAllIncomeTransactionInMonth(currentDate);
+        ArrayList<Transaction> allOutComeYearTransaction = MongoDB.getInstance().getAllOutcomeTransactionInMonth(currentDate);
+
+        IncomeWeek = new double[getValueInComeBaseOnJar.size()];
+        for (int i = 0; i < getValueInComeBaseOnJar.size(); i++) {
+            double cal1 = getValueInComeBaseOnJar.get(i);
             IncomeWeek[i] = cal1;
         }
         for (int i = 0; i < IncomeWeek.length; i++) {
             Log.v("dataaaaaaaIn", "!! " + IncomeWeek[i]);
         }
-        ArrayList<Double> dataList2 = getDataBaseOnTimeAndJorOutComeWeek(currentDate,position);
-        OutcomeWeek = new double[dataList2.size()];
-        for (int i = 0; i < dataList2.size(); i++) {
-            double cal2 = dataList2.get(i);
+
+        OutcomeWeek = new double[getValueIOutComeBaseOnJar.size()];
+        for (int i = 0; i < getValueIOutComeBaseOnJar.size(); i++) {
+            double cal2 = getValueIOutComeBaseOnJar.get(i);
             OutcomeWeek[i] = cal2;
         }
         for (int i = 0; i < OutcomeWeek.length; i++) {
             Log.v("dataaaaaaaOut", "!! " + OutcomeWeek[i]);
         }
-        return dataList;
-    }
-    private ArrayList<Double> getDataBaseOnTimeAndJorOutComeWeek(Calendar time,int position){
-        return MongoDB.getInstance().getDataOfJarOutComeInWeek(time,position);
-    }
-    private ArrayList<Double> getDataBaseOnTimeAndJorIncomeWeek(Calendar time,int position){
-        return MongoDB.getInstance().getDataOfJarInComeInWeek(time,position);
+
+        GroupBarChart(currentDate,position,getValueInCome, getValueOutCome,getValueInComeBaseOnJar, getValueIOutComeBaseOnJar);
+
+
+        loadSoDu(position,getValueInCome, getValueOutCome,getValueInComeBaseOnJar, getValueIOutComeBaseOnJar);
     }
     private void jarListsSpinnerEvents(){
         Jars allJars = new Jars();
@@ -193,8 +197,7 @@ public class QLtheoThang_Fragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 getDataBaseOnJarWeek(position);
                 selection = position;
-                GroupBarChart(currentDate,position);
-                loadSoDu(currentDate,position);
+                getDataBaseOnJarWeek(selection);
             }
 
             @Override
@@ -207,25 +210,32 @@ public class QLtheoThang_Fragment extends Fragment {
 
     }
     @SuppressLint("ResourceType")
-    private void loadSoDu(Calendar calendar,int position){
-        ArrayList<Double> transactionsSoDu = MongoDB.getInstance().getDataOfJarInComeInWeek(calendar,position);
-        Double sodu= Double.valueOf(0d);
-        for (Double tr: transactionsSoDu) {
-            sodu += tr.doubleValue();
-        }
-        ArrayList<Double> transactionsTieuHao = MongoDB.getInstance().getDataOfJarOutComeInWeek(calendar,position);
-        Double tieuhao= Double.valueOf(0d);
-        for (Double tr: transactionsTieuHao) {
-            tieuhao += tr.doubleValue()*-1;
+    private void loadSoDu(int position,ArrayList<Double> transactionsSoDutong, ArrayList<Double> transactionsTieuHaotong,ArrayList<Double> transactionsSoDu,ArrayList<Double> transactionsTieuHao ){
+        Double sodu;
+        Double tieuhao;
+        if(position == 0){
+            sodu= Double.valueOf(0d);
+            tieuhao= Double.valueOf(0d);
+            for (Double tr: transactionsSoDutong) {
+                sodu += tr.doubleValue();
+            }
+            for (Double tr: transactionsTieuHaotong) {
+                tieuhao += tr.doubleValue()*-1;
+            }
+        }else{
+            sodu= Double.valueOf(0d);
+            tieuhao= Double.valueOf(0d);
+            for (Double tr: transactionsSoDu) {
+                sodu += tr.doubleValue();
+            }
+            for (Double tr: transactionsTieuHao) {
+                tieuhao += tr.doubleValue()*-1;
+            }
         }
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
         tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(tieuhao));
     }
-    public void GroupBarChart(Calendar time,int position){
-        ArrayList<Double> getValueOutCome = MongoDB.getInstance().getDataOutComeInWeek(currentDate);
-        ArrayList<Double> getValueInCome = MongoDB.getInstance().getDataInComeInWeek(currentDate);
-        ArrayList<Double> getValueInComeBaseOnJar = MongoDB.getInstance().getDataOfJarInComeInWeek(time,position);
-        ArrayList<Double> getValueIOutComeBaseOnJar = MongoDB.getInstance().getDataOfJarOutComeInWeek(time,position);
+    public void GroupBarChart(Calendar time, int position,ArrayList<Double> getValueInCome,ArrayList<Double> getValueOutCome,ArrayList<Double> getValueInComeBaseOnJar,  ArrayList<Double> getValueIOutComeBaseOnJar){
 
         mChart = (BarChart) view.findViewById(R.id.mChart);
         mChart.setDrawBarShadow(false);
@@ -270,8 +280,8 @@ public class QLtheoThang_Fragment extends Fragment {
                 valOutCome[i] = cal2;
             }
             for (int i = 0; i < valIncome.length; i++) {
-                if (valIncome[i] !=0) barOne.add(new BarEntry(i, (float) valIncome[i]));
-                if (valOutCome[i] !=0) barTwo.add(new BarEntry(i, (float) valOutCome[i]));
+                barOne.add(new BarEntry(i, (float) valIncome[i]));
+                barTwo.add(new BarEntry(i, (float) valOutCome[i]));
             }
         }else {
             for (int i = 0; i < getValueInCome.size(); i++) {
@@ -281,62 +291,58 @@ public class QLtheoThang_Fragment extends Fragment {
                 OutcomeWeek[i] = cal2;
             }
             for (int i = 0; i < IncomeWeek.length; i++) {
-                if (IncomeWeek[i] !=0) barOne.add(new BarEntry(i, (float) IncomeWeek[i]));
-                if (OutcomeWeek[i] !=0) barTwo.add(new BarEntry(i, (float) OutcomeWeek[i]));
+                barOne.add(new BarEntry(i, (float) IncomeWeek[i]));
+                barTwo.add(new BarEntry(i, (float) OutcomeWeek[i]));
             }
         }
 
-        if (barOne.size() >0){
-            BarDataSet set1 = new BarDataSet(barOne, "barOne");
-            set1.setColor(Color.parseColor("#2ecc71"));
-            set1.setDrawValues(true);
-            set1.setValueFormatter(new ChartCurrencyFormatter());
-            BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
-            set2.setColor(Color.parseColor("#e74c3c"));
-            set2.setDrawValues(true);
-            set2.setValueFormatter(new ChartCurrencyFormatter());
+        BarDataSet set1 = new BarDataSet(barOne, "barOne");
+        set1.setColor(Color.parseColor("#2ecc71"));
+        set1.setDrawValues(true);
+        set1.setValueFormatter(new ChartCurrencyFormatter());
+        BarDataSet set2 = new BarDataSet(barTwo, "barTwo");
+        set2.setColor(Color.parseColor("#e74c3c"));
+        set2.setDrawValues(true);
+        set2.setValueFormatter(new ChartCurrencyFormatter());
 
-            set1.setHighlightEnabled(true);
-            set2.setHighlightEnabled(true);
-
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-            dataSets.add(set1);
-            dataSets.add(set2);
-
-            BarData data = new BarData(dataSets);
-            float groupSpace = 0.16f;
-            float barSpace = 0.02f;
-            float barWidth = 0.4f;
-            // (barSpace + barWidth) * 2 + groupSpace = 1
-            data.setBarWidth(barWidth);
-            // so that the entire chart is shown when scrolled from right to left
-            xAxis.setAxisMaximum(labels.length - 1.1f);
-
-            data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
-            data.setValueTextSize(10);
-
-            for (int i = 0; i< leftAxis.mEntries.length; i++){
-                leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
-            }
-            leftAxis.setValueFormatter(new ChartCurrencyFormatter());
-            mChart.setData(data);
-
-            mChart.setScaleEnabled(false);
-            mChart.setDrawValueAboveBar(false);
-            mChart.setVisibleXRangeMaximum(6f);
-            mChart.setHighlightFullBarEnabled(true);
-            mChart.groupBars(1f, groupSpace, barSpace);
-            mChart.animateXY(1000, 1000);
-            mChart.getLegend().setEnabled(false);
-            mChart.setHighlightPerTapEnabled(true);
-            mChart.setTouchEnabled(true);
-            CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
-            mChart.setMarkerView(mv);
-
-            mChart.invalidate();
-        }else Toast.makeText(getContext(), "Không có dữ liệu",Toast.LENGTH_SHORT).show();
+        set1.setHighlightEnabled(true);
+        set2.setHighlightEnabled(true);
 
 
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(set1);
+        dataSets.add(set2);
+
+        BarData data = new BarData(dataSets);
+        float groupSpace = 0.16f;
+        float barSpace = 0.02f;
+        float barWidth = 0.4f;
+        // (barSpace + barWidth) * 2 + groupSpace = 1
+        data.setBarWidth(barWidth);
+        // so that the entire chart is shown when scrolled from right to left
+        xAxis.setAxisMaximum(labels.length - 1.1f);
+
+        data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
+        data.setValueTextSize(10);
+
+        for (int i = 0; i< leftAxis.mEntries.length; i++){
+            leftAxis.mEntries[i] = Math.round(leftAxis.mEntries[i]);
+        }
+        leftAxis.setValueFormatter(new ChartCurrencyFormatter());
+        mChart.setData(data);
+
+        mChart.setScaleEnabled(false);
+        mChart.setDrawValueAboveBar(false);
+        mChart.setVisibleXRangeMaximum(6f);
+        mChart.setHighlightFullBarEnabled(true);
+        mChart.groupBars(1f, groupSpace, barSpace);
+        mChart.animateXY(1000, 1000);
+        mChart.getLegend().setEnabled(false);
+        mChart.setHighlightPerTapEnabled(true);
+        mChart.setTouchEnabled(true);
+        CustomChartView mv = new CustomChartView (getContext(), R.layout.chart_detail_text);
+        mChart.setMarkerView(mv);
+
+        mChart.invalidate();
     }
 }

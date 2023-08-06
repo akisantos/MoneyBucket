@@ -214,18 +214,13 @@ public class QLtheoNam_fragment extends Fragment {
         }else{
             sodu= Double.valueOf(0d);
             tieuhao= Double.valueOf(0d);
-
-            for (Transaction tr: transactionsSoDutong) {
-
-                if (tr.getJars().getId().equals(jarsList.get(position))) sodu += tr.getTransAmount();
+            for (Double tr: transactionsSoDu) {
+                sodu += tr.doubleValue();
             }
-
-            for (Transaction tr: transactionsTieuHaotong) {
-                if (tr.getJars().getId().equals(jarsList.get(position))) tieuhao += tr.getTransAmount()*-1;
+            for (Double tr: transactionsTieuHao) {
+                tieuhao += tr.doubleValue()*-1;
             }
         }
-
-
         tv_soDu.setText(UtilConverter.getInstance().vndCurrencyConverter(sodu));
         tv_tieuHao.setText(UtilConverter.getInstance().vndCurrencyConverter(tieuhao));
     }
@@ -248,8 +243,10 @@ public class QLtheoNam_fragment extends Fragment {
         xAxis.setTextSize(12);
         xAxis.setAxisLineColor(Color.WHITE);
         xAxis.setAxisMinimum(1f);
-
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+
+
+
         YAxis leftAxis = mChart2.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(Color.WHITE);
